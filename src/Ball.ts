@@ -124,7 +124,7 @@ class Ball extends Laya.Box {
     }
 
     /**
-     * 球初始化 
+     * 球初始化  
      */
     public ballRect(): Ball {
         this.pos(this.initialPoint.x, this.initialPoint.y)

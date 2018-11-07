@@ -19,15 +19,16 @@ var Demo = (function () {
         this.ladderArr.pos(0, this.ladderArr.ladderArr_heigth);
         Laya.stage.addChild(this.ball);
         Laya.stage.addChild(this.ladderArr);
-        Laya.timer.frameLoop(1, this, this.test);
+        console.log(" $$$$$$$$  " + this.n + " $$$$$$$$ " + this.ladderArr._childs[3].x + " @@@@@@@");
+        // Laya.timer.frameLoop(1, this, this.test);
     };
     Demo.prototype.test = function (e) {
-        if (this.ladderArr._childs[0].y > 926) {
+        this.ladderArr.startDowm();
+        if (this.n === 25) {
             Laya.timer.clear(this, this.test);
-            console.log(" $$$$$$$$  " + this.n + " $$$$$$$$ ");
+            console.log(" $$$$$$$$  " + this.n + " $$$$$$$$ " + this.ladderArr._childs[3].x + " @@@@@@@");
         }
         this.n++;
-        this.ladderArr.startDowm();
     };
     return Demo;
 }());

@@ -35,7 +35,8 @@ var LadderArr = (function (_super) {
         /** 阶梯每帧缩放变大的数量*/
         _this.ladder_bigger = Math.pow(1.7172448442368613 / 0.4862844382657308, 1 / _this.complete_frames); //1.7172448442368613 / 0.4862844382657308
         /** 测试 */
-        _this.testNumber = 4;
+        _this.testNumber = 6;
+        _this.b = 0;
         _this.stage_heigth = stage_heigth;
         _this.init();
         return _this;
@@ -78,8 +79,8 @@ var LadderArr = (function (_super) {
             this.addChild(ladder);
             // 设置位置  ladder_x是居中的位置。  vy的上一个阶梯的 ladder.y + ladder.heigth
             ladder.pos(ladder_x, ladder_y);
-            console.log(ladder.getBounds().x + "  ************  " + ladder.getBounds().y);
-            console.log(ladder.scaleX);
+            console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "  ************  Y: " + ladder.getBounds().y);
+            console.log("scaleXY: " + ladder.scaleX);
             // 设置阶梯的名字
             ladder.name = "ladder";
             // 下一个的阶梯的缩放值
