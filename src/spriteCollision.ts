@@ -33,7 +33,7 @@ class spriteCollision {
     private countSprPoint() {
         // 获取障碍组的长度
         let ob_length = this.sprArr.length;
-        let arrPostion = new Array();
+        let arrPostion = new Array();5
         let
             x: number,
             y: number;

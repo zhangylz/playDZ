@@ -1,4 +1,3 @@
-import SoundManager = Laya.SoundManager;
 /**
 * 球精灵
 */

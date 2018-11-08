@@ -67,6 +67,8 @@ class Ladder extends Laya.Sprite {
                 this.addChild(spr_ob);
             }
         }
+        // 返回阶梯
+        return this;
     }
 
     /**
@@ -95,6 +97,7 @@ class Ladder extends Laya.Sprite {
             }
         }
         console.log(this.random_arr);
+        return this;
     }
     /**
      * 添加惊喜  砖石 or 红包
@@ -155,6 +158,8 @@ class Ladder extends Laya.Sprite {
                 }
             }
         }
+
+        return this;
     }
 
     /**
@@ -173,15 +178,15 @@ class Ladder extends Laya.Sprite {
             for (let i = 0; i < s; i++) {
                 this._childs[0].destroy();
             }
-            this.random_arr = [];
-            // 开始添加障碍
-            this.spr_add_ob();
-            // 添加白圈
-            this.spr_add_ov(this.random_arr);
-            // 添加砖石 or 红包
-            this.spr_add_gift(this.random_arr);
-            console.log("长度： " + this.random_arr.length);
         }
+        this.random_arr = [];
+        // 开始添加障碍
+        this.spr_add_ob().spr_add_ov(this.random_arr).spr_add_gift(this.random_arr);
+        // // 添加白圈
+        // this.spr_add_ov(this.random_arr);
+        // // 添加砖石 or 红包
+        // this.spr_add_gift(this.random_arr);
+        console.log("长度： " + this.random_arr.length);
     }
 
     /**
@@ -191,11 +196,11 @@ class Ladder extends Laya.Sprite {
         let len = this._childs.length;
         if (len > 0) {
             console.log(" !@#$%^&*(        " + len);
-            for(let i = 0; i < len; i++){
+            for (let i = 0; i < len; i++) {
                 this._childs[0].destroy();
             }
         }
-        // return this;
+        return this;
     }
 
 }

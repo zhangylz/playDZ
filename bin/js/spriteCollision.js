@@ -28,6 +28,7 @@ var spriteCollision = (function () {
         // 获取障碍组的长度
         var ob_length = this.sprArr.length;
         var arrPostion = new Array();
+        5;
         var x, y;
         for (var i = 0; i < ob_length; i++) {
             var obPostion = new Laya.Point();

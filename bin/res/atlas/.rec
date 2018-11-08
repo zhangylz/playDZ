@@ -23,10 +23,9 @@ P DCACC863 image_oval_white.png
 D praticle
 R 0F6382C0 shanguang.plist
 D ui
-P 07B7C47F button_left.png
-P A0BA5B3E button_right.png
 R 532A7181 game_font.ttf
 P 1DA20B9E image_addxcx.png
+P A0BA5B3E image_ballSkin.png
 P 4D7FD54A image_boot_prompt.png
 P 01704DF3 image_crown.png
 P 8AF93B98 image_do.png
@@ -35,6 +34,7 @@ P 5C49401B image_guide.png
 P 2C5AA7CA image_hb.png
 P 9C18AEDC image_invite.png
 P 7A4D591C image_jieshao.png
+P 07B7C47F image_Leaderboard.png
 P ACD94AC7 image_logo.png
 P 5DBFE7E7 image_myhb.png
 P F39B81E2 image_reward.png

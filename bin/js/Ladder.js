@@ -72,6 +72,8 @@ var Ladder = (function (_super) {
                 this.addChild(spr_ob);
             }
         }
+        // 返回阶梯
+        return this;
     };
     /**
      * 添加白圈精灵
@@ -99,6 +101,7 @@ var Ladder = (function (_super) {
             }
         }
         console.log(this.random_arr);
+        return this;
     };
     /**
      * 添加惊喜  砖石 or 红包
@@ -160,6 +163,7 @@ var Ladder = (function (_super) {
                 }
             }
         }
+        return this;
     };
     /**
      * 精灵左右滑动
@@ -176,15 +180,15 @@ var Ladder = (function (_super) {
             for (var i = 0; i < s; i++) {
                 this._childs[0].destroy();
             }
-            this.random_arr = [];
-            // 开始添加障碍
-            this.spr_add_ob();
-            // 添加白圈
-            this.spr_add_ov(this.random_arr);
-            // 添加砖石 or 红包
-            this.spr_add_gift(this.random_arr);
-            console.log("长度： " + this.random_arr.length);
         }
+        this.random_arr = [];
+        // 开始添加障碍
+        this.spr_add_ob().spr_add_ov(this.random_arr).spr_add_gift(this.random_arr);
+        // // 添加白圈
+        // this.spr_add_ov(this.random_arr);
+        // // 添加砖石 or 红包
+        // this.spr_add_gift(this.random_arr);
+        console.log("长度： " + this.random_arr.length);
     };
     /**
      * 清除阶梯上的寄存精灵
@@ -197,7 +201,7 @@ var Ladder = (function (_super) {
                 this._childs[0].destroy();
             }
         }
-        // return this;
+        return this;
     };
     return Ladder;
 }(Laya.Sprite));
