@@ -3,12 +3,11 @@
  */
 var spriteCollision = (function () {
     function spriteCollision() {
-        // 坐标数组
-        this.arrXY = new Array();
-        // 是否碰撞
+        /** 坐标数组 */
+        this.arrXY = new Array(); //sprite全局坐标数组
+        /**是否碰撞 */
         this.resultCollision = false;
     }
-    ; //sprite全局坐标数组
     /**
      * @param Ladder 传入精灵阶梯
      * @param ballSprite 传入精灵球
@@ -28,20 +27,19 @@ var spriteCollision = (function () {
         // 获取障碍组的长度
         var ob_length = this.sprArr.length;
         var arrPostion = new Array();
-        5;
         var x, y;
         for (var i = 0; i < ob_length; i++) {
             var obPostion = new Laya.Point();
             x = this.sprArr[i].x;
             y = this.sprArr[i].y;
-            console.log(" X: " + x + " Y: " + y);
+            // console.log(" X: " + x + " Y: " + y)
             obPostion.x = x;
             obPostion.y = y;
             arrPostion[i] = obPostion;
         }
         // console.log("坐标数组长度" + arrPostion.length)
         // 返回精灵数组
-        console.log(arrPostion);
+        // console.log(arrPostion);
         // 返回坐标组
         return arrPostion;
     };
@@ -50,18 +48,17 @@ var spriteCollision = (function () {
      * @param sprPointArr
      */
     spriteCollision.prototype.stageXY = function (sprPointArr) {
-        console.log(sprPointArr[0]);
+        // console.log(sprPointArr[0]);
         var arr_length = sprPointArr.length; //获取数组的长度 以便处理
         var sprPoint = new Laya.Point(); //实例一个坐标以便赋值
         for (var i = 0; i < arr_length; i++) {
             sprPoint.x = sprPointArr[i].x;
             sprPoint.y = sprPointArr[i].y;
-            console.log("没转换坐标前： " + sprPoint);
+            // console.log("没转换坐标前： " + sprPoint);
             this.Ladder.localToGlobal(sprPoint);
             this.arrXY[i] = [sprPoint.x, sprPoint.y];
-            console.log("转换坐标后： " + sprPoint);
         }
-        console.log(this.arrXY);
+        // console.log(this.arrXY);
     };
     /**
      * 判断是否与球碰撞
@@ -76,29 +73,45 @@ var spriteCollision = (function () {
                 &&
                     Math.abs(y1 - y2) < h1 / 2 + 64.5 / 2 //this.arrXY[i].y是坐标组的子坐标组的y坐标
             ) {
-                this.resultCollision = true;
                 // console.log("撞上了第" + (i + 1) + "个障碍");
+                // 装上后就删除坐标组，不再检测坐标
                 this.testFunction(this.sprArr[i]);
+                this.arrXY.splice(i, 1);
             }
         }
     };
     spriteCollision.prototype.testFunction = function (spr) {
-        var name = spr.name;
+        var name;
+        if (spr != undefined) {
+            name = spr.name;
+            if (name != "spr_ob") {
+                spr.destroy();
+            }
+        }
         // console.log("撞上了" + spr.name + " $$$$$");
         switch (name) {
             case "spr_ov":
                 console.log("调用白圈");
-                break;
+                return "白圈";
             case "spr_ob":
                 console.log("调用障碍");
-                break;
+                return "障碍";
             case "spr_do":
                 console.log("调用砖石");
-                break;
+                return "砖石";
             case "spr_hb":
                 console.log("调用红包");
+                return "红包";
+            case undefined:
+                console.log("不知道为什么undefined!!!!!!!!");
                 break;
+            default:
+                console.log("name undefined!");
         }
+    };
+    /**撞到障碍后调用的方法 */
+    spriteCollision.prototype.obTest = function () {
+        this.resultCollision = true;
     };
     return spriteCollision;
 }());

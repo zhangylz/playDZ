@@ -100,7 +100,8 @@ var Ladder = (function (_super) {
                 judge = false;
             }
         }
-        console.log(this.random_arr);
+        // 打印寄存的随机数
+        // console.log(this.random_arr);
         return this;
     };
     /**
@@ -174,7 +175,7 @@ var Ladder = (function (_super) {
      * 精灵组件初始化，障碍，白圈，红包，砖石。都初始化
      */
     Ladder.prototype.spr_rect = function () {
-        console.log("rect ladder");
+        // console.log("rect ladder");
         var s = this._childs.length;
         if (s > 0) {
             for (var i = 0; i < s; i++) {
@@ -184,11 +185,7 @@ var Ladder = (function (_super) {
         this.random_arr = [];
         // 开始添加障碍
         this.spr_add_ob().spr_add_ov(this.random_arr).spr_add_gift(this.random_arr);
-        // // 添加白圈
-        // this.spr_add_ov(this.random_arr);
-        // // 添加砖石 or 红包
-        // this.spr_add_gift(this.random_arr);
-        console.log("长度： " + this.random_arr.length);
+        // console.log("长度： " + this.random_arr.length);
     };
     /**
      * 清除阶梯上的寄存精灵
@@ -196,7 +193,6 @@ var Ladder = (function (_super) {
     Ladder.prototype.spr_clean = function () {
         var len = this._childs.length;
         if (len > 0) {
-            console.log(" !@#$%^&*(        " + len);
             for (var i = 0; i < len; i++) {
                 this._childs[0].destroy();
             }

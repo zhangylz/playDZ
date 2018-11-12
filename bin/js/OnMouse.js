@@ -4,7 +4,7 @@
 var OnMouse = (function () {
     /**
      * @param ball 传入的球
-     * @param stage 父级舞台
+     * @param stage Laya舞台
      */
     function OnMouse(stage, ball) {
         // 寄存到全局
@@ -16,21 +16,21 @@ var OnMouse = (function () {
      * 初始化监听鼠标移动
      */
     OnMouse.prototype.init = function () {
-        Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);
-        Laya.stage.on(Laya.Event.MOUSE_UP, this, this.mouseUp);
+        this.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);
+        this.stage.on(Laya.Event.MOUSE_UP, this, this.mouseUp);
     };
     /**
      * 鼠标点击动作
      */
     OnMouse.prototype.mouseDowm = function () {
-        this.mouseX = Laya.stage.mouseX;
-        Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
+        this.mouseX = this.stage.mouseX;
+        this.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
     };
     /**
     * 监听鼠标放开
     */
     OnMouse.prototype.mouseUp = function () {
-        Laya.stage.off(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
+        this.stage.off(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
     };
     /**
      * 鼠标移动动作

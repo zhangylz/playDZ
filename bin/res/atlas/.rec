@@ -25,6 +25,7 @@ R 0F6382C0 shanguang.plist
 D ui
 R 532A7181 game_font.ttf
 P 1DA20B9E image_addxcx.png
+P EDF1A7D8 image_ball.png
 P A0BA5B3E image_ballSkin.png
 P 4D7FD54A image_boot_prompt.png
 P 01704DF3 image_crown.png
@@ -37,9 +38,109 @@ P 7A4D591C image_jieshao.png
 P 07B7C47F image_Leaderboard.png
 P ACD94AC7 image_logo.png
 P 5DBFE7E7 image_myhb.png
+P DF8CA080 image_paihang.png
 P F39B81E2 image_reward.png
 P 228E042F image_tuiqian.png
 P 2A7A4CB0 music_off.png
 P 28A1B8DA music_on.png
 P E34B885B 图标框1.png
 P 81A44662 图标框2.png
+D 一个红包
+P FFD93DD7 关闭.png
+R 0CFCFD3E 框.png
+P 5E65FC1A 领取.png
+D 我的红包
+P BEC591B1 关闭.png
+R 8AED692A 我的红包.png
+P C6E1ED8B 按钮.png
+D 每日登录奖励
+P AA802773 关闭.png
+R 99DA4321 内.png
+P 409D7CDF 单选4.png
+P E772E763 按钮1.png
+P B1FAB251 按钮2.png
+P C1568F56 每日登陆奖励.png
+R 65DF3AEE 窗.png
+P CC611F65 红包.png
+P 8DE5D8DE 红包2.png
+D 游戏中
+P A989C329 即将超越.png
+P 2CAA2576 本局游戏结束后打开.png
+P 3B9E0521 白影.png
+P 66A40AD1 红包icon.png
+P 52B8E8FE 红包收集.png
+P 12034B3C 钻石.png
+P 023D8055 阴影.png
+P 7FF14602 障碍物.png
+D 游戏中-游戏结算
+R 89D4BA87 内.png
+P 843D39A7 分享复活.png
+P 2A0B21ED 分享复活icon.png
+P B91B46F9 按钮.png
+R 81B1B4B5 窗.png
+P 74ED523A 红包.png
+P CC611F65 组 2377 拷贝.png
+P B51591A7 视频复活.png
+P 0D790BCB 视频复活icon.png
+P B7CE0F1B 返回.png
+P A1C63CDC 返回icon.png
+P 557E3305 首页.png
+P 661761C9 首页icon.png
+D 游戏中-红包
+P 370E4E39 关闭.png
+P F6C82181 按钮.png
+R 6ECC3993 红包.png
+D 红包
+P 370E4E39 关闭.png
+P F6C82181 按钮.png
+R 67A197AE 窗.png
+D 选择
+R 3F65009D 内.png
+P B65B2F72 按钮.png
+P 2B82FAE5 按钮合并层.png
+P B30279FE 球1.png
+P 666B0EE7 球2.png
+P CD49A88A 球3.png
+P 75D1516E 球4.png
+P F946FBB3 球5.png
+P 5DC3DA2B 球6.png
+P 27FCBD7C 球7.png
+P 2B8CDCA7 球8.png
+P 9C43ED45 球9.png
+P 4AB17700 视频icon.png
+P 9C60F1CF 返回按钮.png
+P 01FAFA0D 选择.png
+P 77BF5CF1 钻石icon.png
+P B994D563 锁.png
+D 邀请有礼
+P 85A9A98B 关闭.png
+R 17B44E69 内.png
+P F3CF8E44 按钮2-1.png
+P 0761C587 按钮2.png
+R F98D5FCA 框.png
+P 85DF0F2A 立即邀请.png
+R 7AFC4BD9 虚线.png
+P D39F9DD5 邀请有礼.png
+P 06C62D09 默认道具框.png
+P 82471099 默认邀请.png
+D 首页
+P ACD94AC7 logo.png
+P 2A7A4CB0 关闭音乐.png
+P E34B885B 图标框1.png
+P 81A44662 图标框2.png
+P 07B7C47F 大按钮1.png
+P A0BA5B3E 大按钮2.png
+P 28A1B8DA 开启音乐.png
+P 5C49401B 引导手势.png
+P 4D7FD54A 引导提示.png
+P 5DBFE7E7 我的红包.png
+P BDADE90B 排名icon.png
+P F39B81E2 每日奖励.png
+P 1DA20B9E 添加到我的小程序.png
+P 228E042F 游戏推荐.png
+P 7A4D591C 玩法介绍.png
+P EDF1A7D8 球球iocn.png
+P DA4411C5 皇冠.png
+P 2C5AA7CA 红包icon.png
+P 9C18AEDC 邀请有礼.png
+P 9FDF3C9D 钻石.png

@@ -16,27 +16,18 @@ var LadderArr = (function (_super) {
         _this.nextScale = 576 / 481; //1.1975051975051975051975051975052
         /** 初始的缩放 */
         _this.initial_scale = Math.pow(_this.UpScale, 4); //0.48628443826573085101743493750953
-        /** 最后一个缩放 */
-        _this.last_scale = _this.initial_scale * Math.pow(_this.nextScale, 7);
-        /** 最后一个的X坐标 */
-        _this.last_x = -341.18433352304334;
         /** 完成的帧*/
-        _this.complete_frames = 180;
+        _this.complete_frames = 30;
         /** 向下落的总长度 */
-        _this.ladder_total_Y = 934.88; //934.8820346401794
+        _this.ladder_total_Y = 390.15345030660546; //934.8820346401794
         /** 向下落速度  = 阶梯群的总高度 / 全部的帧数 */
         _this.dowm_speed = _this.ladder_total_Y / _this.complete_frames;
-        /** 向左偏的总长度 */
-        _this.ladder_total_X = -443.14; //-443.1457461496069
-        /** 往左移动的速度 */
-        _this.left_speed = _this.ladder_total_X / _this.complete_frames;
         /** 增加的透明值 */
-        _this.add_alpha = 0.8 / (_this.complete_frames / 3.5);
+        _this.add_alpha = 0.8 / (_this.complete_frames * 2);
         /** 阶梯每帧缩放变大的数量*/
-        _this.ladder_bigger = Math.pow(1.7172448442368613 / 0.4862844382657308, 1 / _this.complete_frames); //1.7172448442368613 / 0.4862844382657308
+        _this.ladder_bigger = _this.toFixed(Math.pow(_this.nextScale, 1 / _this.complete_frames), 10); //1.7172448442368613 / 0.4862844382657308
         /** 测试 */
-        _this.testNumber = 6;
-        _this.b = 0;
+        _this.testB = 1 - _this.initial_scale;
         _this.stage_heigth = stage_heigth;
         _this.init();
         return _this;
@@ -99,37 +90,36 @@ var LadderArr = (function (_super) {
      * 开始了下落
      */
     LadderArr.prototype.startDowm = function () {
-        // 寄存阶梯
-        var ladder_arr = this._childs;
-        // 数组长度
-        var len = ladder_arr.length;
-        // 初始的大小
-        var ladder_initial_scale = this.initial_scale;
+        // 对阶梯群每个阶梯开始遍历变化
+        var len = this._childs.length; //获取阶梯的长度
+        var ladderArr = this._childs; //寄存阶梯数组
+        var stageWidth = 720; //屏幕的宽度
+        var ladderTotalY = this.ladder_total_Y; //寄存下落的总长度
         for (var i = 0; i < len; i++) {
-            if (
-            // 判断阶梯是否越界  926越界目前比较稳定
-            ladder_arr[i].y > 926) {
-                // 重置越界的阶梯
-                this.ladder_rect(ladder_arr[i]);
-                //测试
-                console.log(this.testNumber + "  $$$$$$$$$$$$$$$$$$$$$$");
-                this.testNumber--;
-                if (this.testNumber < 0) {
-                    this.testNumber = 6;
-                }
+            var ladder = ladderArr[i];
+            ladder.scaleX *= this.ladder_bigger;
+            ladder.scaleY *= this.ladder_bigger;
+            /**居中设置 */
+            var ladderWidth = ladder.getBounds().width;
+            var center = (stageWidth - ladderWidth) / 2;
+            // 根据组件的大小来定位组件的位置
+            var sY = (ladder.scaleY - this.initial_scale) / this.testB * ladderTotalY;
+            ladder.pos(center, sY);
+            if (Math.abs(ladder.x) < 1e-5) {
+                ladder.x = 0;
             }
-            // 阶梯的缩放值  添加的Y坐标或者X坐标都要 * 缩放值
-            var slcaeXY = ladder_arr[i].scaleX;
-            // 增加Y坐标
-            ladder_arr[i].x += this.left_speed * slcaeXY;
-            // 减少X坐标
-            ladder_arr[i].y += this.dowm_speed * slcaeXY;
-            // 阶梯变大
-            ladder_arr[i].scaleX *= this.ladder_bigger;
-            ladder_arr[i].scaleY *= this.ladder_bigger;
-            // 如果透明值少于1那就增加透明值
-            if (ladder_arr[i].alpha < 1) {
-                ladder_arr[i].alpha += this.add_alpha;
+            if (Math.abs(ladder.scaleX - 1) < 1e-3) {
+                ladder.scaleX = 1;
+                ladder.scaleY = 1;
+            }
+            if (
+            // 判断阶梯的缩放值来和Y的坐标
+            this.toFixed(ladder.scaleX, 3) == this.toFixed(1.717251730359543, 3)) {
+                // 重置越界的阶梯
+                this.ladder_rect(ladder);
+            }
+            if (ladder.alpha < 1) {
+                ladder.alpha += this.add_alpha;
             }
         }
     };

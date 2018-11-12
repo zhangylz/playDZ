@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":26,
+    "selecteID":30,
     "props":{"x":0,"width":720,"var":"gamehome","sceneColor":"#EEE9E9","name":"gamehome","height":1280},
     "nodeParent":-1,
     "label":"View(gamehome)",
@@ -18,14 +18,13 @@
             "props":{"y":230,"width":150,"var":"right_frame","skin":"ui/图标框1.png","right":0,"name":"right_frame","height":450},
             "nodeParent":1,
             "label":"Image(right_frame)",
-            "isOpen":true,
+            "isOpen":false,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":16,
             "child":[
                 {
-                    "x":30,
                     "type":"Image",
                     "props":{"y":170,"x":30,"width":100,"var":"reward","skin":"ui/image_reward.png","right":20,"name":"reward","height":100},
                     "nodeParent":16,
@@ -39,7 +38,6 @@
                         ]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "props":{"y":320,"x":30,"width":100,"var":"tuiqian","skin":"ui/image_tuiqian.png","right":20,"name":"tuiqian","height":100},
                     "nodeParent":16,
@@ -52,19 +50,17 @@
                         ]
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "props":{"y":20,"x":30,"width":100,"var":"my_hb","skin":"ui/image_myhb.png","name":"my_hb","height":100},
                     "nodeParent":16,
                     "label":"Image(my_hb)",
-                    "isOpen":true,
+                    "isOpen":false,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":7,
                     "child":[
                         {
-                            "x":45,
                             "type":"Text",
                             "props":{"y":40,"x":24,"var":"hb_timer","text":"20:00","name":"hb_timer","fontSize":20,"color":"#f8e4e4","bold":true},
                             "nodeParent":7,
@@ -231,28 +227,79 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":850,"skin":"ui/image_Leaderboard.png","right":0},
+            "props":{"y":850,"var":"ranking","skin":"ui/image_Leaderboard.png","right":0,"name":"ranking"},
             "nodeParent":1,
-            "label":"Image",
-            "isDirectory":false,
+            "label":"Image(ranking)",
+            "isOpen":true,
+            "isDirectory":true,
             "isAniNode":true,
-            "hasChild":false,
+            "hasChild":true,
             "compId":24,
             "child":[
-                ]
+                {
+                    "x":30,
+                    "type":"Image",
+                    "props":{"y":41,"x":53,"skin":"ui/image_paihang.png"},
+                    "nodeParent":24,
+                    "label":"Image",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":29,
+                    "child":[
+                        ]
+                },
+                {
+                    "x":30,
+                    "type":"Text",
+                    "props":{"y":122,"x":31,"text":"好友排行","fontSize":30,"font":"Arial","color":"#ffffff","bold":true,"align":"center"},
+                    "nodeParent":24,
+                    "label":"Text",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":30,
+                    "child":[
+                        ]
+                }],
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"Image",
-            "props":{"y":850,"skin":"ui/image_ballSkin.png","left":0},
+            "props":{"y":850,"var":"changeBallSkin","skin":"ui/image_ballSkin.png","name":"changeBallSkin","left":0},
             "nodeParent":1,
-            "label":"Image",
-            "isDirectory":false,
+            "label":"Image(changeBallSkin)",
+            "isOpen":false,
+            "isDirectory":true,
             "isAniNode":true,
-            "hasChild":false,
+            "hasChild":true,
             "compId":25,
             "child":[
-                ]
+                {
+                    "type":"Image",
+                    "props":{"y":42,"x":32,"skin":"ui/image_ball.png","scaleY":1,"scaleX":1},
+                    "nodeParent":25,
+                    "label":"Image",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":28,
+                    "child":[
+                        ]
+                },
+                {
+                    "type":"Text",
+                    "props":{"y":122,"x":19,"text":"更换皮肤","fontSize":30,"font":"Arial","color":"#ffffff","bold":true,"align":"center"},
+                    "nodeParent":25,
+                    "label":"Text",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":31,
+                    "child":[
+                        ]
+                }]
         },
         {
             "x":15,
@@ -260,7 +307,7 @@
             "props":{"y":1100,"x":200,"var":"prompt_box","name":"prompt_box"},
             "nodeParent":1,
             "label":"Box(prompt_box)",
-            "isOpen":null,
+            "isOpen":false,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,

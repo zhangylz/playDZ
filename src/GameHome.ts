@@ -15,13 +15,15 @@ class GameHome extends ui.gameViewUI {
         // 时间线动画
         this.createTimerLine();
         // 监听鼠标点击 
-        this.my_hb.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);     //红包
-        this.reward.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);    //每日奖励
-        this.tuiqian.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);   //推荐
-        this.jieshao.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);   //介绍
-        this.invite.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);    //邀请
-        this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //关闭音乐
-        this.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);           //游戏主页界面
+        this.my_hb.on(Laya.Event.MOUSE_UP, this, this.mouseDowm);     //红包
+        this.reward.on(Laya.Event.MOUSE_UP, this, this.mouseDowm);    //每日奖励
+        this.tuiqian.on(Laya.Event.MOUSE_UP, this, this.mouseDowm);   //推荐
+        this.jieshao.on(Laya.Event.MOUSE_UP, this, this.mouseDowm);   //介绍
+        this.invite.on(Laya.Event.MOUSE_UP, this, this.mouseDowm);    //邀请
+        this.changeBallSkin.on(Laya.Event.MOUSE_UP, this, this.mouseDowm);    //球皮肤事件
+        this.ranking.on(Laya.Event.MOUSE_UP, this, this.mouseDowm);           //排行榜
+        this.music_off.on(Laya.Event.MOUSE_UP, this, this.mouseDowm); //关闭音乐
+        this.on(Laya.Event.MOUSE_UP, this, this.mouseDowm);           //游戏主页界面
     }
     /**
      * 鼠标点击绑定出发的事件
@@ -49,8 +51,9 @@ class GameHome extends ui.gameViewUI {
                 console.log("关闭音乐事件");
                 break;
             default:
-                this.visible = false;
-                console.log("开始游戏");
+                // this.visible = false;
+                console.log(name);
+            // console.log("开始游戏");
         }
 
     }
@@ -59,8 +62,8 @@ class GameHome extends ui.gameViewUI {
      * 时间线的指示动画,左右滑动控制球
      */
     private createTimerLine(): void {
-        this.timerLine.addLabel("rigth", 0).to(this.guide, { x: 470, y: this.boot_prompt.y }, 1500, null, 0)
-            .addLabel("left", 0).to(this.guide, { x: 250, y: this.boot_prompt.y }, 1500, null, 0);
+        this.timerLine.addLabel("rigth", 0).to(this.guide, { x: 250, y: this.boot_prompt.y }, 1500, null, 0)
+            .addLabel("left", 0).to(this.guide, { x: 50, y: this.boot_prompt.y }, 1500, null, 0);
         // 播放滑动动画并循环
         this.timerLine.play(0, true);
     }

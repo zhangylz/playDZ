@@ -96,7 +96,8 @@ class Ladder extends Laya.Sprite {
                 judge = false;
             }
         }
-        console.log(this.random_arr);
+        // 打印寄存的随机数
+        // console.log(this.random_arr);
         return this;
     }
     /**
@@ -172,7 +173,7 @@ class Ladder extends Laya.Sprite {
      * 精灵组件初始化，障碍，白圈，红包，砖石。都初始化
      */
     public spr_rect() {
-        console.log("rect ladder");
+        // console.log("rect ladder");
         let s = this._childs.length;
         if (s > 0) {
             for (let i = 0; i < s; i++) {
@@ -182,11 +183,7 @@ class Ladder extends Laya.Sprite {
         this.random_arr = [];
         // 开始添加障碍
         this.spr_add_ob().spr_add_ov(this.random_arr).spr_add_gift(this.random_arr);
-        // // 添加白圈
-        // this.spr_add_ov(this.random_arr);
-        // // 添加砖石 or 红包
-        // this.spr_add_gift(this.random_arr);
-        console.log("长度： " + this.random_arr.length);
+        // console.log("长度： " + this.random_arr.length);
     }
 
     /**
@@ -195,7 +192,6 @@ class Ladder extends Laya.Sprite {
     public spr_clean() {
         let len = this._childs.length;
         if (len > 0) {
-            console.log(" !@#$%^&*(        " + len);
             for (let i = 0; i < len; i++) {
                 this._childs[0].destroy();
             }

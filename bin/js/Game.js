@@ -5,7 +5,8 @@ var Game = (function () {
     function Game() {
         // 初始化引擎
         Laya.init(720, 1280, Laya.WebGL);
-        // Laya.Stat.show(0, 0);
+        // 性能面板
+        Laya.Stat.show(0, 0);
         Laya.stage.bgColor = "#EEE9E9";
         Laya.stage.scaleMode = "showall";
         // 预加载资源
@@ -21,7 +22,7 @@ var Game = (function () {
         // 添加到舞台
         Laya.stage.addChild(this.ladderArr);
         // 实例化一个球
-        this.ball = new Ball()._childs[0];
+        this.ball = new Ball();
         // 添加到舞台
         Laya.stage.addChild(this.ball);
         // 实例化游戏主界面
@@ -43,21 +44,21 @@ var Game = (function () {
         var sp = new Laya.Sprite();
         Laya.stage.addChild(sp);
         //画直线
-        sp.graphics.drawLine(184.9376022243369, this.fy, 0, this.fy + 390.15345030660546, "#ff0000", 2);
+        sp.graphics.drawLine(184.9376022243369, this.fy, 0, this.fy + 390.15345030660546, "#2F4F4F", 2);
     };
     // 测试对比线2
     Game.prototype.drawSomething2 = function () {
         var sp = new Laya.Sprite();
         Laya.stage.addChild(sp);
         //画直线
-        sp.graphics.drawLine(184.9376022243369 + 350.12479555132626, this.fy, 720, this.fy + 390.15345030660546, "#ff0000", 2);
+        sp.graphics.drawLine(184.9376022243369 + 350.12479555132626, this.fy, 720, this.fy + 390.15345030660546, "#2F4F4F", 2);
     };
     // 测试对比线3
     Game.prototype.drawSomething3 = function () {
         var sp = new Laya.Sprite();
         Laya.stage.addChild(sp);
         //画直线
-        sp.graphics.drawLine(Laya.stage.width / 2, this.fy, Laya.stage.width / 2, this.fy + 390.15345030660546, "#ff0000", 2);
+        sp.graphics.drawLine(Laya.stage.width / 2, this.fy, Laya.stage.width / 2, this.fy + 390.15345030660546, "#2F4F4F", 2);
     };
     /**
      * 开始游戏
@@ -65,7 +66,13 @@ var Game = (function () {
     Game.prototype.startGame = function (e) {
         if (this.gameHome.visible === false) {
             console.log("start Game");
+            Laya.timer.frameLoop(1, this, this.startDowm);
         }
+    };
+    /**开始下降 */
+    Game.prototype.startDowm = function () {
+        this.ladderArr.startDowm();
+        this.ball.ballUp(4);
     };
     return Game;
 }());
