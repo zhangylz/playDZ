@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":2,
-    "selecteID":7,
+    "selecteID":4,
     "props":{"sceneWidth":720,"sceneHeight":1280,"sceneColor":"#000000"},
     "nodeParent":-1,
     "label":"View",
@@ -15,7 +15,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":400,"x":92,"skin":"红包/窗.png"},
+            "props":{"y":400,"x":92,"skin":"HBao/window.png"},
             "nodeParent":1,
             "label":"Image",
             "isOpen":true,
@@ -27,7 +27,7 @@
                 {
                     "x":30,
                     "type":"Image",
-                    "props":{"y":45,"x":436,"width":40,"var":"shutDown","skin":"红包/关闭.png","name":"shutDown","height":40},
+                    "props":{"y":45,"x":436,"width":40,"var":"shutDown","skin":"HBao/off.png","name":"shutDown","height":40},
                     "nodeParent":2,
                     "label":"Image(shutDown)",
                     "isDirectory":false,
@@ -40,7 +40,7 @@
                 {
                     "x":30,
                     "type":"Image",
-                    "props":{"y":320,"x":92,"var":"keepOn","skin":"红包/按钮.png","name":"keepOn"},
+                    "props":{"y":320,"x":92,"var":"keepOn","skin":"HBao/buttom.png","name":"keepOn"},
                     "nodeParent":2,
                     "label":"Image(keepOn)",
                     "isOpen":false,

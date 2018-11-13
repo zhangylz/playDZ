@@ -3,14 +3,18 @@
  */
 var Game = (function () {
     function Game() {
+        /** 开始的阶梯编号 */
+        this.ladderN = 4;
+        // 适配微信小游戏
+        Laya.MiniAdpter.init();
         // 初始化引擎
-        Laya.init(720, 1280, Laya.WebGL);
+        Laya.init(640, 1136, Laya.WebGL);
         // 性能面板
-        Laya.Stat.show(0, 0);
+        // Laya.Stat.show(0, 0);
         Laya.stage.bgColor = "#EEE9E9";
         Laya.stage.scaleMode = "showall";
         // 预加载资源
-        Laya.loader.load(["res/atlas/ladder.atlas", "res/test/image_ladder.png", "res/atlas/ui.atlas"], Laya.Handler.create(this, this.onLoad));
+        Laya.loader.load(["res/atlas/ladder.atlas", "res/test/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas"], Laya.Handler.create(this, this.onLoad));
     }
     /** 加载回调 */
     Game.prototype.onLoad = function () {
@@ -29,53 +33,41 @@ var Game = (function () {
         this.gameHome = new GameHome();
         // 添加游戏主界面到舞台
         Laya.stage.addChild(this.gameHome);
+        // 实例化游戏中的界面
+        this.inGameView = new inGameView();
+        this.inGameView.visible = false; //先隐藏起来
+        Laya.stage.addChild(this.inGameView);
         // 添加三条测试对比线
         this.fy = this.ladderArr.ladderArr_heigth;
-        // 添加测试对比线
-        this.drawSomething1();
-        this.drawSomething2();
-        this.drawSomething3();
         // 监听鼠标活动
-        this.onMouse = new OnMouse(Laya.stage, this.ball);
+        this.spriteCollision = new spriteCollision();
         Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.startGame);
-    };
-    // 测试对比线1
-    Game.prototype.drawSomething1 = function () {
-        var sp = new Laya.Sprite();
-        Laya.stage.addChild(sp);
-        //画直线
-        sp.graphics.drawLine(184.9376022243369, this.fy, 0, this.fy + 390.15345030660546, "#2F4F4F", 2);
-    };
-    // 测试对比线2
-    Game.prototype.drawSomething2 = function () {
-        var sp = new Laya.Sprite();
-        Laya.stage.addChild(sp);
-        //画直线
-        sp.graphics.drawLine(184.9376022243369 + 350.12479555132626, this.fy, 720, this.fy + 390.15345030660546, "#2F4F4F", 2);
-    };
-    // 测试对比线3
-    Game.prototype.drawSomething3 = function () {
-        var sp = new Laya.Sprite();
-        Laya.stage.addChild(sp);
-        //画直线
-        sp.graphics.drawLine(Laya.stage.width / 2, this.fy, Laya.stage.width / 2, this.fy + 390.15345030660546, "#2F4F4F", 2);
     };
     /**
      * 开始游戏
      */
     Game.prototype.startGame = function (e) {
-        if (this.gameHome.visible === false) {
-            console.log("start Game");
-            Laya.timer.frameLoop(1, this, this.startDowm);
-        }
+        this.inGameView.visible = true;
+        this.gameHome.visible === false;
+        console.log("start Game");
+        Laya.timer.frameLoop(1, this, this.startDowm);
+        Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
     };
     /**开始下降 */
     Game.prototype.startDowm = function () {
         this.ladderArr.startDowm();
-        this.ball.ballUp(4);
+        this.ladderN = this.ball.ballUp(4, this.inGameView.fraction);
+        var ladder = this.ladderArr._childs[this.ladderN];
+        // 碰撞测试
+        this.spriteCollision.init(ladder);
+        this.spriteCollision.sprCenterPoint(this.ball);
+    };
+    //监听鼠标移动
+    Game.prototype.mouseMove = function () {
+        this.ball.x = Laya.stage.mouseX;
     };
     return Game;
 }());
 // 开始游戏
-// new Game(); 
+new Game();
 //# sourceMappingURL=Game.js.map

@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":1,
-    "selecteID":1,
+    "selectedBox":2,
+    "selecteID":8,
     "props":{"sceneWidth":720,"sceneHeight":1280,"sceneColor":"#f4d9d9"},
     "nodeParent":-1,
     "label":"View",
@@ -15,18 +15,19 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":430,"x":50,"skin":"我的红包/我的红包.png"},
+            "props":{"y":430,"x":50,"skin":"myHbao/myHBao.png"},
             "nodeParent":1,
             "label":"Image",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":2,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
-                    "props":{"y":340,"x":485,"var":"withdraw","skin":"我的红包/按钮.png","name":"withdraw"},
+                    "props":{"y":340,"x":485,"var":"withdraw","skin":"myHbao/button.png","name":"withdraw"},
                     "nodeParent":2,
                     "label":"Image(withdraw)",
                     "isOpen":false,
@@ -49,6 +50,7 @@
                         }]
                 },
                 {
+                    "x":30,
                     "type":"Text",
                     "props":{"y":313,"x":20,"var":"balance","valign":"middle","text":"余额: 9.99 (元) ","name":"balance","fontSize":40,"font":"SimHei","color":"#de1511","bold":true,"align":"center"},
                     "nodeParent":2,
@@ -61,6 +63,7 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Text",
                     "props":{"y":371,"x":20,"var":"prompt","text":"温馨提示：红包满20元可提现","name":"prompt","fontSize":25,"font":"Helvetica","color":"#ccc1c1","bold":true},
                     "nodeParent":2,
@@ -73,8 +76,9 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Image",
-                    "props":{"y":5,"x":580,"var":"closed","skin":"我的红包/关闭.png","name":"closed"},
+                    "props":{"y":5,"x":580,"var":"closed","skin":"myHbao/off.png","name":"closed"},
                     "nodeParent":2,
                     "label":"Image(closed)",
                     "isDirectory":false,

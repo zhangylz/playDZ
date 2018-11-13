@@ -77,15 +77,24 @@ var Ball = (function (_super) {
     /**
      * 球跳动,下落的时候改变检测的阶梯编号
      * @param ladderN 传入阶梯的编号，初始是4
+     * @param fraction 传入的
      */
-    Ball.prototype.ballUp = function (ladderN) {
+    Ball.prototype.ballUp = function (ladderN, fraction) {
+        /** 阶梯编号 */
         var ladderNumber = ladderN;
+        /** 分数 */
+        var frac = Number(fraction.text);
+        // 字体居中
+        fraction.x = (720 - fraction.width) / 2;
+        console.log("fraction:\t" + frac + "\t$$$$ width:\t" + fraction.width + "\t$$$$ x:\t" + fraction.x);
         // Y往上跳
         this.y -= this.upSpeed;
         this.upSpeed -= this.gravity;
         if (this.initialPoint.y - this.y < 1e-5) {
+            // 开始弹回去
             this.y = this.initialPoint.y;
             this.upSpeed = 20;
+            frac += 1;
         }
         if (this.upSpeed < 0 && this.upSpeed > -1) {
             ladderNumber--;
@@ -95,6 +104,8 @@ var Ball = (function (_super) {
             }
             console.log("开始下落\t$$$$$$\t" + ladderN);
         }
+        // 更新分数
+        fraction.text = String(frac);
         //返回处理后编号
         return ladderNumber;
     };

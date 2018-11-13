@@ -14,15 +14,21 @@ class Game {
     private gameHome: GameHome;
     /** 阶梯群 */
     private ladderArr: LadderArr;
+    /** 游戏中的界面 */
+    private inGameView: inGameView;
+    /** 碰撞测试 */
+    private spriteCollision: spriteCollision;
     constructor() {
+        // 适配微信小游戏
+        Laya.MiniAdpter.init();
         // 初始化引擎
-        Laya.init(720, 1280, Laya.WebGL);
+        Laya.init(640, 1136, Laya.WebGL);
         // 性能面板
-        Laya.Stat.show(0, 0);
+        // Laya.Stat.show(0, 0);
         Laya.stage.bgColor = "#EEE9E9";
         Laya.stage.scaleMode = "showall";
         // 预加载资源
-        Laya.loader.load(["res/atlas/ladder.atlas", "res/test/image_ladder.png", "res/atlas/ui.atlas"], Laya.Handler.create(this, this.onLoad));
+        Laya.loader.load(["res/atlas/ladder.atlas", "res/test/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas"], Laya.Handler.create(this, this.onLoad));
     }
 
     /** 加载回调 */
@@ -42,55 +48,45 @@ class Game {
         this.gameHome = new GameHome();
         // 添加游戏主界面到舞台
         Laya.stage.addChild(this.gameHome);
+        // 实例化游戏中的界面
+        this.inGameView = new inGameView();
+        this.inGameView.visible = false;    //先隐藏起来
+        Laya.stage.addChild(this.inGameView);
         // 添加三条测试对比线
         this.fy = this.ladderArr.ladderArr_heigth;
-        // 添加测试对比线
-        this.drawSomething1();
-        this.drawSomething2();
-        this.drawSomething3();
         // 监听鼠标活动
-        this.onMouse = new OnMouse(Laya.stage, this.ball);
+        this.spriteCollision = new spriteCollision();
         Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.startGame);
-    }
-    // 测试对比线1
-    private drawSomething1(): void {
-        let sp = new Laya.Sprite();
-        Laya.stage.addChild(sp);
-        //画直线
-        sp.graphics.drawLine(184.9376022243369, this.fy, 0, this.fy + 390.15345030660546, "#2F4F4F", 2);
-    }
-    // 测试对比线2
-    private drawSomething2(): void {
-        let sp = new Laya.Sprite();
-        Laya.stage.addChild(sp);
-        //画直线
-        sp.graphics.drawLine(184.9376022243369 + 350.12479555132626, this.fy, 720, this.fy + 390.15345030660546, "#2F4F4F", 2);
-    }
-    // 测试对比线3
-    private drawSomething3(): void {
-        let sp = new Laya.Sprite();
-        Laya.stage.addChild(sp);
-        //画直线
-        sp.graphics.drawLine(Laya.stage.width / 2, this.fy, Laya.stage.width / 2, this.fy + 390.15345030660546, "#2F4F4F", 2);
     }
 
     /**
      * 开始游戏
      */
     private startGame(e: Laya.Event): void {
-        if (this.gameHome.visible === false) {
-            console.log("start Game");
-            Laya.timer.frameLoop(1, this, this.startDowm);
-        }
+        this.inGameView.visible = true;
+        this.gameHome.visible === false;
+        console.log("start Game");
+        Laya.timer.frameLoop(1, this, this.startDowm);
+        Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove)
     }
+    /** 开始的阶梯编号 */
+    private ladderN: number = 4;
     /**开始下降 */
     private startDowm(): void {
         this.ladderArr.startDowm();
-        this.ball.ballUp(4);
+        this.ladderN = this.ball.ballUp(4, this.inGameView.fraction);
+        let ladder: Ladder = this.ladderArr._childs[this.ladderN];
+        // 碰撞测试
+        this.spriteCollision.init(ladder);
+        this.spriteCollision.sprCenterPoint(this.ball);
     }
 
+    //监听鼠标移动
+    private mouseMove(): void {
+        this.ball.x = Laya.stage.mouseX;
+    }
 
 }
 
 // 开始游戏
-// new Game();
+new Game();

@@ -53600,12 +53600,11 @@ if (typeof define === 'function' && define.amd){
  */
 var spriteCollision = (function () {
     function spriteCollision() {
-        // 坐标数组
-        this.arrXY = new Array();
-        // 是否碰撞
+        /** 坐标数组 */
+        this.arrXY = new Array(); //sprite全局坐标数组
+        /**是否碰撞 */
         this.resultCollision = false;
     }
-    ; //sprite全局坐标数组
     /**
      * @param Ladder 传入精灵阶梯
      * @param ballSprite 传入精灵球
@@ -53630,14 +53629,14 @@ var spriteCollision = (function () {
             var obPostion = new Laya.Point();
             x = this.sprArr[i].x;
             y = this.sprArr[i].y;
-            console.log(" X: " + x + " Y: " + y);
+            // console.log(" X: " + x + " Y: " + y)
             obPostion.x = x;
             obPostion.y = y;
             arrPostion[i] = obPostion;
         }
         // console.log("坐标数组长度" + arrPostion.length)
         // 返回精灵数组
-        console.log(arrPostion);
+        // console.log(arrPostion);
         // 返回坐标组
         return arrPostion;
     };
@@ -53646,18 +53645,17 @@ var spriteCollision = (function () {
      * @param sprPointArr
      */
     spriteCollision.prototype.stageXY = function (sprPointArr) {
-        console.log(sprPointArr[0]);
+        // console.log(sprPointArr[0]);
         var arr_length = sprPointArr.length; //获取数组的长度 以便处理
         var sprPoint = new Laya.Point(); //实例一个坐标以便赋值
         for (var i = 0; i < arr_length; i++) {
             sprPoint.x = sprPointArr[i].x;
             sprPoint.y = sprPointArr[i].y;
-            console.log("没转换坐标前： " + sprPoint);
+            // console.log("没转换坐标前： " + sprPoint);
             this.Ladder.localToGlobal(sprPoint);
             this.arrXY[i] = [sprPoint.x, sprPoint.y];
-            console.log("转换坐标后： " + sprPoint);
         }
-        console.log(this.arrXY);
+        // console.log(this.arrXY);
     };
     /**
      * 判断是否与球碰撞
@@ -53672,29 +53670,45 @@ var spriteCollision = (function () {
                 &&
                     Math.abs(y1 - y2) < h1 / 2 + 64.5 / 2 //this.arrXY[i].y是坐标组的子坐标组的y坐标
             ) {
-                this.resultCollision = true;
                 // console.log("撞上了第" + (i + 1) + "个障碍");
+                // 装上后就删除坐标组，不再检测坐标
                 this.testFunction(this.sprArr[i]);
+                this.arrXY.splice(i, 1);
             }
         }
     };
     spriteCollision.prototype.testFunction = function (spr) {
-        var name = spr.name;
+        var name;
+        if (spr != undefined) {
+            name = spr.name;
+            if (name != "spr_ob") {
+                spr.destroy();
+            }
+        }
         // console.log("撞上了" + spr.name + " $$$$$");
         switch (name) {
             case "spr_ov":
                 console.log("调用白圈");
-                break;
+                return "白圈";
             case "spr_ob":
                 console.log("调用障碍");
-                break;
+                return "障碍";
             case "spr_do":
                 console.log("调用砖石");
-                break;
+                return "砖石";
             case "spr_hb":
                 console.log("调用红包");
+                return "红包";
+            case undefined:
+                console.log("不知道为什么undefined!!!!!!!!");
                 break;
+            default:
+                console.log("name undefined!");
         }
+    };
+    /**撞到障碍后调用的方法 */
+    spriteCollision.prototype.obTest = function () {
+        this.resultCollision = true;
     };
     return spriteCollision;
 }());
@@ -53705,7 +53719,7 @@ var spriteCollision = (function () {
 var OnMouse = (function () {
     /**
      * @param ball 传入的球
-     * @param stage 父级舞台
+     * @param stage Laya舞台
      */
     function OnMouse(stage, ball) {
         // 寄存到全局
@@ -53717,21 +53731,21 @@ var OnMouse = (function () {
      * 初始化监听鼠标移动
      */
     OnMouse.prototype.init = function () {
-        Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);
-        Laya.stage.on(Laya.Event.MOUSE_UP, this, this.mouseUp);
+        this.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);
+        this.stage.on(Laya.Event.MOUSE_UP, this, this.mouseUp);
     };
     /**
      * 鼠标点击动作
      */
     OnMouse.prototype.mouseDowm = function () {
-        this.mouseX = Laya.stage.mouseX;
-        Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
+        this.mouseX = this.stage.mouseX;
+        this.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
     };
     /**
     * 监听鼠标放开
     */
     OnMouse.prototype.mouseUp = function () {
-        Laya.stage.off(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
+        this.stage.off(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
     };
     /**
      * 鼠标移动动作
@@ -53756,101 +53770,175 @@ var OnMouse = (function () {
  */
 var Game = (function () {
     function Game() {
+        /** 开始的阶梯编号 */
+        this.ladderN = 4;
+        // 适配微信小游戏
+        Laya.MiniAdpter.init();
         // 初始化引擎
-        Laya.init(720, 1280, Laya.WebGL);
+        Laya.init(640, 1136, Laya.WebGL);
+        // 性能面板
         Laya.Stat.show(0, 0);
-        Laya.stage.bgColor = "#FFBBFF";
+        Laya.stage.bgColor = "#EEE9E9";
         Laya.stage.scaleMode = "showall";
         // 预加载资源
-        Laya.loader.load(["res/atlas/ladder.atlas", "res/test/image_ladder.png"], Laya.Handler.create(this, this.onLoad));
+        Laya.loader.load(["res/atlas/ladder.atlas", "res/test/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas"], Laya.Handler.create(this, this.onLoad));
     }
+    /** 加载回调 */
     Game.prototype.onLoad = function () {
-        // 实例化一个阶梯
-        var ladderArr = new LadderArr(Laya.stage.height);
+        Laya.stage.name = "Stage";
+        // 实例化一个阶梯群
+        this.ladderArr = new LadderArr(Laya.stage.height);
         // 设置阶梯的坐标
-        ladderArr.pos(0, ladderArr.ladderArr_heigth);
+        this.ladderArr.pos(0, this.ladderArr.ladderArr_heigth);
         // 添加到舞台
-        Laya.stage.addChild(ladderArr);
-        //阶梯循环下落
-        // ladderArr.ladderLoopDowm();
+        Laya.stage.addChild(this.ladderArr);
         // 实例化一个球
-        this.ball = new Ball()._childs[0];
+        this.ball = new Ball();
         // 添加到舞台
         Laya.stage.addChild(this.ball);
-        // 添加两条测试对比线
-        this.fy = ladderArr.ladderArr_heigth;
-        this.drawSomething1();
-        this.drawSomething2();
-        this.drawSomething3();
+        // 实例化游戏主界面
+        this.gameHome = new GameHome();
+        // 添加游戏主界面到舞台
+        Laya.stage.addChild(this.gameHome);
+        // 实例化游戏中的界面
+        this.inGameView = new inGameView();
+        this.inGameView.visible = false; //先隐藏起来
+        Laya.stage.addChild(this.inGameView);
+        // 添加三条测试对比线
+        this.fy = this.ladderArr.ladderArr_heigth;
         // 监听鼠标活动
-        var sts = new OnMouse(Laya.stage, this.ball);
-        sts.init();
-        // 检测碰撞
-        this.spriteConllision = new spriteCollision();
-        this.spriteConllision.init(ladderArr._childs[4]);
+        this.spriteCollision = new spriteCollision();
+        Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.startGame);
     };
-    // 测试对比线1
-    Game.prototype.drawSomething1 = function () {
-        var sp = new Laya.Sprite();
-        Laya.stage.addChild(sp);
-        //画直线
-        sp.graphics.drawLine(184.9376022243369, this.fy, 0, this.fy + 390.15345030660546, "#ff0000", 2);
+    /**
+     * 开始游戏
+     */
+    Game.prototype.startGame = function (e) {
+        this.inGameView.visible = true;
+        this.gameHome.visible === false;
+        console.log("start Game");
+        Laya.timer.frameLoop(1, this, this.startDowm);
+        Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
     };
-    // 测试对比线2
-    Game.prototype.drawSomething2 = function () {
-        var sp = new Laya.Sprite();
-        Laya.stage.addChild(sp);
-        //画直线
-        sp.graphics.drawLine(184.9376022243369 + 350.12479555132626, this.fy, 720, this.fy + 390.15345030660546, "#ff0000", 2);
+    /**开始下降 */
+    Game.prototype.startDowm = function () {
+        this.ladderArr.startDowm();
+        this.ladderN = this.ball.ballUp(4, this.inGameView.fraction);
+        var ladder = this.ladderArr._childs[this.ladderN];
+        // 碰撞测试
+        this.spriteCollision.init(ladder);
+        this.spriteCollision.sprCenterPoint(this.ball);
     };
-    // 测试对比线3
-    Game.prototype.drawSomething3 = function () {
-        var sp = new Laya.Sprite();
-        Laya.stage.addChild(sp);
-        //画直线
-        sp.graphics.drawLine(Laya.stage.width / 2, this.fy, Laya.stage.width / 2, this.fy + 390.15345030660546, "#ff0000", 2);
+    //监听鼠标移动
+    Game.prototype.mouseMove = function () {
+        this.ball.x = Laya.stage.mouseX;
     };
     return Game;
 }());
 // 开始游戏
-// new Game(); 
+new Game();
 //# sourceMappingURL=Game.js.map
+/** 演示2 */
+var Demo2 = (function () {
+    function Demo2() {
+        Laya.init(720, 1280, Laya.WebGL);
+        Laya.stage.bgColor = "#EEE9E9";
+        Laya.stage.scaleMode = "showall";
+        Laya.loader.load(["res/atlas/ladder.atlas", "res/atlas/inGame.atlas"], Laya.Handler.create(this, this.onLoad));
+    }
+    /** 初始化 */
+    Demo2.prototype.onLoad = function () {
+        this.inGameView = new inGameView();
+        this.ladderArr = new LadderArr(Laya.stage.height);
+        this.ball = new Ball();
+        this.ladderArr.pos(0, this.ladderArr.ladderArr_heigth);
+        Laya.stage.addChild(this.inGameView);
+        Laya.stage.addChild(this.ladderArr);
+        Laya.stage.addChild(this.ball);
+        this.inGameView.init();
+        // 开始循环下降
+        Laya.timer.frameLoop(1, this, this.dowm);
+        Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
+        Laya.stage.on(Laya.Event.MOUSE_UP, this, function () {
+            console.log("鼠标抬起");
+            Laya.stage.off(Laya.Event.MOUSE_MOVE, this, function () { console.log("取消监听鼠标移动"); });
+        });
+    };
+    /** 下落 */
+    Demo2.prototype.dowm = function (e) {
+        this.ladderArr.startDowm();
+        this.ball.ballUp(4, this.inGameView.fraction);
+    };
+    /** 鼠标按下 */
+    Demo2.prototype.mouseDown = function (e) {
+        console.log("按下");
+        this.VX = Laya.stage.mouseX;
+        Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
+    };
+    /** 鼠标移动 */
+    Demo2.prototype.mouseMove = function (e) {
+        console.log("鼠标移动");
+    };
+    return Demo2;
+}());
+// new Demo2(); 
+//# sourceMappingURL=Demo2.js.map
 /**
  * 演示demo
  */
 var Demo = (function () {
     // 构造器
     function Demo() {
+        this.ladderN = 4;
+        Laya.MiniAdpter.init();
         Laya.init(720, 1280, Laya.WebGL);
-        Laya.stage.bgColor = "FFBBFF";
+        Laya.stage.bgColor = "EEE9E9";
         Laya.stage.scaleMode = "showall";
+        // Laya.Stat.show();
         // 预加载资源
-        Laya.loader.load(["res/atlas/ui.atlas"], Laya.Handler.create(this, this.onLoad));
+        Laya.loader.load(["res/atlas/ladder.atlas", "res/test/image_ladder.png", "res/atlas/inGame.atlas"], Laya.Handler.create(this, this.onLoad));
     }
-    Demo.prototype.onLoad = function () {
-        this.GameUi = new GameHome();
-        Laya.stage.addChild(this.GameUi);
-        // Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);
-        var hb = this.GameUi.getChildByName("my_hb");
-        hb.on(Laya.Event.MOUSE_DOWN, this, this.hongbao);
+    // 加载完成
+    Demo.prototype.onLoad = function (set) {
+        this.ball = new Ball();
+        this.inGameView = new inGameView();
+        this.ladderArr = new LadderArr(Laya.stage.height);
+        // 设置阶梯的坐标
+        this.ladderArr.pos(0, this.ladderArr.ladderArr_heigth);
+        // 添加阶梯群
+        Laya.stage.addChild(this.ladderArr);
+        // 添加球
+        Laya.stage.addChild(this.ball);
+        // 添加ingameview
+        Laya.stage.addChild(this.inGameView);
+        Laya.timer.frameLoop(1, this, this.testDown);
+        // 开始检测碰撞
+        this.spriteCollision = new spriteCollision();
+        this.mouseMove = new OnMouse(Laya.stage, this.ball);
+        Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.MouseDowm);
     };
-    Demo.prototype.mouseDowm = function () {
-        this.GameUi.visible = false;
+    /** 测试碰撞 */
+    Demo.prototype.testDown = function (e) {
+        this.ladderArr.startDowm();
+        this.ladderN = this.ball.ballUp(this.ladderN, this.inGameView.fraction);
+        var ladder = this.ladderArr._childs[this.ladderN];
+        this.spriteCollision.init(ladder);
+        this.spriteCollision.sprCenterPoint(this.ball);
     };
-    Demo.prototype.hongbao = function () {
-        console.log(" $$$$$$$$$$$$$$$$$$$$$$$");
+    Demo.prototype.MouseDowm = function () {
+        this.ball.x = Laya.stage.mouseX;
+        // console.log("点击了 &&&&   " + Laya.stage.mouseX + "    ballx" + this.ball.x);
     };
     return Demo;
 }());
 // 演示Demo
-new Demo();
+// new Demo(); 
 //# sourceMappingURL=Demo.js.map
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var SoundManager = Laya.SoundManager;
 /**
 * 球精灵
 */
@@ -53858,62 +53946,44 @@ var Ball = (function (_super) {
     __extends(Ball, _super);
     function Ball() {
         var _this = _super.call(this) || this;
-        // 球宽度
+        /** 球宽度 */
         _this.ballWidth = 50;
-        // 球高度
+        /** 球高度 */
         _this.ballHeigth = _this.ballWidth;
-        // 求的初始坐标
+        /** 球的初始坐标 */
         _this.initialPoint = new Laya.Point(335, 750);
-        // 向上的速度
-        _this.upSpeed = 200 / 15;
-        // 阴影缩放
-        _this.bigS = 0.5 / 15;
-        // 重力加速度    
-        _this.gravity = 10 / 7;
-        _this.test = 0;
+        /** 向上的速度 */
+        _this.upSpeed = 20;
+        /**重力加速度 */
+        _this.gravity = 40 / 29;
         // 球初始化
         _this.init();
         return _this;
     }
-    /**
-     * 球初始化
-     */
+    /** 球初始化 */
     Ball.prototype.init = function () {
-        // 在对象池创建一个球
-        this.ball = Laya.Pool.getItemByClass("ball", Laya.Sprite);
-        // 在对象池创建一个球阴影
-        this.ballShadow = Laya.Pool.getItemByClass("ballShadow", Laya.Sprite);
-        // 给容器命名
-        this.name = "ballBox";
         // 添加球
         this.ballAdd();
-        // 添加球影子
-        this.ballShadowAdd();
-        // 循环下落
-        Laya.timer.frameLoop(1, this, this.ballUp);
+        this.testFilter();
     };
-    /**
-     * 添加球精灵
-     */
+    /** 添加球精灵 */
     Ball.prototype.ballAdd = function () {
         //加载图片
-        this.ball.loadImage("ladder/image_ball_red.png", 0, 0, this.ballWidth, this.ballHeigth);
+        this.loadImage("ladder/image_ball_red.png", 0, 0, this.ballWidth, this.ballHeigth);
         // 球精灵的高度
-        this.ball.height = this.ballHeigth;
+        this.height = this.ballHeigth;
         // 球精灵的宽度
-        this.ball.width = this.ballWidth;
+        this.width = this.ballWidth;
         // 指定是否自动计算宽高数据
-        this.ball.autoSize = true;
+        this.autoSize = true;
         // 球的边界
         var ballBounds = new Laya.Rectangle(0, 0, this.ballWidth, this.ballHeigth);
         // 设置对象在自身坐标系下的边界范围
-        this.ball.setBounds(ballBounds);
+        this.setBounds(ballBounds);
         // 初始坐标
-        this.ball.pos(this.initialPoint.x, this.initialPoint.y);
+        this.pos(this.initialPoint.x, this.initialPoint.y);
         // 球的名字
-        this.ball.name = "ball";
-        //添加到Box
-        this.addChild(this.ball);
+        this.name = "ball";
     };
     /**
      * 添加球阴影精灵
@@ -53941,71 +54011,53 @@ var Ball = (function (_super) {
         this.addChild(this.ballShadow);
     };
     /**
-     * 球跳动
+     * 球跳动,下落的时候改变检测的阶梯编号
+     * @param ladderN 传入阶梯的编号，初始是4
+     * @param fraction 传入的
      */
-    Ball.prototype.ballUp = function () {
-        // 循环次数
-        this.test++;
-        // 球
-        var ball = this.ball;
-        // 阴影
-        var ballShadow = this.ballShadow;
-        // 重力加速
-        // this.upSpeed += this.gravity;
-        if (this.test % 15 == 0) {
-            console.log(750 - ball.y + " &&&&&&&  " + this.test);
+    Ball.prototype.ballUp = function (ladderN, fraction) {
+        /** 阶梯编号 */
+        var ladderNumber = ladderN;
+        /** 分数 */
+        var frac = Number(fraction.text);
+        // 字体居中
+        fraction.x = (720 - fraction.width) / 2;
+        console.log("fraction:\t" + frac + "\t$$$$ width:\t" + fraction.width + "\t$$$$ x:\t" + fraction.x);
+        // Y往上跳
+        this.y -= this.upSpeed;
+        this.upSpeed -= this.gravity;
+        if (this.initialPoint.y - this.y < 1e-5) {
+            // 开始弹回去
+            this.y = this.initialPoint.y;
+            this.upSpeed = 20;
+            frac += 1;
         }
-        if (ball.y >= 750) {
-            this.upSpeed *= -1;
+        if (this.upSpeed < 0 && this.upSpeed > -1) {
+            ladderNumber--;
+            if (ladderNumber < 0) {
+                ladderNumber = 6;
+                console.log("阶梯编号初始化\t%%%%%%%%%%%%%%%%");
+            }
+            console.log("开始下落\t$$$$$$\t" + ladderN);
         }
-        else if (ball.y <= 550) {
-            this.upSpeed *= -1;
-        }
-        ball.y += this.upSpeed;
+        // 更新分数
+        fraction.text = String(frac);
+        //返回处理后编号
+        return ladderNumber;
+    };
+    /** 球初始化 */
+    Ball.prototype.ballRect = function () {
+        this.pos(this.initialPoint.x, this.initialPoint.y);
+        return this;
+    };
+    /** 测试滤镜 */
+    Ball.prototype.testFilter = function () {
+        var greenFilter = new Laya.GlowFilter("#2F4F4F", 5, 0, 0);
+        this.filters = [greenFilter];
     };
     return Ball;
-}(Laya.Box));
+}(Laya.Sprite));
 //# sourceMappingURL=Ball.js.map
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var View = laya.ui.View;
-var Dialog = laya.ui.Dialog;
-var ui;
-(function (ui) {
-    var gameViewUI = (function (_super) {
-        __extends(gameViewUI, _super);
-        function gameViewUI() {
-            return _super.call(this) || this;
-        }
-        gameViewUI.prototype.createChildren = function () {
-            _super.prototype.createChildren.call(this);
-            this.createView(ui.gameViewUI.uiView);
-        };
-        return gameViewUI;
-    }(View));
-    gameViewUI.uiView = { "type": "View", "props": { "x": 0, "width": 720, "height": 1280 }, "child": [{ "type": "Image", "props": { "y": 20, "x": 450, "var": "add_xcx", "skin": "ui/image_addxcx.png", "name": "add_xcx" } }, { "type": "Image", "props": { "y": 1109, "x": 216, "var": "boot_prompt", "skin": "ui/image_boot_prompt.png", "name": "boot_prompt" } }, { "type": "Image", "props": { "y": 50, "x": 100, "width": 50, "var": "diamond", "skin": "ui/image_do.png", "name": "diamond", "height": 50 } }, { "type": "Image", "props": { "y": 1109, "x": 245, "width": 49, "var": "guide", "skin": "ui/image_guide.png", "name": "guide", "height": 89, "alpha": 0.8 } }, { "type": "Image", "props": { "y": 400, "width": 100, "var": "reward", "skin": "ui/image_reward.png", "right": 20, "name": "reward", "height": 100 } }, { "type": "Image", "props": { "y": 550, "width": 100, "var": "tuiqian", "skin": "ui/image_tuiqian.png", "right": 20, "name": "tuiqian", "height": 100 } }, { "type": "Image", "props": { "y": 250, "width": 100, "var": "music_off", "skin": "ui/music_off.png", "name": "music_off", "left": 20, "height": 100 } }, { "type": "Image", "props": { "y": 517, "x": 143, "width": 460, "var": "logo", "skin": "ui/image_logo.png", "name": "logo", "height": 205 } }, { "type": "Image", "props": { "y": 400, "width": 100, "var": "invite", "skin": "ui/image_invite.png", "name": "invite", "left": 20, "height": 100 } }, { "type": "Image", "props": { "y": 350, "x": 225, "width": 80, "var": "crown", "skin": "ui/image_crown.png", "name": "crown", "height": 80 } }, { "type": "Image", "props": { "y": 550, "width": 100, "var": "jieshao", "skin": "ui/image_jieshao.png", "name": "jieshao", "left": 20, "height": 100 } }, { "type": "Image", "props": { "y": 250, "x": 600, "width": 100, "var": "my_hb", "skin": "ui/image_myhb.png", "name": "my_hb", "height": 100 } }] };
-    ui.gameViewUI = gameViewUI;
-})(ui || (ui = {}));
-//# sourceMappingURL=layaUI.max.all.js.map
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-/**
- * 游戏主界面
- */
-var GameHome = (function (_super) {
-    __extends(GameHome, _super);
-    function GameHome() {
-        return _super.call(this) || this;
-    }
-    return GameHome;
-}(ui.gameViewUI));
-//# sourceMappingURL=GameHome.js.map
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -54080,6 +54132,8 @@ var Ladder = (function (_super) {
                 this.addChild(spr_ob);
             }
         }
+        // 返回阶梯
+        return this;
     };
     /**
      * 添加白圈精灵
@@ -54106,7 +54160,9 @@ var Ladder = (function (_super) {
                 judge = false;
             }
         }
-        console.log(this.random_arr);
+        // 打印寄存的随机数
+        // console.log(this.random_arr);
+        return this;
     };
     /**
      * 添加惊喜  砖石 or 红包
@@ -54168,6 +54224,7 @@ var Ladder = (function (_super) {
                 }
             }
         }
+        return this;
     };
     /**
      * 精灵左右滑动
@@ -54178,21 +54235,29 @@ var Ladder = (function (_super) {
      * 精灵组件初始化，障碍，白圈，红包，砖石。都初始化
      */
     Ladder.prototype.spr_rect = function () {
-        console.log("rect ladder");
+        // console.log("rect ladder");
         var s = this._childs.length;
         if (s > 0) {
             for (var i = 0; i < s; i++) {
                 this._childs[0].destroy();
             }
-            this.random_arr = [];
-            // 开始添加障碍
-            this.spr_add_ob();
-            // 添加白圈
-            this.spr_add_ov(this.random_arr);
-            // 添加砖石 or 红包
-            this.spr_add_gift(this.random_arr);
-            console.log("长度： " + this.random_arr.length);
         }
+        this.random_arr = [];
+        // 开始添加障碍
+        this.spr_add_ob().spr_add_ov(this.random_arr).spr_add_gift(this.random_arr);
+        // console.log("长度： " + this.random_arr.length);
+    };
+    /**
+     * 清除阶梯上的寄存精灵
+     */
+    Ladder.prototype.spr_clean = function () {
+        var len = this._childs.length;
+        if (len > 0) {
+            for (var i = 0; i < len; i++) {
+                this._childs[0].destroy();
+            }
+        }
+        return this;
     };
     return Ladder;
 }(Laya.Sprite));
@@ -54209,31 +54274,24 @@ var LadderArr = (function (_super) {
     __extends(LadderArr, _super);
     function LadderArr(stage_heigth) {
         var _this = _super.call(this) || this;
-        // 往上的缩放
+        /** 往上的缩放 */
         _this.UpScale = 481 / 576; //0.83506944444444444444444444444444
-        // 往下的缩放
-        _this.DowmScale = 576 / 481; //1.1975051975051975051975051975052
-        // 初始的缩放
+        /** 下一个的缩放 */
+        _this.nextScale = 576 / 481; //1.1975051975051975051975051975052
+        /** 初始的缩放 */
         _this.initial_scale = Math.pow(_this.UpScale, 4); //0.48628443826573085101743493750953
-        // 最后一个缩放
-        _this.last_scale = _this.initial_scale * Math.pow(_this.DowmScale, 7);
-        // 最后一个的X坐标
-        _this.last_x = -341.18433352304334;
-        // 完成的帧数
-        _this.complete_frames = 180;
-        // 向下落的总长度
-        _this.ladder_total_Y = 934.88; //934.8820346401794
-        // 向下落速度  = 阶梯群的总高度 / 全部的帧数
+        /** 完成的帧*/
+        _this.complete_frames = 30;
+        /** 向下落的总长度 */
+        _this.ladder_total_Y = 390.15345030660546; //934.8820346401794
+        /** 向下落速度  = 阶梯群的总高度 / 全部的帧数 */
         _this.dowm_speed = _this.ladder_total_Y / _this.complete_frames;
-        // 向左偏的总长度
-        _this.ladder_total_X = -443.14; //-443.1457461496069
-        // 往左移动的速度
-        _this.left_speed = _this.ladder_total_X / _this.complete_frames;
-        // 增加的透明值
-        _this.add_alpha = 0.8 / (_this.complete_frames / 3.5);
-        // 阶梯每帧缩放变大的数量
-        _this.ladder_bigger = Math.pow(1.7172448442368613 / 0.4862844382657308, 1 / _this.complete_frames); //1.7172448442368613 / 0.4862844382657308
-        _this.testNumber = 4;
+        /** 增加的透明值 */
+        _this.add_alpha = 0.8 / (_this.complete_frames * 2);
+        /** 阶梯每帧缩放变大的数量*/
+        _this.ladder_bigger = _this.toFixed(Math.pow(_this.nextScale, 1 / _this.complete_frames), 10); //1.7172448442368613 / 0.4862844382657308
+        /** 测试 */
+        _this.testB = 1 - _this.initial_scale;
         _this.stage_heigth = stage_heigth;
         _this.init();
         return _this;
@@ -54269,16 +54327,19 @@ var LadderArr = (function (_super) {
             ladder.scale(scale_XY, scale_XY);
             // 设置居中的 X位置
             var ladder_x = (720 - ladder.getBounds().width) / 2;
+            if (i > 3) {
+                ladder.spr_clean();
+            }
             // 添加到Box
             this.addChild(ladder);
             // 设置位置  ladder_x是居中的位置。  vy的上一个阶梯的 ladder.y + ladder.heigth
             ladder.pos(ladder_x, ladder_y);
-            console.log(ladder.getBounds().x + "  ************  " + ladder.getBounds().y);
-            console.log(ladder.scaleX);
+            console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "  ************  Y: " + ladder.getBounds().y);
+            console.log("scaleXY: " + ladder.scaleX);
             // 设置阶梯的名字
             ladder.name = "ladder";
             // 下一个的阶梯的缩放值
-            scale_XY *= this.DowmScale;
+            scale_XY *= this.nextScale;
             // 下一个阶梯的Y坐标
             ladder_y += 150 * ladder.scaleX;
             //  计算阶梯群Y的坐标。   stage.heigth - 所有阶梯的高度总和
@@ -54290,47 +54351,39 @@ var LadderArr = (function (_super) {
         }
     };
     /**
-     * 阶梯循环往下落
-     */
-    LadderArr.prototype.ladderLoopDowm = function () {
-        // 开始帧循环
-        Laya.timer.frameLoop(1, this, this.startDowm);
-    };
-    /**
      * 开始了下落
      */
     LadderArr.prototype.startDowm = function () {
-        // 寄存阶梯
-        var ladder_arr = this._childs;
-        // 数组长度
-        var len = ladder_arr.length;
-        // 初始的大小
-        var ladder_initial_scale = this.initial_scale;
+        // 对阶梯群每个阶梯开始遍历变化
+        var len = this._childs.length; //获取阶梯的长度
+        var ladderArr = this._childs; //寄存阶梯数组
+        var stageWidth = 720; //屏幕的宽度
+        var ladderTotalY = this.ladder_total_Y; //寄存下落的总长度
         for (var i = 0; i < len; i++) {
-            if (
-            // 判断阶梯是否越界  926越界目前比较稳定
-            ladder_arr[i].y > 926) {
-                // 重置越界的阶梯
-                this.ladder_rect(ladder_arr[i]);
-                //测试
-                console.log(this.testNumber + "  $$$$$$$$$$$$$$$$$$$$$$");
-                this.testNumber--;
-                if (this.testNumber < 0) {
-                    this.testNumber = 6;
-                }
+            var ladder = ladderArr[i];
+            ladder.scaleX *= this.ladder_bigger;
+            ladder.scaleY *= this.ladder_bigger;
+            /**居中设置 */
+            var ladderWidth = ladder.getBounds().width;
+            var center = (stageWidth - ladderWidth) / 2;
+            // 根据组件的大小来定位组件的位置
+            var sY = (ladder.scaleY - this.initial_scale) / this.testB * ladderTotalY;
+            ladder.pos(center, sY);
+            if (Math.abs(ladder.x) < 1e-5) {
+                ladder.x = 0;
             }
-            // 阶梯的缩放值  添加的Y坐标或者X坐标都要 * 缩放值
-            var slcaeXY = ladder_arr[i].scaleX;
-            // 增加Y坐标
-            ladder_arr[i].x += this.left_speed * slcaeXY;
-            // 减少X坐标
-            ladder_arr[i].y += this.dowm_speed * slcaeXY;
-            // 阶梯变大
-            ladder_arr[i].scaleX *= this.ladder_bigger;
-            ladder_arr[i].scaleY *= this.ladder_bigger;
-            // 如果透明值少于1那就增加透明值
-            if (ladder_arr[i].alpha < 1) {
-                ladder_arr[i].alpha += this.add_alpha;
+            if (Math.abs(ladder.scaleX - 1) < 1e-3) {
+                ladder.scaleX = 1;
+                ladder.scaleY = 1;
+            }
+            if (
+            // 判断阶梯的缩放值来和Y的坐标
+            this.toFixed(ladder.scaleX, 3) == this.toFixed(1.717251730359543, 3)) {
+                // 重置越界的阶梯
+                this.ladder_rect(ladder);
+            }
+            if (ladder.alpha < 1) {
+                ladder.alpha += this.add_alpha;
             }
         }
     };
@@ -54361,6 +54414,246 @@ var LadderArr = (function (_super) {
         // 阶梯重置位置和 透明度
         ladder.pos(ladder_x, ladder_y).alpha = 0.2;
     };
+    /**
+     *阶梯重置
+     *推荐写法  $$$.ladderArrRect.init();阶梯重置后初始化
+     */
+    LadderArr.prototype.ladderArrRect = function () {
+        var len = this._childs.length;
+        var ladderArr = this._childs;
+        for (var i = 0; i < len; i++) {
+            ladderArr[0].destroy();
+        }
+        return this;
+    };
     return LadderArr;
 }(Laya.Box));
 //# sourceMappingURL=LadderArr.js.map
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var View = laya.ui.View;
+var Dialog = laya.ui.Dialog;
+var ui;
+(function (ui) {
+    var dailyGiftUI = (function (_super) {
+        __extends(dailyGiftUI, _super);
+        function dailyGiftUI() {
+            return _super.call(this) || this;
+        }
+        dailyGiftUI.prototype.createChildren = function () {
+            _super.prototype.createChildren.call(this);
+            this.createView(ui.dailyGiftUI.uiView);
+        };
+        return dailyGiftUI;
+    }(View));
+    dailyGiftUI.uiView = { "type": "View", "props": { "width": 720, "height": 1280 }, "child": [{ "type": "Image", "props": { "y": 374, "x": 50, "skin": "everyDay/window.png" }, "child": [{ "type": "Image", "props": { "y": 71, "x": 34, "skin": "everyDay/inWindow.png" } }, { "type": "Image", "props": { "y": -21, "x": 558, "var": "button_off", "skin": "everyDay/off.png", "name": "button_off" } }, { "type": "Image", "props": { "y": -44, "x": 79, "skin": "everyDay/daily_Login.png" } }, { "type": "Image", "props": { "y": 415, "x": 330, "var": "voide_get", "skin": "everyDay/image_button_1.png", "name": "voide_get" }, "child": [{ "type": "Label", "props": { "y": 17, "x": 28, "text": "看视频加倍领取", "fontSize": 28, "font": "SimHei", "color": "#fff3da" } }] }, { "type": "Image", "props": { "y": 415, "x": 40, "var": "now_get", "skin": "everyDay/image_button_2.png", "name": "now_get" }, "child": [{ "type": "Label", "props": { "y": 17, "x": 70, "text": "直接领取", "fontSize": 28, "font": "SimHei", "color": "#fff3da" } }] }, { "type": "Box", "props": { "y": 97, "x": 45, "width": 0, "height": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "x": 73, "var": "hb_1", "skin": "Game_Settlement/HBao_open.png", "name": "hb_1" }, "child": [{ "type": "Label", "props": { "y": 57, "x": 29, "text": "已拆", "fontSize": 25, "font": "SimHei", "color": "#fff3da" } }, { "type": "Label", "props": { "y": 16, "x": 24, "var": "day_1_money", "text": "￥0.5", "name": "day_1_money", "fontSize": 25, "font": "Arial", "color": "#db4a2e", "bold": true } }] }, { "type": "Image", "props": { "y": 2, "x": 212, "var": "hb_2", "skin": "everyDay/HBao.png", "name": "hb_2" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第二天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 0, "x": 355, "var": "hb_3", "skin": "everyDay/HBao.png", "name": "hb_3" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第三天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 150, "x": 17, "var": "hb_4", "skin": "everyDay/HBao.png", "name": "hb_4" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第四天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 150, "x": 148, "var": "hb_5", "skin": "everyDay/HBao.png", "name": "hb_5" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第五天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 150, "x": 279, "var": "hb_6", "skin": "everyDay/HBao.png", "name": "hb_6" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第六天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 150, "x": 410, "var": "hb_7", "skin": "everyDay/HBao.png", "name": "hb_7" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第7天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }] }] }] };
+    ui.dailyGiftUI = dailyGiftUI;
+})(ui || (ui = {}));
+(function (ui) {
+    var gameHomeUI = (function (_super) {
+        __extends(gameHomeUI, _super);
+        function gameHomeUI() {
+            return _super.call(this) || this;
+        }
+        gameHomeUI.prototype.createChildren = function () {
+            View.regComponent("Text", laya.display.Text);
+            _super.prototype.createChildren.call(this);
+            this.createView(ui.gameHomeUI.uiView);
+        };
+        return gameHomeUI;
+    }(View));
+    gameHomeUI.uiView = { "type": "View", "props": { "x": 0, "width": 720, "name": "gamehome", "height": 1280 }, "child": [{ "type": "Image", "props": { "y": 230, "width": 150, "var": "right_frame", "skin": "gameHome/Icon_box_rigth.png", "right": 0, "name": "right_frame", "height": 450 }, "child": [{ "type": "Image", "props": { "y": 170, "x": 30, "width": 100, "var": "reward", "skin": "gameHome/image_reward.png", "right": 20, "name": "reward", "height": 100 } }, { "type": "Image", "props": { "y": 320, "x": 30, "width": 100, "var": "tuiqian", "skin": "gameHome/image_tuiqian.png", "right": 20, "name": "tuiqian", "height": 100 } }, { "type": "Image", "props": { "y": 20, "x": 30, "width": 100, "var": "my_hb", "skin": "gameHome/image_myhb.png", "name": "my_hb", "height": 100 }, "child": [{ "type": "Text", "props": { "y": 40, "x": 24, "var": "hb_timer", "text": "20:00", "name": "hb_timer", "fontSize": 20, "color": "#f8e4e4", "bold": true } }] }] }, { "type": "Image", "props": { "y": 230, "x": 0, "width": 150, "var": "left_frame", "skin": "gameHome/Icon_box_left.png", "name": "left_frame", "left": 0, "height": 450 }, "child": [{ "type": "Image", "props": { "y": 20, "x": 20, "width": 100, "var": "music_off", "skin": "gameHome/music_off.png", "name": "music_off", "left": 20, "height": 100 } }, { "type": "Image", "props": { "y": 170, "x": 20, "width": 100, "var": "invite", "skin": "gameHome/image_invite.png", "name": "invite", "left": 20, "height": 100 } }, { "type": "Image", "props": { "y": 320, "x": 20, "width": 100, "var": "jieshao", "skin": "gameHome/image_jieshao.png", "name": "jieshao", "left": 20, "height": 100 } }] }, { "type": "Image", "props": { "y": 20, "x": 450, "var": "add_xcx", "skin": "gameHome/image_addxcx.png", "name": "add_xcx" } }, { "type": "Image", "props": { "y": 84, "x": 130, "width": 460, "var": "logo", "skin": "gameHome/image_logo.png", "name": "logo", "height": 205 } }, { "type": "Box", "props": { "y": 257, "x": 208, "var": "box_fraction", "scaleY": 1.5, "scaleX": 1.5, "name": "box_fraction" }, "child": [{ "type": "Image", "props": { "y": 9, "x": 9, "width": 50, "var": "crown", "skin": "gameHome/image_crown.png", "name": "crown", "height": 50 } }, { "type": "Text", "props": { "y": 0, "x": 78, "var": "fraction", "text": "2666", "name": "fraction", "fontSize": 50, "font": "Microsoft YaHei", "color": "#2d71d6", "bold": true } }] }, { "type": "Box", "props": { "y": 11, "x": 20, "var": "box_do", "name": "box_do" }, "child": [{ "type": "Image", "props": { "y": 9, "width": 50, "var": "diamond", "skin": "gameHome/image_do.png", "name": "diamond", "height": 50 } }, { "type": "Text", "props": { "x": 73, "text": "888", "fontSize": 50, "font": "Microsoft YaHei", "color": "#2d71d6", "bold": true } }] }, { "type": "Image", "props": { "y": 850, "var": "ranking", "skin": "gameHome/image_Leaderboard.png", "right": 0, "name": "ranking" }, "child": [{ "type": "Image", "props": { "y": 41, "x": 53, "skin": "gameHome/image_paihang.png" } }, { "type": "Text", "props": { "y": 122, "x": 31, "text": "好友排行", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 850, "var": "changeBallSkin", "skin": "gameHome/image_ballSkin.png", "name": "changeBallSkin", "left": 0 }, "child": [{ "type": "Image", "props": { "y": 42, "x": 32, "skin": "gameHome/image_ball.png", "scaleY": 1, "scaleX": 1 } }, { "type": "Text", "props": { "y": 122, "x": 19, "text": "更换皮肤", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Box", "props": { "y": 1100, "x": 200, "var": "prompt_box", "name": "prompt_box" }, "child": [{ "type": "Image", "props": { "var": "boot_prompt", "skin": "gameHome/image_boot_prompt.png", "name": "boot_prompt", "alpha": 0.8 } }, { "type": "Image", "props": { "x": 50, "var": "guide", "skin": "gameHome/image_guide.png", "name": "guide", "alpha": 0.8 } }] }] };
+    ui.gameHomeUI = gameHomeUI;
+})(ui || (ui = {}));
+(function (ui) {
+    var gameOverVIewUI = (function (_super) {
+        __extends(gameOverVIewUI, _super);
+        function gameOverVIewUI() {
+            return _super.call(this) || this;
+        }
+        gameOverVIewUI.prototype.createChildren = function () {
+            View.regComponent("Text", laya.display.Text);
+            _super.prototype.createChildren.call(this);
+            this.createView(ui.gameOverVIewUI.uiView);
+        };
+        return gameOverVIewUI;
+    }(View));
+    gameOverVIewUI.uiView = { "type": "View", "props": {}, "child": [{ "type": "Image", "props": { "y": 349, "x": 50, "skin": "Game_Settlement/window.png" }, "child": [{ "type": "Image", "props": { "y": 220, "x": 34, "skin": "Game_Settlement/inWindow.png" }, "child": [{ "type": "Box", "props": { "y": 43, "x": 6, "var": "box_hb_open" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/HBao_open.png" }, "child": [{ "type": "Text", "props": { "y": 58, "x": 28, "width": 0, "text": "已拆", "height": 0, "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }, { "type": "Text", "props": { "y": 19, "x": 20, "width": 0, "text": "￥ 0.5", "height": 0, "fontSize": 25, "font": "Arial", "color": "#ff0c08", "bold": true } }] }, { "type": "Image", "props": { "y": 0, "x": 143, "skin": "Game_Settlement/HBao_open.png" }, "child": [{ "type": "Text", "props": { "y": 58, "x": 28, "width": 0, "text": "已拆", "height": 0, "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }, { "type": "Text", "props": { "y": 19, "x": 20, "width": 0, "text": "￥ 0.5", "height": 0, "fontSize": 25, "font": "Arial", "color": "#ff0c08", "bold": true } }] }, { "type": "Image", "props": { "y": 0, "x": 287, "skin": "Game_Settlement/HBao_open.png" }, "child": [{ "type": "Text", "props": { "y": 58, "x": 28, "width": 0, "text": "已拆", "height": 0, "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }, { "type": "Text", "props": { "y": 19, "x": 20, "width": 0, "text": "￥ 0.5", "height": 0, "fontSize": 25, "font": "Arial", "color": "#ff0c08", "bold": true } }] }, { "type": "Image", "props": { "y": -4, "x": 430, "skin": "Game_Settlement/HBao_open.png" }, "child": [{ "type": "Text", "props": { "y": 58, "x": 28, "width": 0, "text": "已拆", "height": 0, "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }, { "type": "Text", "props": { "y": 19, "x": 20, "width": 0, "text": "￥ 0.5", "height": 0, "fontSize": 25, "font": "Arial", "color": "#ff0c08", "bold": true } }] }] }, { "type": "Box", "props": { "y": 16, "x": 7, "var": "box_hb" }, "child": [{ "type": "Image", "props": { "y": 10, "x": 0, "skin": "Game_Settlement/HBao.png" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 6, "wordWrap": true, "width": 97, "valign": "middle", "text": "点击分享\\n 拆开", "height": 52, "fontSize": 20, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 10, "x": 142, "skin": "Game_Settlement/HBao.png" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 6, "wordWrap": true, "width": 97, "valign": "middle", "text": "点击分享\\n 拆开", "height": 52, "fontSize": 20, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 10, "x": 285, "skin": "Game_Settlement/HBao.png" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 6, "width": 97, "valign": "middle", "text": "点击分享\\n 拆开", "height": 45, "fontSize": 20, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 10, "x": 428, "skin": "Game_Settlement/HBao.png" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 6, "width": 97, "valign": "middle", "text": "点击分享\\n 拆开", "height": 45, "fontSize": 20, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }] }] }, { "type": "Box", "props": { "y": 428, "x": 33, "var": "box_botton" }, "child": [{ "type": "Image", "props": { "y": 3, "x": 0, "var": "restart_img", "skin": "Game_Settlement/button.png", "name": "restart_img" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/image_rect.png" } }] }, { "type": "Image", "props": { "y": 2, "x": 149, "var": "home_img", "skin": "Game_Settlement/button.png", "name": "home_img" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/home.png" } }] }, { "type": "Image", "props": { "x": 298, "var": "share_img", "skin": "Game_Settlement/button.png", "name": "share_img" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/share.png" } }] }, { "type": "Image", "props": { "y": 1, "x": 447, "var": "void_img", "skin": "Game_Settlement/button.png", "name": "void_img" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/voide.png" } }] }, { "type": "Box", "props": { "y": -47, "x": 5, "width": 0, "var": "box_text", "height": 0 }, "child": [{ "type": "Text", "props": { "y": 145, "x": -14, "var": "restart_text", "text": "重新开始", "name": "restart_text", "fontSize": 30, "font": "Arial", "color": "#06abec", "bold": true } }, { "type": "Text", "props": { "y": 146, "x": 137, "var": "home_text", "text": "返回首页", "name": "home_text", "fontSize": 30, "font": "Arial", "color": "#06abec", "bold": true } }, { "type": "Text", "props": { "y": 146, "x": 287, "var": "share_text", "text": "分享复活", "name": "share_text", "fontSize": 30, "font": "Arial", "color": "#06abec", "bold": true } }, { "type": "Text", "props": { "y": 148, "x": 438, "var": "video_text", "text": "视频复活", "name": "video_text", "fontSize": 30, "font": "Arial", "color": "#06abec", "bold": true } }] }] }, { "type": "Box", "props": { "y": 136, "x": 50, "var": "box_bill", "name": "box_bill" }, "child": [{ "type": "Text", "props": { "y": 3, "x": 0, "text": "本次得分：", "fontSize": 35, "font": "Arial", "bold": true } }, { "type": "Text", "props": { "y": 3, "x": 380, "text": "砖石：", "fontSize": 35, "font": "Arial", "bold": true } }, { "type": "Text", "props": { "y": 1, "x": 174, "var": "score", "text": "5551", "name": "score", "fontSize": 40, "font": "Arial", "color": "#5284ee", "bold": true } }, { "type": "Text", "props": { "y": 2, "x": 478, "var": "od", "text": "59", "name": "od", "fontSize": 40, "font": "Arial", "color": "#5284ee", "bold": true } }] }] }] };
+    ui.gameOverVIewUI = gameOverVIewUI;
+})(ui || (ui = {}));
+(function (ui) {
+    var hbViewUI = (function (_super) {
+        __extends(hbViewUI, _super);
+        function hbViewUI() {
+            return _super.call(this) || this;
+        }
+        hbViewUI.prototype.createChildren = function () {
+            View.regComponent("Text", laya.display.Text);
+            _super.prototype.createChildren.call(this);
+            this.createView(ui.hbViewUI.uiView);
+        };
+        return hbViewUI;
+    }(View));
+    hbViewUI.uiView = { "type": "View", "props": {}, "child": [{ "type": "Image", "props": { "y": 400, "x": 92, "skin": "HBao/window.png" }, "child": [{ "type": "Image", "props": { "y": 45, "x": 436, "width": 40, "var": "shutDown", "skin": "HBao/off.png", "name": "shutDown", "height": 40 } }, { "type": "Image", "props": { "y": 320, "x": 92, "var": "keepOn", "skin": "HBao/buttom.png", "name": "keepOn" }, "child": [{ "type": "Text", "props": { "y": 13, "x": 56, "text": "继续打开红包", "fontSize": 40, "font": "Microsoft YaHei", "color": "#e51512", "bold": true } }] }, { "type": "Text", "props": { "y": 269, "x": 163, "var": "deposit", "text": "已存入我的红包", "name": "deposit", "fontSize": 30, "font": "Microsoft YaHei", "color": "#fff3da", "bold": false, "alpha": 0.8 } }, { "type": "Text", "props": { "y": 117, "x": 148, "var": "getMoney", "text": "￥0.5", "name": "getMoney", "fontSize": 100, "font": "Arial", "color": "#db4a2e", "bold": true } }, { "type": "Label", "props": { "y": 422, "x": 206, "var": "withdraw", "underline": true, "text": "我要提现", "name": "withdraw", "fontSize": 30, "font": "SimHei", "color": "#e3d3d3", "bold": true, "alpha": 0.8 } }] }] };
+    ui.hbViewUI = hbViewUI;
+})(ui || (ui = {}));
+(function (ui) {
+    var inGameViewUI = (function (_super) {
+        __extends(inGameViewUI, _super);
+        function inGameViewUI() {
+            return _super.call(this) || this;
+        }
+        inGameViewUI.prototype.createChildren = function () {
+            View.regComponent("Text", laya.display.Text);
+            _super.prototype.createChildren.call(this);
+            this.createView(ui.inGameViewUI.uiView);
+        };
+        return inGameViewUI;
+    }(View));
+    inGameViewUI.uiView = { "type": "View", "props": { "width": 720, "height": 1280 }, "child": [{ "type": "Image", "props": { "y": 20, "x": 20, "var": "hongbao", "skin": "inGame/HBao.png", "scaleY": 1.5, "scaleX": 1.5, "name": "hongbao" }, "child": [{ "type": "Image", "props": { "y": -10, "x": 33, "width": 35, "var": "prompt_1", "skin": "inGame/HB_number.png", "name": "prompt_1", "height": 35 }, "child": [{ "type": "Text", "props": { "y": 2, "x": 9, "var": "hbNumber", "text": "0", "name": "hbNumber", "fontSize": 30, "font": "Arial", "color": "#fff3da", "bold": true } }] }] }, { "type": "Image", "props": { "y": 39, "x": 115, "var": "prompt_0", "skin": "inGame/game_end.png", "name": "prompt_0" } }, { "type": "Image", "props": { "y": 120, "x": 20, "var": "prompt_surpass", "skin": "inGame/coming_soon.png", "name": "prompt_surpass" }, "child": [{ "type": "Text", "props": { "y": 40, "x": 15, "var": "surpass_fraction", "text": "99999", "name": "surpass_fraction", "fontSize": 40, "font": "Arial", "color": "#e3dd48", "bold": true } }, { "type": "Image", "props": { "y": 11, "x": 150, "width": 80, "skin": "inGame/yazi.jpg", "height": 80 } }] }, { "type": "Text", "props": { "y": 220, "x": 332, "width": 0, "var": "fraction", "text": "0", "strokeColor": "#d6a644", "stroke": 7, "overflow": "visible", "name": "fraction", "height": 0, "fontSize": 100, "font": "Arial", "color": "#167dcf", "bold": true, "align": "center" } }] };
+    ui.inGameViewUI = inGameViewUI;
+})(ui || (ui = {}));
+(function (ui) {
+    var invateGiftUI = (function (_super) {
+        __extends(invateGiftUI, _super);
+        function invateGiftUI() {
+            return _super.call(this) || this;
+        }
+        invateGiftUI.prototype.createChildren = function () {
+            _super.prototype.createChildren.call(this);
+            this.createView(ui.invateGiftUI.uiView);
+        };
+        return invateGiftUI;
+    }(Dialog));
+    invateGiftUI.uiView = { "type": "Dialog", "props": { "width": 720, "height": 1280 }, "child": [{ "type": "Image", "props": { "y": 358, "x": 50, "skin": "invite_gift/window.png" }, "child": [{ "type": "Image", "props": { "y": -28, "x": 560, "var": "off_button", "skin": "invite_gift/off.png", "name": "off_button" } }, { "type": "Label", "props": { "y": 255, "x": 43, "text": "已邀请8位好友，完成以下任务，即可获取奖励!", "fontSize": 25, "font": "Arial", "color": "#9a8b8b", "bold": true } }, { "type": "Image", "props": { "y": 39, "x": 216, "skin": "invite_gift/invate_gift.png" } }, { "type": "Image", "props": { "y": 125, "x": 34, "skin": "invite_gift/in_view.png" }, "child": [{ "type": "Box", "props": { "y": 12, "x": 5 }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "invite_gift/df_invate.png" } }, { "type": "Image", "props": { "y": 0, "x": 102, "skin": "invite_gift/df_invate.png" } }, { "type": "Image", "props": { "y": 0, "x": 204, "skin": "invite_gift/df_invate.png" } }, { "type": "Image", "props": { "y": 0, "x": 306, "skin": "invite_gift/df_invate.png" } }] }, { "type": "Image", "props": { "y": 9, "x": 437, "var": "now_invite", "skin": "invite_gift/now_invite.png" } }] }, { "type": "Box", "props": { "y": 311, "x": 53 }, "child": [{ "type": "Image", "props": { "y": 16, "x": 389, "skin": "invite_gift/image_button_1.png" } }, { "type": "Image", "props": { "skin": "invite_gift/df_window.png" } }, { "type": "Label", "props": { "y": 12, "x": 111, "width": 0, "text": "邀请5位好友奖励", "fontSize": 30, "font": "SimHei", "color": "#2a667d" } }, { "type": "Label", "props": { "y": 57, "x": 114, "var": "schedule_1", "text": "（目标：5/5）", "name": "schedule_1", "fontSize": 25, "font": "SimHei", "color": "#2a667d" } }] }, { "type": "Box", "props": { "y": 432, "x": 53 }, "child": [{ "type": "Image", "props": { "y": 16, "x": 389, "skin": "invite_gift/image_button_2.png" } }, { "type": "Image", "props": { "skin": "invite_gift/df_window.png" } }, { "type": "Label", "props": { "y": 12, "x": 111, "width": 0, "text": "邀请5位好友奖励", "fontSize": 30, "font": "SimHei", "color": "#2a667d" } }, { "type": "Label", "props": { "y": 57, "x": 114, "var": "schedule_2", "text": "（目标：5/10）", "name": "schedule_2", "fontSize": 25, "font": "SimHei", "color": "#2a667d" } }] }, { "type": "Image", "props": { "y": 416, "x": 40, "skin": "invite_gift/dotted_line.png" } }] }] };
+    ui.invateGiftUI = invateGiftUI;
+})(ui || (ui = {}));
+(function (ui) {
+    var myHbUI = (function (_super) {
+        __extends(myHbUI, _super);
+        function myHbUI() {
+            return _super.call(this) || this;
+        }
+        myHbUI.prototype.createChildren = function () {
+            View.regComponent("Text", laya.display.Text);
+            _super.prototype.createChildren.call(this);
+            this.createView(ui.myHbUI.uiView);
+        };
+        return myHbUI;
+    }(View));
+    myHbUI.uiView = { "type": "View", "props": {}, "child": [{ "type": "Image", "props": { "y": 430, "x": 50, "skin": "myHbao/myHBao.png" }, "child": [{ "type": "Image", "props": { "y": 340, "x": 485, "var": "withdraw", "skin": "myHbao/button.png", "name": "withdraw" }, "child": [{ "type": "Text", "props": { "y": 10, "x": 22, "text": "提现", "fontSize": 30, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Text", "props": { "y": 313, "x": 20, "var": "balance", "valign": "middle", "text": "余额: 9.99 (元) ", "name": "balance", "fontSize": 40, "font": "SimHei", "color": "#de1511", "bold": true, "align": "center" } }, { "type": "Text", "props": { "y": 371, "x": 20, "var": "prompt", "text": "温馨提示：红包满20元可提现", "name": "prompt", "fontSize": 25, "font": "Helvetica", "color": "#ccc1c1", "bold": true } }, { "type": "Image", "props": { "y": 5, "x": 580, "var": "closed", "skin": "myHbao/off.png", "name": "closed" } }] }] };
+    ui.myHbUI = myHbUI;
+})(ui || (ui = {}));
+(function (ui) {
+    var oneHBaoUI = (function (_super) {
+        __extends(oneHBaoUI, _super);
+        function oneHBaoUI() {
+            return _super.call(this) || this;
+        }
+        oneHBaoUI.prototype.createChildren = function () {
+            _super.prototype.createChildren.call(this);
+            this.createView(ui.oneHBaoUI.uiView);
+        };
+        return oneHBaoUI;
+    }(View));
+    oneHBaoUI.uiView = { "type": "View", "props": { "width": 720, "height": 1280 }, "child": [{ "type": "Image", "props": { "y": 318, "x": 82, "skin": "one_HBao/window.png" }, "child": [{ "type": "Image", "props": { "y": 292, "x": 168, "var": "button_receive", "skin": "one_HBao/receive.png", "scaleY": 1.2, "scaleX": 1.2, "name": "button_receive" } }, { "type": "Image", "props": { "y": -9, "x": 514, "skin": "one_HBao/off.png" } }, { "type": "Label", "props": { "y": 209, "x": 28, "valign": "middle", "text": "恭喜获得一个现金红包", "fontSize": 50, "font": "Arial", "color": "#fff3da" } }, { "type": "Label", "props": { "y": 90, "x": 200, "text": "恭喜！", "fontSize": 70, "color": "#fff3da", "bold": true } }, { "type": "Label", "props": { "y": 592, "x": 66, "text": "温馨提示：领红包满20元可提现", "fontSize": 30, "color": "#fff3da" } }] }] };
+    ui.oneHBaoUI = oneHBaoUI;
+})(ui || (ui = {}));
+//# sourceMappingURL=layaUI.max.all.js.map
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+/**
+ * 游戏主界面
+ */
+var GameHome = (function (_super) {
+    __extends(GameHome, _super);
+    function GameHome() {
+        var _this = _super.call(this) || this;
+        _this.timerLine = new Laya.TimeLine;
+        // 初始化
+        _this.init();
+        return _this;
+    }
+    /**
+     * 初始化
+     */
+    GameHome.prototype.init = function () {
+        // 时间线动画
+        this.createTimerLine();
+        // 监听鼠标点击 
+        this.my_hb.on(Laya.Event.MOUSE_UP, this, this.mouseDowm); //红包
+        this.reward.on(Laya.Event.MOUSE_UP, this, this.mouseDowm); //每日奖励
+        this.tuiqian.on(Laya.Event.MOUSE_UP, this, this.mouseDowm); //推荐
+        this.jieshao.on(Laya.Event.MOUSE_UP, this, this.mouseDowm); //介绍
+        this.invite.on(Laya.Event.MOUSE_UP, this, this.mouseDowm); //邀请
+        this.changeBallSkin.on(Laya.Event.MOUSE_UP, this, this.mouseDowm); //球皮肤事件
+        this.ranking.on(Laya.Event.MOUSE_UP, this, this.mouseDowm); //排行榜
+        this.music_off.on(Laya.Event.MOUSE_UP, this, this.mouseDowm); //关闭音乐
+        this.on(Laya.Event.MOUSE_UP, this, this.mouseDowm); //游戏主页界面
+    };
+    /**
+     * 鼠标点击绑定出发的事件
+     * @param e
+     */
+    GameHome.prototype.mouseDowm = function (e) {
+        var name = e.target.name;
+        switch (name) {
+            case "my_hb":
+                console.log("红包事件");
+                break;
+            case "reward":
+                console.log("每日奖励事件");
+                break;
+            case "tuiqian":
+                console.log("推荐事件");
+                break;
+            case "jieshao":
+                console.log("介绍事件");
+                break;
+            case "invite":
+                console.log("邀请事件");
+                break;
+            case "music_off":
+                console.log("关闭音乐事件");
+                break;
+            default:
+                this.visible = false;
+                console.log(name);
+        }
+    };
+    /**
+     * 时间线的指示动画,左右滑动控制球
+     */
+    GameHome.prototype.createTimerLine = function () {
+        this.timerLine.addLabel("rigth", 0).to(this.guide, { x: 250, y: this.boot_prompt.y }, 1500, null, 0)
+            .addLabel("left", 0).to(this.guide, { x: 50, y: this.boot_prompt.y }, 1500, null, 0);
+        // 播放滑动动画并循环
+        this.timerLine.play(0, true);
+    };
+    return GameHome;
+}(ui.gameHomeUI));
+//# sourceMappingURL=GameHome.js.map
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+/** 游戏中 */
+var inGameView = (function (_super) {
+    __extends(inGameView, _super);
+    function inGameView() {
+        return _super.call(this) || this;
+    }
+    /** 初始化 */
+    inGameView.prototype.init = function () {
+        console.log("inGame init \t$$$$");
+    };
+    return inGameView;
+}(ui.inGameViewUI));
+//# sourceMappingURL=inGameView.js.map

@@ -2,8 +2,8 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":2,
-    "props":{"width":720,"sceneColor":"#aaeaef","height":1280},
+    "selecteID":7,
+    "props":{"width":640,"sceneColor":"#aaeaef","height":1136},
     "nodeParent":-1,
     "label":"View",
     "isOpen":true,
@@ -15,7 +15,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":20,"x":20,"var":"hongbao","skin":"游戏中/红包icon.png","scaleY":1.5,"scaleX":1.5,"name":"hongbao"},
+            "props":{"y":20,"x":20,"var":"hongbao","skin":"inGame/HBao.png","scaleY":1.5,"scaleX":1.5,"name":"hongbao"},
             "nodeParent":1,
             "label":"Image(hongbao)",
             "isOpen":false,
@@ -25,9 +25,8 @@
             "compId":2,
             "child":[
                 {
-                    "x":30,
                     "type":"Image",
-                    "props":{"y":-10,"x":33,"width":35,"var":"prompt_1","skin":"游戏中/红包收集.png","name":"prompt_1","height":35},
+                    "props":{"y":-10,"x":33,"width":35,"var":"prompt_1","skin":"inGame/HB_number.png","name":"prompt_1","height":35},
                     "nodeParent":2,
                     "label":"Image(prompt_1)",
                     "isOpen":true,
@@ -37,9 +36,8 @@
                     "compId":5,
                     "child":[
                         {
-                            "x":45,
                             "type":"Text",
-                            "props":{"y":2,"x":9,"var":"hbNumber","text":"5","name":"hbNumber","fontSize":30,"font":"Arial","color":"#fff3da","bold":true},
+                            "props":{"y":2,"x":9,"var":"hbNumber","text":"0","name":"hbNumber","fontSize":30,"font":"Arial","color":"#fff3da","bold":true},
                             "nodeParent":5,
                             "label":"Text(hbNumber)",
                             "isDirectory":false,
@@ -54,7 +52,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":39,"x":115,"var":"prompt_0","skin":"游戏中/本局游戏结束后打开.png","name":"prompt_0"},
+            "props":{"y":39,"x":115,"var":"prompt_0","skin":"inGame/game_end.png","name":"prompt_0"},
             "nodeParent":1,
             "label":"Image(prompt_0)",
             "isDirectory":false,
@@ -67,7 +65,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":150,"x":20,"var":"prompt_surpass","skin":"游戏中/即将超越.png","name":"prompt_surpass"},
+            "props":{"y":120,"x":20,"var":"prompt_surpass","skin":"inGame/coming_soon.png","name":"prompt_surpass"},
             "nodeParent":1,
             "label":"Image(prompt_surpass)",
             "isOpen":false,
@@ -78,7 +76,7 @@
             "child":[
                 {
                     "type":"Text",
-                    "props":{"y":40,"x":15,"var":"surpass_fraction","text":"10999","name":"surpass_fraction","fontSize":40,"font":"Arial","color":"#e3dd48","bold":true},
+                    "props":{"y":40,"x":15,"var":"surpass_fraction","text":"99999","name":"surpass_fraction","fontSize":40,"font":"Arial","color":"#e3dd48","bold":true},
                     "nodeParent":4,
                     "label":"Text(surpass_fraction)",
                     "isDirectory":false,
@@ -87,12 +85,24 @@
                     "compId":8,
                     "child":[
                         ]
+                },
+                {
+                    "type":"Image",
+                    "props":{"y":11,"x":150,"width":80,"skin":"inGame/yazi.jpg","height":80},
+                    "nodeParent":4,
+                    "label":"Image",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":9,
+                    "child":[
+                        ]
                 }]
         },
         {
             "x":15,
             "type":"Text",
-            "props":{"y":250,"x":244,"width":0,"var":"fraction","text":"9999","strokeColor":"#d6a644","stroke":7,"overflow":"visible","name":"fraction","height":0,"fontSize":100,"font":"Arial","color":"#167dcf","bold":true,"align":"center"},
+            "props":{"y":220,"x":292,"width":0,"var":"fraction","text":"0","strokeColor":"#d6a644","stroke":7,"overflow":"visible","name":"fraction","height":0,"fontSize":100,"font":"Arial","color":"#167dcf","bold":true,"align":"center"},
             "nodeParent":1,
             "label":"Text(fraction)",
             "isDirectory":false,
