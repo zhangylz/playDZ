@@ -103,9 +103,7 @@ class spriteCollision {
         let name: string;
         if (spr != undefined) {
             name = spr.name;
-            if (name != "spr_ob") {
-                spr.destroy();
-            }
+            spr.destroy();
         }
 
         // console.log("撞上了" + spr.name + " $$$$$");
@@ -115,6 +113,7 @@ class spriteCollision {
                 return "白圈";
             case "spr_ob":
                 console.log("调用障碍")
+                this.obTest();
                 return "障碍";
             case "spr_do":
                 console.log("调用砖石")

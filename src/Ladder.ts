@@ -3,17 +3,17 @@
  */
 class Ladder extends Laya.Sprite {
     // 阶梯宽度
-    public ladder_width: number = 720;
+    public ladder_width: number = 640;
     // 阶梯高度
-    public ladder_heigth: number = 150;
+    public ladder_heigth: number = 150 * (8 / 9);
     // 子精灵宽度
-    private spr_width: number = 65.45;
+    private spr_width: number = 58.18;
     // 子精灵高度
-    private spr_heigth: number = 65.45;
+    private spr_heigth: number = 58.18;
     // 精灵数组
     public spr_arr: Array<Laya.Sprite>;
     // 子精灵x坐标
-    public sprX_arr: Array<number> = [65.45, 196.35, 327.25, 458.15, 589.05]
+    public sprX_arr: Array<number> = [58.18, 174.55, 290.91, 407.27, 523.64];
     // 子精灵y坐标
     public sprY: number = 0;
     // 最大的障碍数 <0 && >5;
@@ -28,18 +28,20 @@ class Ladder extends Laya.Sprite {
         // 精灵初始化
         this.width = this.ladder_width;
         this.height = this.ladder_heigth;
+        // 设置设置阶梯的边际范围
+        this.setBounds(new Laya.Rectangle(0, 0, this.width, this.height));
         this.init();
     }
     // 精灵初始化
     private init() {
         // 加载阶梯图片，放在坐标 0，0
-        this.loadImage("res/test/image_ladder.png", 0, 0, this.ladder_width, this.ladder_heigth);
-        // 开始添加障碍
-        this.spr_add_ob();
+        this.loadImage("res/ladder/image_ladder.png", 0, 0, this.ladder_width, this.ladder_heigth);
+        // 开始添加障碍 添加白圈 添加砖石 or 红包
+        this.spr_add_ob().spr_add_ov(this.random_arr).spr_add_gift(this.random_arr);
         // 添加白圈
-        this.spr_add_ov(this.random_arr);
+        // this.spr_add_ov(this.random_arr);
         // 添加砖石 or 红包
-        this.spr_add_gift(this.random_arr);
+        // this.spr_add_gift(this.random_arr);
         // 设置自动宽高
         this.autoSize = true;
     }
@@ -86,7 +88,7 @@ class Ladder extends Laya.Sprite {
             let random_e = Math.floor(Math.random() * this.sprX_arr.length);
             // 检查时候重复的随机数 否继续循环
             if (this.random_arr.indexOf(random_e) === -1) {
-                spr_ov.pos(this.sprX_arr[random_e], 45.45);
+                spr_ov.pos(this.sprX_arr[random_e], 40.5);
                 spr_ov.loadImage("ladder/image_oval_white.png", 0, 0, this.spr_width, 15)
                 // 添加白圈
                 this.addChild(spr_ov);

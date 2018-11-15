@@ -53681,9 +53681,7 @@ var spriteCollision = (function () {
         var name;
         if (spr != undefined) {
             name = spr.name;
-            if (name != "spr_ob") {
-                spr.destroy();
-            }
+            spr.destroy();
         }
         // console.log("撞上了" + spr.name + " $$$$$");
         switch (name) {
@@ -53692,6 +53690,7 @@ var spriteCollision = (function () {
                 return "白圈";
             case "spr_ob":
                 console.log("调用障碍");
+                this.obTest();
                 return "障碍";
             case "spr_do":
                 console.log("调用砖石");
@@ -53770,18 +53769,18 @@ var OnMouse = (function () {
  */
 var Game = (function () {
     function Game() {
-        /** 开始的阶梯编号 */
+        /** 初始的阶梯编号 */
         this.ladderN = 4;
         // 适配微信小游戏
         Laya.MiniAdpter.init();
         // 初始化引擎
         Laya.init(640, 1136, Laya.WebGL);
         // 性能面板
-        Laya.Stat.show(0, 0);
+        // Laya.Stat.show(0, 0);
         Laya.stage.bgColor = "#EEE9E9";
-        Laya.stage.scaleMode = "showall";
+        // Laya.stage.scaleMode = "showall";
         // 预加载资源
-        Laya.loader.load(["res/atlas/ladder.atlas", "res/test/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas"], Laya.Handler.create(this, this.onLoad));
+        Laya.loader.load(["res/atlas/ladder.atlas", "res/ladder/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas"], Laya.Handler.create(this, this.onLoad));
     }
     /** 加载回调 */
     Game.prototype.onLoad = function () {
@@ -53789,7 +53788,7 @@ var Game = (function () {
         // 实例化一个阶梯群
         this.ladderArr = new LadderArr(Laya.stage.height);
         // 设置阶梯的坐标
-        this.ladderArr.pos(0, this.ladderArr.ladderArr_heigth);
+        this.ladderArr.pos(0, 350);
         // 添加到舞台
         Laya.stage.addChild(this.ladderArr);
         // 实例化一个球
@@ -53804,8 +53803,6 @@ var Game = (function () {
         this.inGameView = new inGameView();
         this.inGameView.visible = false; //先隐藏起来
         Laya.stage.addChild(this.inGameView);
-        // 添加三条测试对比线
-        this.fy = this.ladderArr.ladderArr_heigth;
         // 监听鼠标活动
         this.spriteCollision = new spriteCollision();
         Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.startGame);
@@ -53815,23 +53812,40 @@ var Game = (function () {
      */
     Game.prototype.startGame = function (e) {
         this.inGameView.visible = true;
-        this.gameHome.visible === false;
+        this.gameHome.visible = false;
         console.log("start Game");
         Laya.timer.frameLoop(1, this, this.startDowm);
         Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
     };
     /**开始下降 */
     Game.prototype.startDowm = function () {
+        //阶梯开始循环下降
         this.ladderArr.startDowm();
-        this.ladderN = this.ball.ballUp(4, this.inGameView.fraction);
-        var ladder = this.ladderArr._childs[this.ladderN];
-        // 碰撞测试
-        this.spriteCollision.init(ladder);
-        this.spriteCollision.sprCenterPoint(this.ball);
+        // 检测碰撞
+        this.collision();
     };
     //监听鼠标移动
     Game.prototype.mouseMove = function () {
         this.ball.x = Laya.stage.mouseX;
+    };
+    /** 碰撞检测 */
+    Game.prototype.collision = function () {
+        // 寄存阶梯群
+        var ladderArr = this.ladderArr._childs;
+        // 下落的时候返回新的阶梯编号
+        var newLadderN = this.ball.ballUp(this.ladderN, this.inGameView.fraction);
+        if (newLadderN != this.ladderN) {
+            this.ladderN = newLadderN;
+        }
+        var ladder = ladderArr[newLadderN];
+        this.spriteCollision.init(ladder);
+        this.spriteCollision.sprCenterPoint(this.ball);
+        //检测是否碰撞
+        if (this.spriteCollision.resultCollision == true) {
+            Laya.stage.off(Laya.Event.MOUSE_DOWN, this, this.startGame);
+            Laya.stage.off(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
+            Laya.timer.clearAll(this);
+        }
     };
     return Game;
 }());
@@ -53851,7 +53865,7 @@ var Demo2 = (function () {
         this.inGameView = new inGameView();
         this.ladderArr = new LadderArr(Laya.stage.height);
         this.ball = new Ball();
-        this.ladderArr.pos(0, this.ladderArr.ladderArr_heigth);
+        this.ladderArr.pos(0, this.ladderArr.ladderArr_Y);
         Laya.stage.addChild(this.inGameView);
         Laya.stage.addChild(this.ladderArr);
         Laya.stage.addChild(this.ball);
@@ -53889,45 +53903,46 @@ var Demo2 = (function () {
 var Demo = (function () {
     // 构造器
     function Demo() {
+        this.timer = 0;
         this.ladderN = 4;
         Laya.MiniAdpter.init();
-        Laya.init(720, 1280, Laya.WebGL);
+        Laya.init(640, 1136, Laya.WebGL);
         Laya.stage.bgColor = "EEE9E9";
         Laya.stage.scaleMode = "showall";
-        // Laya.Stat.show();
+        Laya.Stat.show(640, 0);
         // 预加载资源
-        Laya.loader.load(["res/atlas/ladder.atlas", "res/test/image_ladder.png", "res/atlas/inGame.atlas"], Laya.Handler.create(this, this.onLoad));
+        Laya.loader.load(["res/atlas/ladder.atlas", "res/atlas/inGame.atlas"], Laya.Handler.create(this, this.onLoad));
     }
     // 加载完成
     Demo.prototype.onLoad = function (set) {
-        this.ball = new Ball();
-        this.inGameView = new inGameView();
         this.ladderArr = new LadderArr(Laya.stage.height);
-        // 设置阶梯的坐标
-        this.ladderArr.pos(0, this.ladderArr.ladderArr_heigth);
-        // 添加阶梯群
+        this.ladderArr.pos(0, 350);
+        this.inGameView = new inGameView();
+        this.ball = new Ball();
         Laya.stage.addChild(this.ladderArr);
-        // 添加球
-        Laya.stage.addChild(this.ball);
-        // 添加ingameview
         Laya.stage.addChild(this.inGameView);
-        Laya.timer.frameLoop(1, this, this.testDown);
-        // 开始检测碰撞
+        Laya.stage.addChild(this.ball);
+        Laya.timer.frameLoop(1, this, this.testDowm);
+        this.startFrame = Laya.timer.currFrame;
         this.spriteCollision = new spriteCollision();
-        this.mouseMove = new OnMouse(Laya.stage, this.ball);
-        Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.MouseDowm);
+    };
+    Demo.prototype.testDowm = function (e) {
+        this.timer++;
+        this.ladderArr.startDowm();
+        // 测试碰撞
+        this.collision();
+        // console.log(this.ladderN + "\t$$$\t" + Laya.timer.currFrame);
     };
     /** 测试碰撞 */
-    Demo.prototype.testDown = function (e) {
-        this.ladderArr.startDowm();
-        this.ladderN = this.ball.ballUp(this.ladderN, this.inGameView.fraction);
-        var ladder = this.ladderArr._childs[this.ladderN];
+    Demo.prototype.collision = function () {
+        var ladderArr = this.ladderArr._childs;
+        var newLadderN = this.ball.ballUp(this.ladderN, this.inGameView.fraction);
+        if (newLadderN != this.ladderN) {
+            this.ladderN = newLadderN;
+        }
+        var ladder = ladderArr[newLadderN];
         this.spriteCollision.init(ladder);
         this.spriteCollision.sprCenterPoint(this.ball);
-    };
-    Demo.prototype.MouseDowm = function () {
-        this.ball.x = Laya.stage.mouseX;
-        // console.log("点击了 &&&&   " + Laya.stage.mouseX + "    ballx" + this.ball.x);
     };
     return Demo;
 }());
@@ -53951,7 +53966,7 @@ var Ball = (function (_super) {
         /** 球高度 */
         _this.ballHeigth = _this.ballWidth;
         /** 球的初始坐标 */
-        _this.initialPoint = new Laya.Point(335, 750);
+        _this.initialPoint = new Laya.Point((640 - _this.ballWidth) / 2, 705);
         /** 向上的速度 */
         _this.upSpeed = 20;
         /**重力加速度 */
@@ -53964,6 +53979,7 @@ var Ball = (function (_super) {
     Ball.prototype.init = function () {
         // 添加球
         this.ballAdd();
+        // 测试滤镜
         this.testFilter();
     };
     /** 添加球精灵 */
@@ -54022,7 +54038,7 @@ var Ball = (function (_super) {
         var frac = Number(fraction.text);
         // 字体居中
         fraction.x = (720 - fraction.width) / 2;
-        console.log("fraction:\t" + frac + "\t$$$$ width:\t" + fraction.width + "\t$$$$ x:\t" + fraction.x);
+        // console.log("fraction:\t" + frac + "\t$$$$ width:\t" + fraction.width + "\t$$$$ x:\t" + fraction.x);
         // Y往上跳
         this.y -= this.upSpeed;
         this.upSpeed -= this.gravity;
@@ -54036,9 +54052,7 @@ var Ball = (function (_super) {
             ladderNumber--;
             if (ladderNumber < 0) {
                 ladderNumber = 6;
-                console.log("阶梯编号初始化\t%%%%%%%%%%%%%%%%");
             }
-            console.log("开始下落\t$$$$$$\t" + ladderN);
         }
         // 更新分数
         fraction.text = String(frac);
@@ -54052,7 +54066,7 @@ var Ball = (function (_super) {
     };
     /** 测试滤镜 */
     Ball.prototype.testFilter = function () {
-        var greenFilter = new Laya.GlowFilter("#2F4F4F", 5, 0, 0);
+        var greenFilter = new Laya.GlowFilter("#EEEE00", 5, 0, 0);
         this.filters = [greenFilter];
     };
     return Ball;
@@ -54072,15 +54086,15 @@ var Ladder = (function (_super) {
     function Ladder() {
         var _this = _super.call(this) || this;
         // 阶梯宽度
-        _this.ladder_width = 720;
+        _this.ladder_width = 640;
         // 阶梯高度
-        _this.ladder_heigth = 150;
+        _this.ladder_heigth = 150 * (8 / 9);
         // 子精灵宽度
-        _this.spr_width = 65.45;
+        _this.spr_width = 58.18;
         // 子精灵高度
-        _this.spr_heigth = 65.45;
+        _this.spr_heigth = 58.18;
         // 子精灵x坐标
-        _this.sprX_arr = [65.45, 196.35, 327.25, 458.15, 589.05];
+        _this.sprX_arr = [58.18, 174.55, 290.91, 407.27, 523.64];
         // 子精灵y坐标
         _this.sprY = 0;
         // 最大的障碍数 <0 && >5;
@@ -54092,19 +54106,21 @@ var Ladder = (function (_super) {
         // 精灵初始化
         _this.width = _this.ladder_width;
         _this.height = _this.ladder_heigth;
+        // 设置设置阶梯的边际范围
+        _this.setBounds(new Laya.Rectangle(0, 0, _this.width, _this.height));
         _this.init();
         return _this;
     }
     // 精灵初始化
     Ladder.prototype.init = function () {
         // 加载阶梯图片，放在坐标 0，0
-        this.loadImage("res/test/image_ladder.png", 0, 0, this.ladder_width, this.ladder_heigth);
-        // 开始添加障碍
-        this.spr_add_ob();
+        this.loadImage("res/ladder/image_ladder.png", 0, 0, this.ladder_width, this.ladder_heigth);
+        // 开始添加障碍 添加白圈 添加砖石 or 红包
+        this.spr_add_ob().spr_add_ov(this.random_arr).spr_add_gift(this.random_arr);
         // 添加白圈
-        this.spr_add_ov(this.random_arr);
+        // this.spr_add_ov(this.random_arr);
         // 添加砖石 or 红包
-        this.spr_add_gift(this.random_arr);
+        // this.spr_add_gift(this.random_arr);
         // 设置自动宽高
         this.autoSize = true;
     };
@@ -54150,7 +54166,7 @@ var Ladder = (function (_super) {
             var random_e = Math.floor(Math.random() * this.sprX_arr.length);
             // 检查时候重复的随机数 否继续循环
             if (this.random_arr.indexOf(random_e) === -1) {
-                spr_ov.pos(this.sprX_arr[random_e], 45.45);
+                spr_ov.pos(this.sprX_arr[random_e], 40.5);
                 spr_ov.loadImage("ladder/image_oval_white.png", 0, 0, this.spr_width, 15);
                 // 添加白圈
                 this.addChild(spr_ov);
@@ -54280,10 +54296,12 @@ var LadderArr = (function (_super) {
         _this.nextScale = 576 / 481; //1.1975051975051975051975051975052
         /** 初始的缩放 */
         _this.initial_scale = Math.pow(_this.UpScale, 4); //0.48628443826573085101743493750953
+        /** 屏幕的宽度 */
+        _this.stageW = 640;
         /** 完成的帧*/
         _this.complete_frames = 30;
         /** 向下落的总长度 */
-        _this.ladder_total_Y = 390.15345030660546; //934.8820346401794
+        _this.ladder_total_Y = 346.80306693920477; //934.8820346401794
         /** 向下落速度  = 阶梯群的总高度 / 全部的帧数 */
         _this.dowm_speed = _this.ladder_total_Y / _this.complete_frames;
         /** 增加的透明值 */
@@ -54322,11 +54340,11 @@ var LadderArr = (function (_super) {
             }
             ;
             // 设置阶梯的边际范围
-            ladder.setBounds(new Laya.Rectangle(0, 0, 720, 150));
+            // ladder.setBounds(new Laya.Rectangle(0, 0, 720, 150));
             // 给阶梯设置缩放
             ladder.scale(scale_XY, scale_XY);
             // 设置居中的 X位置
-            var ladder_x = (720 - ladder.getBounds().width) / 2;
+            var ladder_x = (this.stageW - ladder.getBounds().width) / 2;
             if (i > 3) {
                 ladder.spr_clean();
             }
@@ -54334,19 +54352,19 @@ var LadderArr = (function (_super) {
             this.addChild(ladder);
             // 设置位置  ladder_x是居中的位置。  vy的上一个阶梯的 ladder.y + ladder.heigth
             ladder.pos(ladder_x, ladder_y);
-            console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "  ************  Y: " + ladder.getBounds().y);
+            console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "\t  Y: " + ladder.getBounds().y + "\theigth:  " + ladder.getBounds().height);
             console.log("scaleXY: " + ladder.scaleX);
             // 设置阶梯的名字
             ladder.name = "ladder";
             // 下一个的阶梯的缩放值
             scale_XY *= this.nextScale;
             // 下一个阶梯的Y坐标
-            ladder_y += 150 * ladder.scaleX;
+            ladder_y += ladder.height * ladder.scaleX;
             //  计算阶梯群Y的坐标。   stage.heigth - 所有阶梯的高度总和
             if (i == (ladder_qy - 1)) {
                 this.ladderArrHeigth = ladder_y; //ladderArrHeigth = 阶梯群的总高度
-                this.ladderArr_heigth = this.stage_heigth - this.ladderArrHeigth;
-                console.log(" 阶梯群高度:  " + this.ladderArr_heigth);
+                this.ladderArr_Y = this.stage_heigth - this.ladderArrHeigth;
+                console.log(" 阶梯群高度:  " + this.ladderArrHeigth);
             }
         }
     };
@@ -54357,7 +54375,7 @@ var LadderArr = (function (_super) {
         // 对阶梯群每个阶梯开始遍历变化
         var len = this._childs.length; //获取阶梯的长度
         var ladderArr = this._childs; //寄存阶梯数组
-        var stageWidth = 720; //屏幕的宽度
+        var stageWidth = 640; //屏幕的宽度
         var ladderTotalY = this.ladder_total_Y; //寄存下落的总长度
         for (var i = 0; i < len; i++) {
             var ladder = ladderArr[i];
@@ -54382,7 +54400,7 @@ var LadderArr = (function (_super) {
                 // 重置越界的阶梯
                 this.ladder_rect(ladder);
             }
-            if (ladder.alpha < 1) {
+            if (ladder.alpha < 1.1) {
                 ladder.alpha += this.add_alpha;
             }
         }
@@ -54408,7 +54426,7 @@ var LadderArr = (function (_super) {
         var scale_XY = this.initial_scale;
         ladder.scale(scale_XY, scale_XY);
         // 设置居中的 X位置
-        var ladder_x = (720 - ladder.getBounds().width) / 2;
+        var ladder_x = (this.stageW - ladder.getBounds().width) / 2;
         // 设置阶梯初始化Y的位置
         var ladder_y = 0;
         // 阶梯重置位置和 透明度
@@ -54449,7 +54467,7 @@ var ui;
         };
         return dailyGiftUI;
     }(View));
-    dailyGiftUI.uiView = { "type": "View", "props": { "width": 720, "height": 1280 }, "child": [{ "type": "Image", "props": { "y": 374, "x": 50, "skin": "everyDay/window.png" }, "child": [{ "type": "Image", "props": { "y": 71, "x": 34, "skin": "everyDay/inWindow.png" } }, { "type": "Image", "props": { "y": -21, "x": 558, "var": "button_off", "skin": "everyDay/off.png", "name": "button_off" } }, { "type": "Image", "props": { "y": -44, "x": 79, "skin": "everyDay/daily_Login.png" } }, { "type": "Image", "props": { "y": 415, "x": 330, "var": "voide_get", "skin": "everyDay/image_button_1.png", "name": "voide_get" }, "child": [{ "type": "Label", "props": { "y": 17, "x": 28, "text": "看视频加倍领取", "fontSize": 28, "font": "SimHei", "color": "#fff3da" } }] }, { "type": "Image", "props": { "y": 415, "x": 40, "var": "now_get", "skin": "everyDay/image_button_2.png", "name": "now_get" }, "child": [{ "type": "Label", "props": { "y": 17, "x": 70, "text": "直接领取", "fontSize": 28, "font": "SimHei", "color": "#fff3da" } }] }, { "type": "Box", "props": { "y": 97, "x": 45, "width": 0, "height": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "x": 73, "var": "hb_1", "skin": "Game_Settlement/HBao_open.png", "name": "hb_1" }, "child": [{ "type": "Label", "props": { "y": 57, "x": 29, "text": "已拆", "fontSize": 25, "font": "SimHei", "color": "#fff3da" } }, { "type": "Label", "props": { "y": 16, "x": 24, "var": "day_1_money", "text": "￥0.5", "name": "day_1_money", "fontSize": 25, "font": "Arial", "color": "#db4a2e", "bold": true } }] }, { "type": "Image", "props": { "y": 2, "x": 212, "var": "hb_2", "skin": "everyDay/HBao.png", "name": "hb_2" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第二天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 0, "x": 355, "var": "hb_3", "skin": "everyDay/HBao.png", "name": "hb_3" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第三天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 150, "x": 17, "var": "hb_4", "skin": "everyDay/HBao.png", "name": "hb_4" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第四天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 150, "x": 148, "var": "hb_5", "skin": "everyDay/HBao.png", "name": "hb_5" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第五天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 150, "x": 279, "var": "hb_6", "skin": "everyDay/HBao.png", "name": "hb_6" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第六天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 150, "x": 410, "var": "hb_7", "skin": "everyDay/HBao.png", "name": "hb_7" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第7天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }] }] }] };
+    dailyGiftUI.uiView = { "type": "View", "props": { "width": 640, "height": 1164 }, "child": [{ "type": "Image", "props": { "y": 374, "x": 10, "skin": "everyDay/window.png" }, "child": [{ "type": "Image", "props": { "y": 71, "x": 34, "skin": "everyDay/inWindow.png" } }, { "type": "Image", "props": { "y": -21, "x": 558, "var": "button_off", "skin": "everyDay/off.png", "name": "button_off" } }, { "type": "Image", "props": { "y": -44, "x": 79, "skin": "everyDay/daily_Login.png" } }, { "type": "Image", "props": { "y": 415, "x": 330, "var": "voide_get", "skin": "everyDay/image_button_1.png", "name": "voide_get" }, "child": [{ "type": "Label", "props": { "y": 17, "x": 28, "text": "看视频加倍领取", "fontSize": 28, "font": "SimHei", "color": "#fff3da" } }] }, { "type": "Image", "props": { "y": 415, "x": 40, "var": "now_get", "skin": "everyDay/image_button_2.png", "name": "now_get" }, "child": [{ "type": "Label", "props": { "y": 17, "x": 70, "text": "直接领取", "fontSize": 28, "font": "SimHei", "color": "#fff3da" } }] }, { "type": "Box", "props": { "y": 97, "x": 45, "width": 0, "height": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "x": 73, "var": "hb_1", "skin": "Game_Settlement/HBao_open.png", "name": "hb_1" }, "child": [{ "type": "Label", "props": { "y": 57, "x": 29, "text": "已拆", "fontSize": 25, "font": "SimHei", "color": "#fff3da" } }, { "type": "Label", "props": { "y": 16, "x": 24, "var": "day_1_money", "text": "￥0.5", "name": "day_1_money", "fontSize": 25, "font": "Arial", "color": "#db4a2e", "bold": true } }] }, { "type": "Image", "props": { "y": 2, "x": 212, "var": "hb_2", "skin": "everyDay/HBao.png", "name": "hb_2" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第二天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 0, "x": 355, "var": "hb_3", "skin": "everyDay/HBao.png", "name": "hb_3" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第三天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 150, "x": 17, "var": "hb_4", "skin": "everyDay/HBao.png", "name": "hb_4" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第四天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 150, "x": 148, "var": "hb_5", "skin": "everyDay/HBao.png", "name": "hb_5" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第五天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 150, "x": 279, "var": "hb_6", "skin": "everyDay/HBao.png", "name": "hb_6" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第六天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Image", "props": { "y": 150, "x": 410, "var": "hb_7", "skin": "everyDay/HBao.png", "name": "hb_7" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 16, "text": "第7天", "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }] }] }] }] };
     ui.dailyGiftUI = dailyGiftUI;
 })(ui || (ui = {}));
 (function (ui) {
@@ -54465,7 +54483,7 @@ var ui;
         };
         return gameHomeUI;
     }(View));
-    gameHomeUI.uiView = { "type": "View", "props": { "x": 0, "width": 720, "name": "gamehome", "height": 1280 }, "child": [{ "type": "Image", "props": { "y": 230, "width": 150, "var": "right_frame", "skin": "gameHome/Icon_box_rigth.png", "right": 0, "name": "right_frame", "height": 450 }, "child": [{ "type": "Image", "props": { "y": 170, "x": 30, "width": 100, "var": "reward", "skin": "gameHome/image_reward.png", "right": 20, "name": "reward", "height": 100 } }, { "type": "Image", "props": { "y": 320, "x": 30, "width": 100, "var": "tuiqian", "skin": "gameHome/image_tuiqian.png", "right": 20, "name": "tuiqian", "height": 100 } }, { "type": "Image", "props": { "y": 20, "x": 30, "width": 100, "var": "my_hb", "skin": "gameHome/image_myhb.png", "name": "my_hb", "height": 100 }, "child": [{ "type": "Text", "props": { "y": 40, "x": 24, "var": "hb_timer", "text": "20:00", "name": "hb_timer", "fontSize": 20, "color": "#f8e4e4", "bold": true } }] }] }, { "type": "Image", "props": { "y": 230, "x": 0, "width": 150, "var": "left_frame", "skin": "gameHome/Icon_box_left.png", "name": "left_frame", "left": 0, "height": 450 }, "child": [{ "type": "Image", "props": { "y": 20, "x": 20, "width": 100, "var": "music_off", "skin": "gameHome/music_off.png", "name": "music_off", "left": 20, "height": 100 } }, { "type": "Image", "props": { "y": 170, "x": 20, "width": 100, "var": "invite", "skin": "gameHome/image_invite.png", "name": "invite", "left": 20, "height": 100 } }, { "type": "Image", "props": { "y": 320, "x": 20, "width": 100, "var": "jieshao", "skin": "gameHome/image_jieshao.png", "name": "jieshao", "left": 20, "height": 100 } }] }, { "type": "Image", "props": { "y": 20, "x": 450, "var": "add_xcx", "skin": "gameHome/image_addxcx.png", "name": "add_xcx" } }, { "type": "Image", "props": { "y": 84, "x": 130, "width": 460, "var": "logo", "skin": "gameHome/image_logo.png", "name": "logo", "height": 205 } }, { "type": "Box", "props": { "y": 257, "x": 208, "var": "box_fraction", "scaleY": 1.5, "scaleX": 1.5, "name": "box_fraction" }, "child": [{ "type": "Image", "props": { "y": 9, "x": 9, "width": 50, "var": "crown", "skin": "gameHome/image_crown.png", "name": "crown", "height": 50 } }, { "type": "Text", "props": { "y": 0, "x": 78, "var": "fraction", "text": "2666", "name": "fraction", "fontSize": 50, "font": "Microsoft YaHei", "color": "#2d71d6", "bold": true } }] }, { "type": "Box", "props": { "y": 11, "x": 20, "var": "box_do", "name": "box_do" }, "child": [{ "type": "Image", "props": { "y": 9, "width": 50, "var": "diamond", "skin": "gameHome/image_do.png", "name": "diamond", "height": 50 } }, { "type": "Text", "props": { "x": 73, "text": "888", "fontSize": 50, "font": "Microsoft YaHei", "color": "#2d71d6", "bold": true } }] }, { "type": "Image", "props": { "y": 850, "var": "ranking", "skin": "gameHome/image_Leaderboard.png", "right": 0, "name": "ranking" }, "child": [{ "type": "Image", "props": { "y": 41, "x": 53, "skin": "gameHome/image_paihang.png" } }, { "type": "Text", "props": { "y": 122, "x": 31, "text": "好友排行", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 850, "var": "changeBallSkin", "skin": "gameHome/image_ballSkin.png", "name": "changeBallSkin", "left": 0 }, "child": [{ "type": "Image", "props": { "y": 42, "x": 32, "skin": "gameHome/image_ball.png", "scaleY": 1, "scaleX": 1 } }, { "type": "Text", "props": { "y": 122, "x": 19, "text": "更换皮肤", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Box", "props": { "y": 1100, "x": 200, "var": "prompt_box", "name": "prompt_box" }, "child": [{ "type": "Image", "props": { "var": "boot_prompt", "skin": "gameHome/image_boot_prompt.png", "name": "boot_prompt", "alpha": 0.8 } }, { "type": "Image", "props": { "x": 50, "var": "guide", "skin": "gameHome/image_guide.png", "name": "guide", "alpha": 0.8 } }] }] };
+    gameHomeUI.uiView = { "type": "View", "props": { "x": 0, "width": 640, "name": "gamehome", "height": 1136 }, "child": [{ "type": "Image", "props": { "y": 230, "width": 150, "var": "right_frame", "skin": "gameHome/Icon_box_rigth.png", "right": 0, "name": "right_frame", "height": 450 }, "child": [{ "type": "Image", "props": { "y": 170, "x": 30, "width": 100, "var": "reward", "skin": "gameHome/image_reward.png", "right": 20, "name": "reward", "height": 100 } }, { "type": "Image", "props": { "y": 320, "x": 30, "width": 100, "var": "tuiqian", "skin": "gameHome/image_tuiqian.png", "right": 20, "name": "tuiqian", "height": 100 } }, { "type": "Image", "props": { "y": 20, "x": 30, "width": 100, "var": "my_hb", "skin": "gameHome/image_myhb.png", "name": "my_hb", "height": 100 }, "child": [{ "type": "Text", "props": { "y": 40, "x": 24, "var": "hb_timer", "text": "20:00", "name": "hb_timer", "fontSize": 20, "color": "#f8e4e4", "bold": true } }] }] }, { "type": "Image", "props": { "y": 230, "x": 0, "width": 150, "var": "left_frame", "skin": "gameHome/Icon_box_left.png", "name": "left_frame", "left": 0, "height": 450 }, "child": [{ "type": "Image", "props": { "y": 20, "x": 20, "width": 100, "var": "music_off", "skin": "gameHome/music_off.png", "name": "music_off", "left": 20, "height": 100 } }, { "type": "Image", "props": { "y": 170, "x": 20, "width": 100, "var": "invite", "skin": "gameHome/image_invite.png", "name": "invite", "left": 20, "height": 100 } }, { "type": "Image", "props": { "y": 320, "x": 20, "width": 100, "var": "jieshao", "skin": "gameHome/image_jieshao.png", "name": "jieshao", "left": 20, "height": 100 } }] }, { "type": "Image", "props": { "x": 324, "var": "add_xcx", "top": 20, "skin": "gameHome/image_addxcx.png", "name": "add_xcx" } }, { "type": "Image", "props": { "y": 84, "x": 90, "width": 460, "var": "logo", "skin": "gameHome/image_logo.png", "name": "logo", "height": 205 } }, { "type": "Box", "props": { "y": 257, "x": 168, "var": "box_fraction", "scaleY": 1.5, "scaleX": 1.5, "name": "box_fraction" }, "child": [{ "type": "Image", "props": { "y": 9, "x": 9, "width": 50, "var": "crown", "skin": "gameHome/image_crown.png", "name": "crown", "height": 50 } }, { "type": "Text", "props": { "y": 0, "x": 78, "var": "fraction", "text": "2666", "name": "fraction", "fontSize": 50, "font": "Microsoft YaHei", "color": "#2d71d6", "bold": true } }] }, { "type": "Box", "props": { "y": 11, "x": 20, "var": "box_do", "name": "box_do" }, "child": [{ "type": "Image", "props": { "y": 9, "width": 50, "var": "diamond", "skin": "gameHome/image_do.png", "name": "diamond", "height": 50 } }, { "type": "Text", "props": { "x": 73, "text": "888", "fontSize": 50, "font": "Microsoft YaHei", "color": "#2d71d6", "bold": true } }] }, { "type": "Image", "props": { "y": 850, "var": "ranking", "skin": "gameHome/image_Leaderboard.png", "right": 0, "name": "ranking" }, "child": [{ "type": "Image", "props": { "y": 41, "x": 53, "skin": "gameHome/image_paihang.png" } }, { "type": "Text", "props": { "y": 122, "x": 31, "text": "好友排行", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 850, "var": "changeBallSkin", "skin": "gameHome/image_ballSkin.png", "name": "changeBallSkin", "left": 0 }, "child": [{ "type": "Image", "props": { "y": 42, "x": 32, "skin": "gameHome/image_ball.png", "scaleY": 1, "scaleX": 1 } }, { "type": "Text", "props": { "y": 122, "x": 19, "text": "更换皮肤", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Box", "props": { "x": 158, "var": "prompt_box", "name": "prompt_box", "bottom": 0 }, "child": [{ "type": "Image", "props": { "var": "boot_prompt", "skin": "gameHome/image_boot_prompt.png", "name": "boot_prompt", "alpha": 0.8 } }, { "type": "Image", "props": { "x": 50, "var": "guide", "skin": "gameHome/image_guide.png", "name": "guide", "alpha": 0.8 } }] }] };
     ui.gameHomeUI = gameHomeUI;
 })(ui || (ui = {}));
 (function (ui) {
@@ -54481,7 +54499,7 @@ var ui;
         };
         return gameOverVIewUI;
     }(View));
-    gameOverVIewUI.uiView = { "type": "View", "props": {}, "child": [{ "type": "Image", "props": { "y": 349, "x": 50, "skin": "Game_Settlement/window.png" }, "child": [{ "type": "Image", "props": { "y": 220, "x": 34, "skin": "Game_Settlement/inWindow.png" }, "child": [{ "type": "Box", "props": { "y": 43, "x": 6, "var": "box_hb_open" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/HBao_open.png" }, "child": [{ "type": "Text", "props": { "y": 58, "x": 28, "width": 0, "text": "已拆", "height": 0, "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }, { "type": "Text", "props": { "y": 19, "x": 20, "width": 0, "text": "￥ 0.5", "height": 0, "fontSize": 25, "font": "Arial", "color": "#ff0c08", "bold": true } }] }, { "type": "Image", "props": { "y": 0, "x": 143, "skin": "Game_Settlement/HBao_open.png" }, "child": [{ "type": "Text", "props": { "y": 58, "x": 28, "width": 0, "text": "已拆", "height": 0, "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }, { "type": "Text", "props": { "y": 19, "x": 20, "width": 0, "text": "￥ 0.5", "height": 0, "fontSize": 25, "font": "Arial", "color": "#ff0c08", "bold": true } }] }, { "type": "Image", "props": { "y": 0, "x": 287, "skin": "Game_Settlement/HBao_open.png" }, "child": [{ "type": "Text", "props": { "y": 58, "x": 28, "width": 0, "text": "已拆", "height": 0, "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }, { "type": "Text", "props": { "y": 19, "x": 20, "width": 0, "text": "￥ 0.5", "height": 0, "fontSize": 25, "font": "Arial", "color": "#ff0c08", "bold": true } }] }, { "type": "Image", "props": { "y": -4, "x": 430, "skin": "Game_Settlement/HBao_open.png" }, "child": [{ "type": "Text", "props": { "y": 58, "x": 28, "width": 0, "text": "已拆", "height": 0, "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }, { "type": "Text", "props": { "y": 19, "x": 20, "width": 0, "text": "￥ 0.5", "height": 0, "fontSize": 25, "font": "Arial", "color": "#ff0c08", "bold": true } }] }] }, { "type": "Box", "props": { "y": 16, "x": 7, "var": "box_hb" }, "child": [{ "type": "Image", "props": { "y": 10, "x": 0, "skin": "Game_Settlement/HBao.png" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 6, "wordWrap": true, "width": 97, "valign": "middle", "text": "点击分享\\n 拆开", "height": 52, "fontSize": 20, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 10, "x": 142, "skin": "Game_Settlement/HBao.png" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 6, "wordWrap": true, "width": 97, "valign": "middle", "text": "点击分享\\n 拆开", "height": 52, "fontSize": 20, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 10, "x": 285, "skin": "Game_Settlement/HBao.png" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 6, "width": 97, "valign": "middle", "text": "点击分享\\n 拆开", "height": 45, "fontSize": 20, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 10, "x": 428, "skin": "Game_Settlement/HBao.png" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 6, "width": 97, "valign": "middle", "text": "点击分享\\n 拆开", "height": 45, "fontSize": 20, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }] }] }, { "type": "Box", "props": { "y": 428, "x": 33, "var": "box_botton" }, "child": [{ "type": "Image", "props": { "y": 3, "x": 0, "var": "restart_img", "skin": "Game_Settlement/button.png", "name": "restart_img" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/image_rect.png" } }] }, { "type": "Image", "props": { "y": 2, "x": 149, "var": "home_img", "skin": "Game_Settlement/button.png", "name": "home_img" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/home.png" } }] }, { "type": "Image", "props": { "x": 298, "var": "share_img", "skin": "Game_Settlement/button.png", "name": "share_img" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/share.png" } }] }, { "type": "Image", "props": { "y": 1, "x": 447, "var": "void_img", "skin": "Game_Settlement/button.png", "name": "void_img" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/voide.png" } }] }, { "type": "Box", "props": { "y": -47, "x": 5, "width": 0, "var": "box_text", "height": 0 }, "child": [{ "type": "Text", "props": { "y": 145, "x": -14, "var": "restart_text", "text": "重新开始", "name": "restart_text", "fontSize": 30, "font": "Arial", "color": "#06abec", "bold": true } }, { "type": "Text", "props": { "y": 146, "x": 137, "var": "home_text", "text": "返回首页", "name": "home_text", "fontSize": 30, "font": "Arial", "color": "#06abec", "bold": true } }, { "type": "Text", "props": { "y": 146, "x": 287, "var": "share_text", "text": "分享复活", "name": "share_text", "fontSize": 30, "font": "Arial", "color": "#06abec", "bold": true } }, { "type": "Text", "props": { "y": 148, "x": 438, "var": "video_text", "text": "视频复活", "name": "video_text", "fontSize": 30, "font": "Arial", "color": "#06abec", "bold": true } }] }] }, { "type": "Box", "props": { "y": 136, "x": 50, "var": "box_bill", "name": "box_bill" }, "child": [{ "type": "Text", "props": { "y": 3, "x": 0, "text": "本次得分：", "fontSize": 35, "font": "Arial", "bold": true } }, { "type": "Text", "props": { "y": 3, "x": 380, "text": "砖石：", "fontSize": 35, "font": "Arial", "bold": true } }, { "type": "Text", "props": { "y": 1, "x": 174, "var": "score", "text": "5551", "name": "score", "fontSize": 40, "font": "Arial", "color": "#5284ee", "bold": true } }, { "type": "Text", "props": { "y": 2, "x": 478, "var": "od", "text": "59", "name": "od", "fontSize": 40, "font": "Arial", "color": "#5284ee", "bold": true } }] }] }] };
+    gameOverVIewUI.uiView = { "type": "View", "props": { "width": 640, "height": 1164 }, "child": [{ "type": "Image", "props": { "y": 291, "x": 10, "skin": "Game_Settlement/window.png" }, "child": [{ "type": "Image", "props": { "y": 220, "x": 34, "skin": "Game_Settlement/inWindow.png" }, "child": [{ "type": "Box", "props": { "y": 43, "x": 6, "var": "box_hb_open" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/HBao_open.png" }, "child": [{ "type": "Text", "props": { "y": 58, "x": 28, "width": 0, "text": "已拆", "height": 0, "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }, { "type": "Text", "props": { "y": 19, "x": 20, "width": 0, "text": "￥ 0.5", "height": 0, "fontSize": 25, "font": "Arial", "color": "#ff0c08", "bold": true } }] }, { "type": "Image", "props": { "y": 0, "x": 143, "skin": "Game_Settlement/HBao_open.png" }, "child": [{ "type": "Text", "props": { "y": 58, "x": 28, "width": 0, "text": "已拆", "height": 0, "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }, { "type": "Text", "props": { "y": 19, "x": 20, "width": 0, "text": "￥ 0.5", "height": 0, "fontSize": 25, "font": "Arial", "color": "#ff0c08", "bold": true } }] }, { "type": "Image", "props": { "y": 0, "x": 287, "skin": "Game_Settlement/HBao_open.png" }, "child": [{ "type": "Text", "props": { "y": 58, "x": 28, "width": 0, "text": "已拆", "height": 0, "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }, { "type": "Text", "props": { "y": 19, "x": 20, "width": 0, "text": "￥ 0.5", "height": 0, "fontSize": 25, "font": "Arial", "color": "#ff0c08", "bold": true } }] }, { "type": "Image", "props": { "y": -4, "x": 430, "skin": "Game_Settlement/HBao_open.png" }, "child": [{ "type": "Text", "props": { "y": 58, "x": 28, "width": 0, "text": "已拆", "height": 0, "fontSize": 25, "font": "Arial", "color": "#fff3da", "bold": true } }, { "type": "Text", "props": { "y": 19, "x": 20, "width": 0, "text": "￥ 0.5", "height": 0, "fontSize": 25, "font": "Arial", "color": "#ff0c08", "bold": true } }] }] }, { "type": "Box", "props": { "y": 16, "x": 7, "var": "box_hb" }, "child": [{ "type": "Image", "props": { "y": 10, "x": 0, "skin": "Game_Settlement/HBao.png" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 6, "wordWrap": true, "width": 97, "valign": "middle", "text": "点击分享\\n 拆开", "height": 52, "fontSize": 20, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 10, "x": 142, "skin": "Game_Settlement/HBao.png" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 6, "wordWrap": true, "width": 97, "valign": "middle", "text": "点击分享\\n 拆开", "height": 52, "fontSize": 20, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 10, "x": 285, "skin": "Game_Settlement/HBao.png" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 6, "width": 97, "valign": "middle", "text": "点击分享\\n 拆开", "height": 45, "fontSize": 20, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 10, "x": 428, "skin": "Game_Settlement/HBao.png" }, "child": [{ "type": "Label", "props": { "y": 65, "x": 6, "width": 97, "valign": "middle", "text": "点击分享\\n 拆开", "height": 45, "fontSize": 20, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }] }] }, { "type": "Box", "props": { "y": 428, "x": 33, "var": "box_botton" }, "child": [{ "type": "Image", "props": { "y": 3, "x": 0, "var": "restart_img", "skin": "Game_Settlement/button.png", "name": "restart_img" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/image_rect.png" } }] }, { "type": "Image", "props": { "y": 2, "x": 149, "var": "home_img", "skin": "Game_Settlement/button.png", "name": "home_img" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/home.png" } }] }, { "type": "Image", "props": { "x": 298, "var": "share_img", "skin": "Game_Settlement/button.png", "name": "share_img" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/share.png" } }] }, { "type": "Image", "props": { "y": 1, "x": 447, "var": "void_img", "skin": "Game_Settlement/button.png", "name": "void_img" }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "Game_Settlement/voide.png" } }] }, { "type": "Box", "props": { "y": -47, "x": 5, "width": 0, "var": "box_text", "height": 0 }, "child": [{ "type": "Text", "props": { "y": 145, "x": -14, "var": "restart_text", "text": "重新开始", "name": "restart_text", "fontSize": 30, "font": "Arial", "color": "#06abec", "bold": true } }, { "type": "Text", "props": { "y": 146, "x": 137, "var": "home_text", "text": "返回首页", "name": "home_text", "fontSize": 30, "font": "Arial", "color": "#06abec", "bold": true } }, { "type": "Text", "props": { "y": 146, "x": 287, "var": "share_text", "text": "分享复活", "name": "share_text", "fontSize": 30, "font": "Arial", "color": "#06abec", "bold": true } }, { "type": "Text", "props": { "y": 148, "x": 438, "var": "video_text", "text": "视频复活", "name": "video_text", "fontSize": 30, "font": "Arial", "color": "#06abec", "bold": true } }] }] }, { "type": "Box", "props": { "y": 136, "x": 50, "var": "box_bill", "name": "box_bill" }, "child": [{ "type": "Text", "props": { "y": 3, "x": 0, "text": "本次得分：", "fontSize": 35, "font": "Arial", "bold": true } }, { "type": "Text", "props": { "y": 3, "x": 380, "text": "砖石：", "fontSize": 35, "font": "Arial", "bold": true } }, { "type": "Text", "props": { "y": 1, "x": 174, "var": "score", "text": "5551", "name": "score", "fontSize": 40, "font": "Arial", "color": "#5284ee", "bold": true } }, { "type": "Text", "props": { "y": 2, "x": 478, "var": "od", "text": "59", "name": "od", "fontSize": 40, "font": "Arial", "color": "#5284ee", "bold": true } }] }] }] };
     ui.gameOverVIewUI = gameOverVIewUI;
 })(ui || (ui = {}));
 (function (ui) {
@@ -54497,7 +54515,7 @@ var ui;
         };
         return hbViewUI;
     }(View));
-    hbViewUI.uiView = { "type": "View", "props": {}, "child": [{ "type": "Image", "props": { "y": 400, "x": 92, "skin": "HBao/window.png" }, "child": [{ "type": "Image", "props": { "y": 45, "x": 436, "width": 40, "var": "shutDown", "skin": "HBao/off.png", "name": "shutDown", "height": 40 } }, { "type": "Image", "props": { "y": 320, "x": 92, "var": "keepOn", "skin": "HBao/buttom.png", "name": "keepOn" }, "child": [{ "type": "Text", "props": { "y": 13, "x": 56, "text": "继续打开红包", "fontSize": 40, "font": "Microsoft YaHei", "color": "#e51512", "bold": true } }] }, { "type": "Text", "props": { "y": 269, "x": 163, "var": "deposit", "text": "已存入我的红包", "name": "deposit", "fontSize": 30, "font": "Microsoft YaHei", "color": "#fff3da", "bold": false, "alpha": 0.8 } }, { "type": "Text", "props": { "y": 117, "x": 148, "var": "getMoney", "text": "￥0.5", "name": "getMoney", "fontSize": 100, "font": "Arial", "color": "#db4a2e", "bold": true } }, { "type": "Label", "props": { "y": 422, "x": 206, "var": "withdraw", "underline": true, "text": "我要提现", "name": "withdraw", "fontSize": 30, "font": "SimHei", "color": "#e3d3d3", "bold": true, "alpha": 0.8 } }] }] };
+    hbViewUI.uiView = { "type": "View", "props": { "width": 640, "height": 1164 }, "child": [{ "type": "Image", "props": { "y": 342, "x": 52, "skin": "HBao/window.png" }, "child": [{ "type": "Image", "props": { "y": 45, "x": 436, "width": 40, "var": "shutDown", "skin": "HBao/off.png", "name": "shutDown", "height": 40 } }, { "type": "Image", "props": { "y": 320, "x": 92, "var": "keepOn", "skin": "HBao/buttom.png", "name": "keepOn" }, "child": [{ "type": "Text", "props": { "y": 13, "x": 56, "text": "继续打开红包", "fontSize": 40, "font": "Microsoft YaHei", "color": "#e51512", "bold": true } }] }, { "type": "Text", "props": { "y": 269, "x": 163, "var": "deposit", "text": "已存入我的红包", "name": "deposit", "fontSize": 30, "font": "Microsoft YaHei", "color": "#fff3da", "bold": false, "alpha": 0.8 } }, { "type": "Text", "props": { "y": 117, "x": 148, "var": "getMoney", "text": "￥0.5", "name": "getMoney", "fontSize": 100, "font": "Arial", "color": "#db4a2e", "bold": true } }, { "type": "Label", "props": { "y": 422, "x": 206, "var": "withdraw", "underline": true, "text": "我要提现", "name": "withdraw", "fontSize": 30, "font": "SimHei", "color": "#e3d3d3", "bold": true, "alpha": 0.8 } }] }] };
     ui.hbViewUI = hbViewUI;
 })(ui || (ui = {}));
 (function (ui) {
@@ -54513,7 +54531,7 @@ var ui;
         };
         return inGameViewUI;
     }(View));
-    inGameViewUI.uiView = { "type": "View", "props": { "width": 720, "height": 1280 }, "child": [{ "type": "Image", "props": { "y": 20, "x": 20, "var": "hongbao", "skin": "inGame/HBao.png", "scaleY": 1.5, "scaleX": 1.5, "name": "hongbao" }, "child": [{ "type": "Image", "props": { "y": -10, "x": 33, "width": 35, "var": "prompt_1", "skin": "inGame/HB_number.png", "name": "prompt_1", "height": 35 }, "child": [{ "type": "Text", "props": { "y": 2, "x": 9, "var": "hbNumber", "text": "0", "name": "hbNumber", "fontSize": 30, "font": "Arial", "color": "#fff3da", "bold": true } }] }] }, { "type": "Image", "props": { "y": 39, "x": 115, "var": "prompt_0", "skin": "inGame/game_end.png", "name": "prompt_0" } }, { "type": "Image", "props": { "y": 120, "x": 20, "var": "prompt_surpass", "skin": "inGame/coming_soon.png", "name": "prompt_surpass" }, "child": [{ "type": "Text", "props": { "y": 40, "x": 15, "var": "surpass_fraction", "text": "99999", "name": "surpass_fraction", "fontSize": 40, "font": "Arial", "color": "#e3dd48", "bold": true } }, { "type": "Image", "props": { "y": 11, "x": 150, "width": 80, "skin": "inGame/yazi.jpg", "height": 80 } }] }, { "type": "Text", "props": { "y": 220, "x": 332, "width": 0, "var": "fraction", "text": "0", "strokeColor": "#d6a644", "stroke": 7, "overflow": "visible", "name": "fraction", "height": 0, "fontSize": 100, "font": "Arial", "color": "#167dcf", "bold": true, "align": "center" } }] };
+    inGameViewUI.uiView = { "type": "View", "props": { "width": 640, "height": 1136 }, "child": [{ "type": "Image", "props": { "y": 20, "x": 20, "var": "hongbao", "skin": "inGame/HBao.png", "scaleY": 1.5, "scaleX": 1.5, "name": "hongbao" }, "child": [{ "type": "Image", "props": { "y": -10, "x": 33, "width": 35, "var": "prompt_1", "skin": "inGame/HB_number.png", "name": "prompt_1", "height": 35 }, "child": [{ "type": "Text", "props": { "y": 2, "x": 9, "var": "hbNumber", "text": "0", "name": "hbNumber", "fontSize": 30, "font": "Arial", "color": "#fff3da", "bold": true } }] }] }, { "type": "Image", "props": { "y": 39, "x": 115, "var": "prompt_0", "skin": "inGame/game_end.png", "name": "prompt_0" } }, { "type": "Image", "props": { "y": 120, "x": 20, "var": "prompt_surpass", "skin": "inGame/coming_soon.png", "scaleY": 0.8, "scaleX": 0.8, "name": "prompt_surpass" }, "child": [{ "type": "Text", "props": { "y": 40, "x": 15, "var": "surpass_fraction", "text": "99999", "name": "surpass_fraction", "fontSize": 40, "font": "Arial", "color": "#e3dd48", "bold": true } }, { "type": "Image", "props": { "y": 11, "x": 150, "width": 80, "skin": "inGame/yazi.jpg", "height": 80 } }] }, { "type": "Text", "props": { "y": 200, "x": 292, "width": 0, "var": "fraction", "text": "0", "strokeColor": "#d6a644", "stroke": 7, "overflow": "visible", "name": "fraction", "height": 0, "fontSize": 100, "font": "Arial", "color": "#167dcf", "bold": true, "align": "center" } }] };
     ui.inGameViewUI = inGameViewUI;
 })(ui || (ui = {}));
 (function (ui) {
@@ -54528,7 +54546,7 @@ var ui;
         };
         return invateGiftUI;
     }(Dialog));
-    invateGiftUI.uiView = { "type": "Dialog", "props": { "width": 720, "height": 1280 }, "child": [{ "type": "Image", "props": { "y": 358, "x": 50, "skin": "invite_gift/window.png" }, "child": [{ "type": "Image", "props": { "y": -28, "x": 560, "var": "off_button", "skin": "invite_gift/off.png", "name": "off_button" } }, { "type": "Label", "props": { "y": 255, "x": 43, "text": "已邀请8位好友，完成以下任务，即可获取奖励!", "fontSize": 25, "font": "Arial", "color": "#9a8b8b", "bold": true } }, { "type": "Image", "props": { "y": 39, "x": 216, "skin": "invite_gift/invate_gift.png" } }, { "type": "Image", "props": { "y": 125, "x": 34, "skin": "invite_gift/in_view.png" }, "child": [{ "type": "Box", "props": { "y": 12, "x": 5 }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "invite_gift/df_invate.png" } }, { "type": "Image", "props": { "y": 0, "x": 102, "skin": "invite_gift/df_invate.png" } }, { "type": "Image", "props": { "y": 0, "x": 204, "skin": "invite_gift/df_invate.png" } }, { "type": "Image", "props": { "y": 0, "x": 306, "skin": "invite_gift/df_invate.png" } }] }, { "type": "Image", "props": { "y": 9, "x": 437, "var": "now_invite", "skin": "invite_gift/now_invite.png" } }] }, { "type": "Box", "props": { "y": 311, "x": 53 }, "child": [{ "type": "Image", "props": { "y": 16, "x": 389, "skin": "invite_gift/image_button_1.png" } }, { "type": "Image", "props": { "skin": "invite_gift/df_window.png" } }, { "type": "Label", "props": { "y": 12, "x": 111, "width": 0, "text": "邀请5位好友奖励", "fontSize": 30, "font": "SimHei", "color": "#2a667d" } }, { "type": "Label", "props": { "y": 57, "x": 114, "var": "schedule_1", "text": "（目标：5/5）", "name": "schedule_1", "fontSize": 25, "font": "SimHei", "color": "#2a667d" } }] }, { "type": "Box", "props": { "y": 432, "x": 53 }, "child": [{ "type": "Image", "props": { "y": 16, "x": 389, "skin": "invite_gift/image_button_2.png" } }, { "type": "Image", "props": { "skin": "invite_gift/df_window.png" } }, { "type": "Label", "props": { "y": 12, "x": 111, "width": 0, "text": "邀请5位好友奖励", "fontSize": 30, "font": "SimHei", "color": "#2a667d" } }, { "type": "Label", "props": { "y": 57, "x": 114, "var": "schedule_2", "text": "（目标：5/10）", "name": "schedule_2", "fontSize": 25, "font": "SimHei", "color": "#2a667d" } }] }, { "type": "Image", "props": { "y": 416, "x": 40, "skin": "invite_gift/dotted_line.png" } }] }] };
+    invateGiftUI.uiView = { "type": "Dialog", "props": { "width": 640, "height": 1164 }, "child": [{ "type": "Image", "props": { "y": 300, "x": 10, "skin": "invite_gift/window.png" }, "child": [{ "type": "Image", "props": { "y": -28, "x": 560, "var": "off_button", "skin": "invite_gift/off.png", "name": "off_button" } }, { "type": "Label", "props": { "y": 255, "x": 43, "text": "已邀请8位好友，完成以下任务，即可获取奖励!", "fontSize": 25, "font": "Arial", "color": "#9a8b8b", "bold": true } }, { "type": "Image", "props": { "y": 39, "x": 216, "skin": "invite_gift/invate_gift.png" } }, { "type": "Image", "props": { "y": 125, "x": 34, "skin": "invite_gift/in_view.png" }, "child": [{ "type": "Box", "props": { "y": 12, "x": 5 }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "invite_gift/df_invate.png" } }, { "type": "Image", "props": { "y": 0, "x": 102, "skin": "invite_gift/df_invate.png" } }, { "type": "Image", "props": { "y": 0, "x": 204, "skin": "invite_gift/df_invate.png" } }, { "type": "Image", "props": { "y": 0, "x": 306, "skin": "invite_gift/df_invate.png" } }] }, { "type": "Image", "props": { "y": 9, "x": 437, "var": "now_invite", "skin": "invite_gift/now_invite.png" } }] }, { "type": "Box", "props": { "y": 311, "x": 53 }, "child": [{ "type": "Image", "props": { "y": 16, "x": 389, "skin": "invite_gift/image_button_1.png" } }, { "type": "Image", "props": { "skin": "invite_gift/df_window.png" } }, { "type": "Label", "props": { "y": 12, "x": 111, "width": 0, "text": "邀请5位好友奖励", "fontSize": 30, "font": "SimHei", "color": "#2a667d" } }, { "type": "Label", "props": { "y": 57, "x": 114, "var": "schedule_1", "text": "（目标：5/5）", "name": "schedule_1", "fontSize": 25, "font": "SimHei", "color": "#2a667d" } }] }, { "type": "Box", "props": { "y": 432, "x": 53 }, "child": [{ "type": "Image", "props": { "y": 16, "x": 389, "skin": "invite_gift/image_button_2.png" } }, { "type": "Image", "props": { "skin": "invite_gift/df_window.png" } }, { "type": "Label", "props": { "y": 12, "x": 111, "width": 0, "text": "邀请5位好友奖励", "fontSize": 30, "font": "SimHei", "color": "#2a667d" } }, { "type": "Label", "props": { "y": 57, "x": 114, "var": "schedule_2", "text": "（目标：5/10）", "name": "schedule_2", "fontSize": 25, "font": "SimHei", "color": "#2a667d" } }] }, { "type": "Image", "props": { "y": 416, "x": 40, "skin": "invite_gift/dotted_line.png" } }] }] };
     ui.invateGiftUI = invateGiftUI;
 })(ui || (ui = {}));
 (function (ui) {
@@ -54544,7 +54562,7 @@ var ui;
         };
         return myHbUI;
     }(View));
-    myHbUI.uiView = { "type": "View", "props": {}, "child": [{ "type": "Image", "props": { "y": 430, "x": 50, "skin": "myHbao/myHBao.png" }, "child": [{ "type": "Image", "props": { "y": 340, "x": 485, "var": "withdraw", "skin": "myHbao/button.png", "name": "withdraw" }, "child": [{ "type": "Text", "props": { "y": 10, "x": 22, "text": "提现", "fontSize": 30, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Text", "props": { "y": 313, "x": 20, "var": "balance", "valign": "middle", "text": "余额: 9.99 (元) ", "name": "balance", "fontSize": 40, "font": "SimHei", "color": "#de1511", "bold": true, "align": "center" } }, { "type": "Text", "props": { "y": 371, "x": 20, "var": "prompt", "text": "温馨提示：红包满20元可提现", "name": "prompt", "fontSize": 25, "font": "Helvetica", "color": "#ccc1c1", "bold": true } }, { "type": "Image", "props": { "y": 5, "x": 580, "var": "closed", "skin": "myHbao/off.png", "name": "closed" } }] }] };
+    myHbUI.uiView = { "type": "View", "props": { "width": 640, "height": 1164 }, "child": [{ "type": "Image", "props": { "y": 393, "x": 40, "skin": "myHbao/myHBao.png", "scaleY": 0.9, "scaleX": 0.9 }, "child": [{ "type": "Image", "props": { "y": 340, "x": 485, "var": "withdraw", "skin": "myHbao/button.png", "name": "withdraw" }, "child": [{ "type": "Text", "props": { "y": 10, "x": 22, "text": "提现", "fontSize": 30, "font": "Arial", "color": "#fff3da", "bold": true } }] }, { "type": "Text", "props": { "y": 313, "x": 20, "var": "balance", "valign": "middle", "text": "余额: 9.99 (元) ", "name": "balance", "fontSize": 40, "font": "SimHei", "color": "#de1511", "bold": true, "align": "center" } }, { "type": "Text", "props": { "y": 371, "x": 20, "var": "prompt", "text": "温馨提示：红包满20元可提现", "name": "prompt", "fontSize": 25, "font": "Helvetica", "color": "#ccc1c1", "bold": true } }, { "type": "Image", "props": { "y": 5, "x": 580, "var": "closed", "skin": "myHbao/off.png", "name": "closed" } }] }] };
     ui.myHbUI = myHbUI;
 })(ui || (ui = {}));
 (function (ui) {
@@ -54559,7 +54577,7 @@ var ui;
         };
         return oneHBaoUI;
     }(View));
-    oneHBaoUI.uiView = { "type": "View", "props": { "width": 720, "height": 1280 }, "child": [{ "type": "Image", "props": { "y": 318, "x": 82, "skin": "one_HBao/window.png" }, "child": [{ "type": "Image", "props": { "y": 292, "x": 168, "var": "button_receive", "skin": "one_HBao/receive.png", "scaleY": 1.2, "scaleX": 1.2, "name": "button_receive" } }, { "type": "Image", "props": { "y": -9, "x": 514, "skin": "one_HBao/off.png" } }, { "type": "Label", "props": { "y": 209, "x": 28, "valign": "middle", "text": "恭喜获得一个现金红包", "fontSize": 50, "font": "Arial", "color": "#fff3da" } }, { "type": "Label", "props": { "y": 90, "x": 200, "text": "恭喜！", "fontSize": 70, "color": "#fff3da", "bold": true } }, { "type": "Label", "props": { "y": 592, "x": 66, "text": "温馨提示：领红包满20元可提现", "fontSize": 30, "color": "#fff3da" } }] }] };
+    oneHBaoUI.uiView = { "type": "View", "props": { "width": 640, "height": 1164 }, "child": [{ "type": "Image", "props": { "y": 260, "x": 42, "skin": "one_HBao/window.png" }, "child": [{ "type": "Image", "props": { "y": 292, "x": 168, "var": "button_receive", "skin": "one_HBao/receive.png", "scaleY": 1.2, "scaleX": 1.2, "name": "button_receive" } }, { "type": "Image", "props": { "y": -9, "x": 514, "skin": "one_HBao/off.png" } }, { "type": "Label", "props": { "y": 209, "x": 28, "valign": "middle", "text": "恭喜获得一个现金红包", "fontSize": 50, "font": "Arial", "color": "#fff3da" } }, { "type": "Label", "props": { "y": 90, "x": 200, "text": "恭喜！", "fontSize": 70, "color": "#fff3da", "bold": true } }, { "type": "Label", "props": { "y": 592, "x": 66, "text": "温馨提示：领红包满20元可提现", "fontSize": 30, "color": "#fff3da" } }] }] };
     ui.oneHBaoUI = oneHBaoUI;
 })(ui || (ui = {}));
 //# sourceMappingURL=layaUI.max.all.js.map
@@ -54638,7 +54656,21 @@ var GameHome = (function (_super) {
     };
     return GameHome;
 }(ui.gameHomeUI));
-//# sourceMappingURL=GameHome.js.map
+//# sourceMappingURL=gameHome.js.map
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+/** 游戏结束 */
+var gameOver = (function (_super) {
+    __extends(gameOver, _super);
+    function gameOver() {
+        return _super.call(this) || this;
+    }
+    return gameOver;
+}(ui.gameOverVIewUI));
+//# sourceMappingURL=GameOver.js.map
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }

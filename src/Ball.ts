@@ -13,7 +13,7 @@ class Ball extends Laya.Sprite {
     /** 球速度 */
     public ballSpeed: number;
     /** 球的初始坐标 */
-    private initialPoint: Laya.Point = new Laya.Point(335, 750);
+    private initialPoint: Laya.Point = new Laya.Point((640 - this.ballWidth)/2, 705);
     constructor() {
         super();
         // 球初始化
@@ -24,7 +24,6 @@ class Ball extends Laya.Sprite {
     private init(): void {
         // 添加球
         this.ballAdd();
-        this.testFilter();
     }
 
     /** 添加球精灵 */
@@ -83,14 +82,14 @@ class Ball extends Laya.Sprite {
      * @param ladderN 传入阶梯的编号，初始是4
      * @param fraction 传入的
      */
-    public ballUp(ladderN: number, fraction: Laya.Text): number {
+    public ballUp(ladderN: number, fraction?: Laya.Text): number {
         /** 阶梯编号 */
         let ladderNumber = ladderN;
         /** 分数 */
         let frac: number = Number(fraction.text);
         // 字体居中
         fraction.x = (720 - fraction.width) / 2;
-        console.log("fraction:\t" + frac + "\t$$$$ width:\t" + fraction.width + "\t$$$$ x:\t" + fraction.x);
+        // console.log("fraction:\t" + frac + "\t$$$$ width:\t" + fraction.width + "\t$$$$ x:\t" + fraction.x);
         // Y往上跳
         this.y -= this.upSpeed;
         this.upSpeed -= this.gravity;
@@ -104,9 +103,9 @@ class Ball extends Laya.Sprite {
             ladderNumber--;
             if (ladderNumber < 0) {
                 ladderNumber = 6;
-                console.log("阶梯编号初始化\t%%%%%%%%%%%%%%%%");
+                // console.log("阶梯编号初始化\t%%%%%%%%%%%%%%%%");
             }
-            console.log("开始下落\t$$$$$$\t" + ladderN);
+            // console.log("开始下落\t$$$$$$\t" + ladderN);
         }
         // 更新分数
         fraction.text = String(frac);
@@ -118,10 +117,5 @@ class Ball extends Laya.Sprite {
     public ballRect(): Ball {
         this.pos(this.initialPoint.x, this.initialPoint.y)
         return this;
-    }
-    /** 测试滤镜 */
-    private testFilter(): void {
-        let greenFilter: Laya.GlowFilter = new Laya.GlowFilter("#2F4F4F", 5, 0, 0);
-        this.filters = [greenFilter];
     }
 }

@@ -1,23 +1,24 @@
 D .
 R 39B957DA texture.png
 D ball_skin
-R 3F65009D 内.png
+P 01FAFA0D iamge_select.png
+P EB34EDAD image_ball_0.png
+P B30279FE image_ball_1.png
+P 666B0EE7 image_ball_2.png
+P CD49A88A image_ball_3.png
+P 75D1516E image_ball_4.png
+P F946FBB3 image_ball_5.png
+P 5DC3DA2B image_ball_6.png
+P 27FCBD7C image_ball_7.png
+P 2B8CDCA7 image_ball_8.png
+P 9C43ED45 image_ball_9.png
+P 9C60F1CF image_break_button.png
+P 77BF5CF1 image_do.png
+R 3F65009D image_inWindow.png
+P B994D563 image_lock.png
+P 4AB17700 image_void.png
+P 2B82FAE5 image_voide_button.png
 P B65B2F72 按钮.png
-P 2B82FAE5 按钮合并层.png
-P B30279FE 球1.png
-P 666B0EE7 球2.png
-P CD49A88A 球3.png
-P 75D1516E 球4.png
-P F946FBB3 球5.png
-P 5DC3DA2B 球6.png
-P 27FCBD7C 球7.png
-P 2B8CDCA7 球8.png
-P 9C43ED45 球9.png
-P 4AB17700 视频icon.png
-P 9C60F1CF 返回按钮.png
-P 01FAFA0D 选择.png
-P 77BF5CF1 钻石icon.png
-P B994D563 锁.png
 D ballBoom
 P D691BF31 01.png
 P BAAC6847 02.png

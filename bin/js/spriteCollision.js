@@ -84,9 +84,7 @@ var spriteCollision = (function () {
         var name;
         if (spr != undefined) {
             name = spr.name;
-            if (name != "spr_ob") {
-                spr.destroy();
-            }
+            spr.destroy();
         }
         // console.log("撞上了" + spr.name + " $$$$$");
         switch (name) {
@@ -95,6 +93,7 @@ var spriteCollision = (function () {
                 return "白圈";
             case "spr_ob":
                 console.log("调用障碍");
+                this.obTest();
                 return "障碍";
             case "spr_do":
                 console.log("调用砖石");

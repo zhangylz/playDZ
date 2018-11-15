@@ -4,56 +4,55 @@
 class Demo {
     private ball: Ball;
     private ladderArr: LadderArr;
-    /**通告 */
-    private notice: Laya.Text;
-    private mouseMove: OnMouse;
+    private ladder: Ladder;
     private inGameView: inGameView;
+    private spriteCollision: spriteCollision;
     // 构造器
     constructor() {
         Laya.MiniAdpter.init();
-        Laya.init(720, 1280, Laya.WebGL);
+        Laya.init(640, 1136, Laya.WebGL);
         Laya.stage.bgColor = "EEE9E9";
         Laya.stage.scaleMode = "showall";
-        // Laya.Stat.show();
+        Laya.Stat.show(640, 0);
         // 预加载资源
-        Laya.loader.load(["res/atlas/ladder.atlas", "res/test/image_ladder.png", "res/atlas/inGame.atlas"], Laya.Handler.create(this, this.onLoad));
+        Laya.loader.load(["res/atlas/ladder.atlas", "res/atlas/inGame.atlas"], Laya.Handler.create(this, this.onLoad));
     }
     // 加载完成
     private onLoad(set: Laya.ParticleSetting): void {
-        this.ball = new Ball();
-        this.inGameView = new inGameView();
         this.ladderArr = new LadderArr(Laya.stage.height);
-        // 设置阶梯的坐标
-        this.ladderArr.pos(0, this.ladderArr.ladderArr_heigth);
-        // 添加阶梯群
+        this.ladderArr.pos(0, 350)
+        this.inGameView = new inGameView();
+        this.ball = new Ball();
         Laya.stage.addChild(this.ladderArr);
-        // 添加球
-        Laya.stage.addChild(this.ball);
-        // 添加ingameview
         Laya.stage.addChild(this.inGameView);
-        Laya.timer.frameLoop(1, this, this.testDown);
-        // 开始检测碰撞
+        Laya.stage.addChild(this.ball);
+        Laya.timer.frameLoop(1, this, this.testDowm);
+        this.startFrame = Laya.timer.currFrame;
         this.spriteCollision = new spriteCollision();
-        this.mouseMove = new OnMouse(Laya.stage, this.ball);
-        Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.MouseDowm);
+    }
+
+    private timer: number = 0;
+    private startFrame: number;
+    private testDowm(e: Laya.Event) {
+        this.timer++;
+        this.ladderArr.startDowm();
+        // 测试碰撞
+        this.collision();
+        // console.log(this.ladderN + "\t$$$\t" + Laya.timer.currFrame);
     }
     private ladderN: number = 4;
-
     /** 测试碰撞 */
-    private testDown(e: Laya.Timer): void {
-        this.ladderArr.startDowm();
-        this.ladderN = this.ball.ballUp(this.ladderN, this.inGameView.fraction);
-        let ladder: Ladder = this.ladderArr._childs[this.ladderN];
+    private collision(): void {
+        let ladderArr: Array<Ladder> = this.ladderArr._childs as Array<Ladder>;
+        let newLadderN: number = this.ball.ballUp(this.ladderN, this.inGameView.fraction);
+        if (newLadderN != this.ladderN) {
+            this.ladderN = newLadderN;
+        }
+        let ladder = ladderArr[newLadderN];
         this.spriteCollision.init(ladder);
         this.spriteCollision.sprCenterPoint(this.ball);
     }
 
-    /**检测碰撞 */
-    private spriteCollision: spriteCollision;
-    private MouseDowm(): void {
-        this.ball.x = Laya.stage.mouseX;
-        // console.log("点击了 &&&&   " + Laya.stage.mouseX + "    ballx" + this.ball.x);
-    }
 }
 
 // 演示Demo

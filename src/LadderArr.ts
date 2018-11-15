@@ -10,9 +10,11 @@ class LadderArr extends Laya.Box {
     private initial_scale: number = Math.pow(this.UpScale, 4);  //0.48628443826573085101743493750953
     private stage_heigth: number;
     /** 阶梯的总高度 */
-    public ladderArr_heigth: number;
+    public ladderArr_Y: number;
     /** 阶梯群的总高度 */
     public ladderArrHeigth: number;
+    /** 屏幕的宽度 */
+    public stageW: number = 640;
     constructor(stage_heigth: number) {
         super();
         this.stage_heigth = stage_heigth;
@@ -35,11 +37,11 @@ class LadderArr extends Laya.Box {
             // 给前两个添加透视
             if (i == 0) { ladder.alpha = 0.2; } else if (i == 1) { ladder.alpha = 0.6; } else { ladder.alpha = 1 };
             // 设置阶梯的边际范围
-            ladder.setBounds(new Laya.Rectangle(0, 0, 720, 150));
+            // ladder.setBounds(new Laya.Rectangle(0, 0, 720, 150));
             // 给阶梯设置缩放
             ladder.scale(scale_XY, scale_XY);
             // 设置居中的 X位置
-            let ladder_x = (720 - ladder.getBounds().width) / 2;
+            let ladder_x = (this.stageW - ladder.getBounds().width) / 2;
             if (i > 3) {
                 ladder.spr_clean();
             }
@@ -47,19 +49,19 @@ class LadderArr extends Laya.Box {
             this.addChild(ladder);
             // 设置位置  ladder_x是居中的位置。  vy的上一个阶梯的 ladder.y + ladder.heigth
             ladder.pos(ladder_x, ladder_y);
-            console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "  ************  Y: " + ladder.getBounds().y);
+            console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "\t  Y: " + ladder.getBounds().y + "\theigth:  " + ladder.getBounds().height);
             console.log("scaleXY: " + ladder.scaleX);
             // 设置阶梯的名字
             ladder.name = "ladder";
             // 下一个的阶梯的缩放值
             scale_XY *= this.nextScale;
             // 下一个阶梯的Y坐标
-            ladder_y += 150 * ladder.scaleX;
+            ladder_y += ladder.height * ladder.scaleX;
             //  计算阶梯群Y的坐标。   stage.heigth - 所有阶梯的高度总和
             if (i == (ladder_qy - 1)) {
                 this.ladderArrHeigth = ladder_y;   //ladderArrHeigth = 阶梯群的总高度
-                this.ladderArr_heigth = this.stage_heigth - this.ladderArrHeigth;
-                console.log(" 阶梯群高度:  " + this.ladderArr_heigth);
+                this.ladderArr_Y = this.stage_heigth - this.ladderArrHeigth;
+                console.log(" 阶梯群高度:  " + this.ladderArrHeigth);
             }
         }
     }
@@ -67,7 +69,7 @@ class LadderArr extends Laya.Box {
     /** 完成的帧*/
     public complete_frames: number = 30;
     /** 向下落的总长度 */
-    private ladder_total_Y: number = 390.15345030660546;  //934.8820346401794
+    private ladder_total_Y: number = 346.80306693920477;  //934.8820346401794
     /** 向下落速度  = 阶梯群的总高度 / 全部的帧数 */
     private dowm_speed: number = this.ladder_total_Y / this.complete_frames;
     /** 增加的透明值 */
@@ -84,10 +86,10 @@ class LadderArr extends Laya.Box {
         // 对阶梯群每个阶梯开始遍历变化
         let len = this._childs.length;  //获取阶梯的长度
         let ladderArr = this._childs as Array<Ladder>; //寄存阶梯数组
-        let stageWidth = 720;       //屏幕的宽度
+        let stageWidth = 640;       //屏幕的宽度
         let ladderTotalY = this.ladder_total_Y; //寄存下落的总长度
         for (let i = 0; i < len; i++) {
-            let ladder = ladderArr[i];
+            let ladder: Ladder = ladderArr[i];
             ladder.scaleX *= this.ladder_bigger;
             ladder.scaleY *= this.ladder_bigger;
             /**居中设置 */
@@ -112,7 +114,7 @@ class LadderArr extends Laya.Box {
                 // 重置越界的阶梯
                 this.ladder_rect(ladder);
             }
-            if (ladder.alpha < 1) {
+            if (ladder.alpha < 1.1) {
                 ladder.alpha += this.add_alpha;
             }
         }
@@ -141,7 +143,7 @@ class LadderArr extends Laya.Box {
         let scale_XY = this.initial_scale;
         ladder.scale(scale_XY, scale_XY)
         // 设置居中的 X位置
-        let ladder_x = (720 - ladder.getBounds().width) / 2;
+        let ladder_x = (this.stageW - ladder.getBounds().width) / 2;
         // 设置阶梯初始化Y的位置
         let ladder_y = 0;
         // 阶梯重置位置和 透明度
