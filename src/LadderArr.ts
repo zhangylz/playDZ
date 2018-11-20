@@ -49,8 +49,8 @@ class LadderArr extends Laya.Box {
             this.addChild(ladder);
             // 设置位置  ladder_x是居中的位置。  vy的上一个阶梯的 ladder.y + ladder.heigth
             ladder.pos(ladder_x, ladder_y);
-            console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "\t  Y: " + ladder.getBounds().y + "\theigth:  " + ladder.getBounds().height);
-            console.log("scaleXY: " + ladder.scaleX);
+            // console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "\t  Y: " + ladder.getBounds().y + "\theigth:  " + ladder.getBounds().height);
+            // console.log("scaleXY: " + ladder.scaleX);
             // 设置阶梯的名字
             ladder.name = "ladder";
             // 下一个的阶梯的缩放值
@@ -86,7 +86,7 @@ class LadderArr extends Laya.Box {
         // 对阶梯群每个阶梯开始遍历变化
         let len = this._childs.length;  //获取阶梯的长度
         let ladderArr = this._childs as Array<Ladder>; //寄存阶梯数组
-        let stageWidth = 640;       //屏幕的宽度
+        let stageWidth = this.stageW;       //屏幕的宽度
         let ladderTotalY = this.ladder_total_Y; //寄存下落的总长度
         for (let i = 0; i < len; i++) {
             let ladder: Ladder = ladderArr[i];

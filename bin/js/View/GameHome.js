@@ -8,15 +8,24 @@ var __extends = (this && this.__extends) || function (d, b) {
  */
 var GameHome = (function (_super) {
     __extends(GameHome, _super);
-    function GameHome() {
+    function GameHome(game) {
         var _this = _super.call(this) || this;
+        /** 时间线 */
         _this.timerLine = new Laya.TimeLine();
+        /** 邀请好礼 */
         _this.inviteGift = new inviteGift();
+        /** 我的红包 */
+        _this.myHB = new myHB();
+        /** 每日奖励 */
+        _this.dailyGift = new dailyGift;
+        /** 玩法介绍 */
+        _this.playDialog = new playDialog();
         /** 倒计时时间 */
         _this.maxTimer = 0;
         _this.HbtimeLine = new Laya.TimeLine();
         // 初始化
         _this.init();
+        _this.Game = game;
         return _this;
     }
     /**
@@ -25,17 +34,18 @@ var GameHome = (function (_super) {
     GameHome.prototype.init = function () {
         // 时间线动画
         this.createTimerLine();
-        // 监听鼠标点击 
-        this.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //游戏主页界面
-        this.my_hb.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //红包
-        this.reward.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //每日奖励
-        this.tuiqian.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //推荐
-        this.jieshao.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //介绍
-        this.invite.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun); //邀请
-        this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //球皮肤事件
-        this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //排行榜
+        //同步数据
+        this.synchronousData();
+        // 监听鼠标点击
+        this.my_hb.on(Laya.Event.MOUSE_DOWN, this, this.myHBao); //我的红包
+        this.reward.on(Laya.Event.MOUSE_DOWN, this, this.openDailyGift); //每日奖励
+        this.tuiqian.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //游戏推荐
+        this.jieshao.on(Laya.Event.MOUSE_DOWN, this, this.playJieShao); //玩法介绍
+        this.invite.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun); //邀请有礼
         this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //关闭音乐
-        this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startGame);
+        this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //球皮肤事件
+        this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //好友排行
+        this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest); //开始游戏
         //时钟倒计时
         Laya.timer.loop(1000, this, this.HBcountdown);
     };
@@ -58,7 +68,7 @@ var GameHome = (function (_super) {
             --maxTimer;
         }
         else {
-            console.log("时间到，可以领红包");
+            // console.log("时间到，可以领红包");
             // 关闭红包倒计时
             Laya.timer.clear(this, this.HBcountdown);
             // 给红包价格时间线 目的为了醒目
@@ -86,16 +96,43 @@ var GameHome = (function (_super) {
         // 播放滑动动画并循环
         this.timerLine.play(0, true);
     };
-    /** 邀请按钮点击事件 */
+    /** 邀请有礼点击事件 */
     GameHome.prototype.inviteFun = function (e) {
-        if (this.inviteGift.isPopup == false) {
+        //判断是否显示 否就显示
+        if (this.inviteGift.isPopup != true) {
             this.inviteGift.popup();
         }
         return this;
     };
-    GameHome.prototype.startGame = function () {
+    /** 玩法介绍 */
+    GameHome.prototype.playJieShao = function () {
+        // 判断是否显示 否就显示
+        if (this.playDialog.isPopup != true) {
+            this.playDialog.popup();
+        }
+    };
+    /** 每日奖励 */
+    GameHome.prototype.openDailyGift = function () {
+        this.dailyGift.popup();
+        return this;
+    };
+    /** 我的红包 */
+    GameHome.prototype.myHBao = function () {
+        this.myHB.popup();
+    };
+    /** 开始游戏 */
+    GameHome.prototype.startTest = function () {
+        var VX = Laya.stage.mouseX;
+        this.Game.startGame(VX);
         this.visible = false;
-        console.log("close View, start Game!! gogo!!");
+        console.log("start game gameHome " + VX);
+    };
+    /** 同步数据 */
+    GameHome.prototype.synchronousData = function () {
+        // 更新数据
+        this.doNumber.text = String(888);
+        this.bigFraction.text = String(999);
+        return this;
     };
     return GameHome;
 }(ui.gameHomeUI));

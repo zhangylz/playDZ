@@ -1,11 +1,11 @@
 {
     "x":0,
-    "type":"View",
-    "selectedBox":1,
-    "selecteID":2,
+    "type":"Dialog",
+    "selectedBox":2,
+    "selecteID":8,
     "props":{"width":640,"sceneColor":"#000000","height":1164},
     "nodeParent":-1,
-    "label":"View",
+    "label":"Dialog",
     "isOpen":true,
     "isDirectory":true,
     "isAniNode":true,
@@ -15,7 +15,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":374,"x":10,"skin":"everyDay/window.png"},
+            "props":{"y":384,"x":10,"skin":"everyDay/window.png"},
             "nodeParent":1,
             "label":"Image",
             "isOpen":true,
@@ -33,20 +33,20 @@
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
-                    "compId":17,
+                    "compId":3,
                     "child":[
                         ]
                 },
                 {
                     "x":30,
                     "type":"Image",
-                    "props":{"y":-21,"x":558,"var":"button_off","skin":"everyDay/off.png","name":"button_off"},
+                    "props":{"y":-21,"x":558,"var":"closeButton","skin":"everyDay/off.png","name":"closeButton"},
                     "nodeParent":2,
-                    "label":"Image(button_off)",
+                    "label":"Image(closeButton)",
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
-                    "compId":3,
+                    "compId":4,
                     "child":[
                         ]
                 },
@@ -59,7 +59,7 @@
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
-                    "compId":4,
+                    "compId":5,
                     "child":[
                         ]
                 },
@@ -83,7 +83,7 @@
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
-                            "compId":18,
+                            "compId":7,
                             "child":[
                                 ]
                         }]
@@ -98,17 +98,17 @@
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
-                    "compId":7,
+                    "compId":8,
                     "child":[
                         {
                             "type":"Label",
                             "props":{"y":17,"x":70,"text":"直接领取","fontSize":28,"font":"SimHei","color":"#fff3da"},
-                            "nodeParent":7,
+                            "nodeParent":8,
                             "label":"Label",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
-                            "compId":19,
+                            "compId":9,
                             "child":[
                                 ]
                         }]
@@ -119,41 +119,136 @@
                     "props":{"y":97,"x":45,"width":0,"height":0},
                     "nodeParent":2,
                     "label":"Box",
-                    "isOpen":true,
+                    "isOpen":false,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
-                    "compId":16,
+                    "compId":10,
                     "child":[
                         {
-                            "x":45,
                             "type":"Image",
-                            "props":{"y":20,"x":73,"var":"hb_1","skin":"Game_Settlement/HBao_open.png","name":"hb_1"},
-                            "nodeParent":16,
+                            "props":{"y":20,"x":73,"skin":"Game_Settlement/HBao_open.png","name":"hb_1"},
+                            "nodeParent":10,
                             "label":"Image(hb_1)",
                             "isOpen":false,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
-                            "compId":8,
+                            "compId":11,
                             "child":[
                                 {
                                     "type":"Label",
                                     "props":{"y":57,"x":29,"text":"已拆","fontSize":25,"font":"SimHei","color":"#fff3da"},
-                                    "nodeParent":8,
+                                    "nodeParent":11,
                                     "label":"Label",
                                     "isDirectory":false,
                                     "isAniNode":true,
                                     "hasChild":false,
-                                    "compId":20,
+                                    "compId":12,
                                     "child":[
                                         ]
                                 },
                                 {
                                     "type":"Label",
-                                    "props":{"y":16,"x":24,"var":"day_1_money","text":"￥0.5","name":"day_1_money","fontSize":25,"font":"Arial","color":"#db4a2e","bold":true},
-                                    "nodeParent":8,
+                                    "props":{"y":16,"x":24,"text":"￥0.5","name":"day_1_money","fontSize":25,"font":"Arial","color":"#db4a2e","bold":true},
+                                    "nodeParent":11,
                                     "label":"Label(day_1_money)",
+                                    "isDirectory":false,
+                                    "isAniNode":true,
+                                    "hasChild":false,
+                                    "compId":13,
+                                    "child":[
+                                        ]
+                                }]
+                        },
+                        {
+                            "type":"Image",
+                            "props":{"y":2,"x":212,"skin":"everyDay/HBao.png","name":"hb_2"},
+                            "nodeParent":10,
+                            "label":"Image(hb_2)",
+                            "isOpen":false,
+                            "isDirectory":true,
+                            "isAniNode":true,
+                            "hasChild":true,
+                            "compId":14,
+                            "child":[
+                                {
+                                    "type":"Label",
+                                    "props":{"y":65,"x":16,"text":"第二天","fontSize":25,"font":"Arial","color":"#fff3da","bold":true},
+                                    "nodeParent":14,
+                                    "label":"Label",
+                                    "isDirectory":false,
+                                    "isAniNode":true,
+                                    "hasChild":false,
+                                    "compId":15,
+                                    "child":[
+                                        ]
+                                }]
+                        },
+                        {
+                            "type":"Image",
+                            "props":{"y":0,"x":355,"skin":"everyDay/HBao.png","name":"hb_3"},
+                            "nodeParent":10,
+                            "label":"Image(hb_3)",
+                            "isOpen":false,
+                            "isDirectory":true,
+                            "isAniNode":true,
+                            "hasChild":true,
+                            "compId":16,
+                            "child":[
+                                {
+                                    "type":"Label",
+                                    "props":{"y":65,"x":16,"text":"第三天","fontSize":25,"font":"Arial","color":"#fff3da","bold":true},
+                                    "nodeParent":16,
+                                    "label":"Label",
+                                    "isDirectory":false,
+                                    "isAniNode":true,
+                                    "hasChild":false,
+                                    "compId":17,
+                                    "child":[
+                                        ]
+                                }]
+                        },
+                        {
+                            "type":"Image",
+                            "props":{"y":150,"x":17,"skin":"everyDay/HBao.png","name":"hb_4"},
+                            "nodeParent":10,
+                            "label":"Image(hb_4)",
+                            "isOpen":false,
+                            "isDirectory":true,
+                            "isAniNode":true,
+                            "hasChild":true,
+                            "compId":18,
+                            "child":[
+                                {
+                                    "type":"Label",
+                                    "props":{"y":65,"x":16,"text":"第四天","fontSize":25,"font":"Arial","color":"#fff3da","bold":true},
+                                    "nodeParent":18,
+                                    "label":"Label",
+                                    "isDirectory":false,
+                                    "isAniNode":true,
+                                    "hasChild":false,
+                                    "compId":19,
+                                    "child":[
+                                        ]
+                                }]
+                        },
+                        {
+                            "type":"Image",
+                            "props":{"y":150,"x":148,"skin":"everyDay/HBao.png","name":"hb_5"},
+                            "nodeParent":10,
+                            "label":"Image(hb_5)",
+                            "isOpen":false,
+                            "isDirectory":true,
+                            "isAniNode":true,
+                            "hasChild":true,
+                            "compId":20,
+                            "child":[
+                                {
+                                    "type":"Label",
+                                    "props":{"y":65,"x":16,"text":"第五天","fontSize":25,"font":"Arial","color":"#fff3da","bold":true},
+                                    "nodeParent":20,
+                                    "label":"Label",
                                     "isDirectory":false,
                                     "isAniNode":true,
                                     "hasChild":false,
@@ -163,46 +258,20 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
-                            "props":{"y":2,"x":212,"var":"hb_2","skin":"everyDay/HBao.png","name":"hb_2"},
-                            "nodeParent":16,
-                            "label":"Image(hb_2)",
-                            "isOpen":false,
+                            "props":{"y":150,"x":279,"skin":"everyDay/HBao.png","name":"hb_6"},
+                            "nodeParent":10,
+                            "label":"Image(hb_6)",
+                            "isOpen":true,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
-                            "compId":9,
+                            "compId":22,
                             "child":[
                                 {
                                     "type":"Label",
-                                    "props":{"y":65,"x":16,"text":"第二天","fontSize":25,"font":"Arial","color":"#fff3da","bold":true},
-                                    "nodeParent":9,
-                                    "label":"Label",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":22,
-                                    "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "props":{"y":0,"x":355,"var":"hb_3","skin":"everyDay/HBao.png","name":"hb_3"},
-                            "nodeParent":16,
-                            "label":"Image(hb_3)",
-                            "isOpen":false,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":15,
-                            "child":[
-                                {
-                                    "type":"Label",
-                                    "props":{"y":65,"x":16,"text":"第三天","fontSize":25,"font":"Arial","color":"#fff3da","bold":true},
-                                    "nodeParent":15,
+                                    "props":{"y":65,"x":16,"text":"第六天","fontSize":25,"font":"Arial","color":"#fff3da","bold":true},
+                                    "nodeParent":22,
                                     "label":"Label",
                                     "isDirectory":false,
                                     "isAniNode":true,
@@ -213,103 +282,25 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
-                            "props":{"y":150,"x":17,"var":"hb_4","skin":"everyDay/HBao.png","name":"hb_4"},
-                            "nodeParent":16,
-                            "label":"Image(hb_4)",
-                            "isOpen":false,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":11,
-                            "child":[
-                                {
-                                    "type":"Label",
-                                    "props":{"y":65,"x":16,"text":"第四天","fontSize":25,"font":"Arial","color":"#fff3da","bold":true},
-                                    "nodeParent":11,
-                                    "label":"Label",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":24,
-                                    "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "props":{"y":150,"x":148,"var":"hb_5","skin":"everyDay/HBao.png","name":"hb_5"},
-                            "nodeParent":16,
-                            "label":"Image(hb_5)",
-                            "isOpen":false,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":12,
-                            "child":[
-                                {
-                                    "type":"Label",
-                                    "props":{"y":65,"x":16,"text":"第五天","fontSize":25,"font":"Arial","color":"#fff3da","bold":true},
-                                    "nodeParent":12,
-                                    "label":"Label",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":25,
-                                    "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "props":{"y":150,"x":279,"var":"hb_6","skin":"everyDay/HBao.png","name":"hb_6"},
-                            "nodeParent":16,
-                            "label":"Image(hb_6)",
-                            "isOpen":true,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":13,
-                            "child":[
-                                {
-                                    "x":60,
-                                    "type":"Label",
-                                    "props":{"y":65,"x":16,"text":"第六天","fontSize":25,"font":"Arial","color":"#fff3da","bold":true},
-                                    "nodeParent":13,
-                                    "label":"Label",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":26,
-                                    "child":[
-                                        ]
-                                }]
-                        },
-                        {
-                            "x":45,
-                            "type":"Image",
-                            "props":{"y":150,"x":410,"var":"hb_7","skin":"everyDay/HBao.png","name":"hb_7"},
-                            "nodeParent":16,
+                            "props":{"y":150,"x":410,"skin":"everyDay/HBao.png","name":"hb_7"},
+                            "nodeParent":10,
                             "label":"Image(hb_7)",
                             "isOpen":true,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
-                            "compId":10,
+                            "compId":24,
                             "child":[
                                 {
-                                    "x":60,
                                     "type":"Label",
                                     "props":{"y":65,"x":16,"text":"第7天","fontSize":25,"font":"Arial","color":"#fff3da","bold":true},
-                                    "nodeParent":10,
+                                    "nodeParent":24,
                                     "label":"Label",
                                     "isDirectory":false,
                                     "isAniNode":true,
                                     "hasChild":false,
-                                    "compId":27,
+                                    "compId":25,
                                     "child":[
                                         ]
                                 }]

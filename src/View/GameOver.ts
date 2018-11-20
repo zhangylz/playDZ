@@ -1,76 +1,82 @@
 /** 游戏结束 */
-class gameOver extends ui.gameOverVIewUI {
+class gameOver extends ui.gameOverUI {
     /** 重新开始 */
-    public agin_img;
+    public agin_img: Laya.Image;
     /** 回到主页 */
-    public home_img;
+    public home_img: Laya.Image;
     /** 分享复活 */
-    public share_img
+    public share_img: Laya.Image;
     /** 视频复活 */
-    public void_img
-    constructor() {
+    public void_img: Laya.Image;
+    /** Game类 */
+    public Game: Game;
+
+    constructor(game: Game) {
         super();
-        this.init()
+        this.init();
+        this.Game = game;
     }
-
     private init(): void {
-        this.agin_img.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown)
-        this.home_img.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
-        this.share_img.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
-        this.void_img.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
-    }
-
-    /** 
-     * 检测鼠标按下
-     *@param e 事件触发回调对象 
-     */
-    private mouseDown(e: Laya.Event): void {
-        // 寄存触发事件的父级名字
-        let name = e.target.name;
-        // console.log(e.target.name);
-        switch (name) {
-            case "agin_img":
-                // console.log("RECT!");
-                this.gameAgin();
-                break;
-            case "home_img":
-                // console.log("GO Game Home!");
-                this.gameHome();
-                break;
-            case "share_img":
-                // console.log("Share Frinde!");
-                this.shareGeme();
-                break;
-            case "void_img":
-                // console.log("Seeing Void");
-                this.voidRelive();
-                break;
-            default:
-                console.log("that is nothing!");
-                break;
-        }
+        // 四个组件监听
+        this.agin_img.on(Laya.Event.MOUSE_DOWN, this, this.gameAgin);          //重新开始
+        this.home_img.on(Laya.Event.MOUSE_DOWN, this, this.gameHome);       //回到主页
+        this.share_img.on(Laya.Event.MOUSE_DOWN, this, this.shareGeme);     //分享复活
+        this.void_img.on(Laya.Event.MOUSE_DOWN, this, this.voidRelive);     //视频复活
     }
     /** 重新开始游戏 */
-    private gameAgin(): this {
-        console.log("Game Agin")
-        return this;
+    public gameAgin(): void {
+        //判断gameOver弹窗显示状态
+        if (this.isPopup == true) {
+            this.close();
+        }
+        //重置分数
+        this.Game.inGameView.reset();
+        this.Game.gameReset().startGame();
+        console.log("Game Agin");
     }
 
     /** 返回主页 */
-    private gameHome(): this {
+    private gameHome(): void {
+        this.close();
+        this.Game.inGameView.visible = false;
+        this.Game.gameHome.visible = true;
+        this.Game.inGameView.reset();
+        this.Game.gameReset();
+        this.Game.monitorMouse();
         console.log("goBreak Game Home");
-        return this;
     }
 
     /** 分享复活 */
-    private shareGeme(): this {
+    private shareGeme(): void {
+        if (this.isPopup == true) {
+            this.close();
+        }
+        //重置然后开始游戏
+        this.Game.gameReset().startGame();
         console.log("share game to frinde");
-        return this;
     }
 
     /** 视频复活 */
-    private voidRelive(): this {
+    private voidRelive(): void {
+        if (this.isPopup == true) {
+            this.close();
+        }
+        // 重置然后开始游戏
+        this.Game.gameReset().startGame();
         console.log("Watch void to Relive");
-        return this;
+    }
+
+    /**
+     * 关闭完成后
+     * @param e  e:String (default = null) — 如果是点击默认关闭按钮触发，则传入关闭按钮的名字(name)，否则为null
+     */
+    public onClosed(e: String = null): void {
+        console.log("closed OK! $$$$$$$$$$$")
+
+    }
+    /** 打开完成后 */
+    public onOpened(): void {
+        this.fraction.text = this.Game.inGameView.fraction.text;
+        console.log("open OK! $$$$$$$$$$$");
     }
 }

@@ -9,9 +9,11 @@ var inGameView = (function (_super) {
     function inGameView() {
         return _super.call(this) || this;
     }
-    /** 初始化 */
-    inGameView.prototype.init = function () {
-        console.log("inGame init \t$$$$");
+    /** 分数重置 */
+    inGameView.prototype.reset = function () {
+        this.fraction.text = String(0);
+        this.hbNumber.text = String(0);
+        console.log("inGame reset \t$$$$");
     };
     return inGameView;
 }(ui.inGameViewUI));

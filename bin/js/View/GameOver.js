@@ -6,67 +6,71 @@ var __extends = (this && this.__extends) || function (d, b) {
 /** 游戏结束 */
 var gameOver = (function (_super) {
     __extends(gameOver, _super);
-    function gameOver() {
+    function gameOver(game) {
         var _this = _super.call(this) || this;
         _this.init();
+        _this.Game = game;
         return _this;
     }
     gameOver.prototype.init = function () {
-        this.agin_img.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
-        this.home_img.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
-        this.share_img.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
-        this.void_img.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
-    };
-    /**
-     * 检测鼠标按下
-     *@param e 事件触发回调对象
-     */
-    gameOver.prototype.mouseDown = function (e) {
-        // 寄存触发事件的父级名字
-        var name = e.target.name;
-        // console.log(e.target.name);
-        switch (name) {
-            case "agin_img":
-                // console.log("RECT!");
-                this.gameAgin();
-                break;
-            case "home_img":
-                // console.log("GO Game Home!");
-                this.gameHome();
-                break;
-            case "share_img":
-                // console.log("Share Frinde!");
-                this.shareGeme();
-                break;
-            case "void_img":
-                // console.log("Seeing Void");
-                this.voidRelive();
-                break;
-            default:
-                console.log("that is nothing!");
-                break;
-        }
+        // 四个组件监听
+        this.agin_img.on(Laya.Event.MOUSE_DOWN, this, this.gameAgin); //重新开始
+        this.home_img.on(Laya.Event.MOUSE_DOWN, this, this.gameHome); //回到主页
+        this.share_img.on(Laya.Event.MOUSE_DOWN, this, this.shareGeme); //分享复活
+        this.void_img.on(Laya.Event.MOUSE_DOWN, this, this.voidRelive); //视频复活
     };
     /** 重新开始游戏 */
     gameOver.prototype.gameAgin = function () {
+        //判断gameOver弹窗显示状态
+        if (this.isPopup == true) {
+            this.close();
+        }
+        //重置分数
+        this.Game.inGameView.reset();
+        this.Game.gameReset().startGame();
         console.log("Game Agin");
-        return this;
     };
     /** 返回主页 */
     gameOver.prototype.gameHome = function () {
+        this.close();
+        this.Game.inGameView.visible = false;
+        this.Game.gameHome.visible = true;
+        this.Game.inGameView.reset();
+        this.Game.gameReset();
+        this.Game.monitorMouse();
         console.log("goBreak Game Home");
-        return this;
     };
     /** 分享复活 */
     gameOver.prototype.shareGeme = function () {
+        if (this.isPopup == true) {
+            this.close();
+        }
+        //重置然后开始游戏
+        this.Game.gameReset().startGame();
         console.log("share game to frinde");
-        return this;
     };
     /** 视频复活 */
     gameOver.prototype.voidRelive = function () {
+        if (this.isPopup == true) {
+            this.close();
+        }
+        // 重置然后开始游戏
+        this.Game.gameReset().startGame();
         console.log("Watch void to Relive");
-        return this;
+    };
+    /**
+     * 关闭完成后
+     * @param e  e:String (default = null) — 如果是点击默认关闭按钮触发，则传入关闭按钮的名字(name)，否则为null
+     */
+    gameOver.prototype.onClosed = function (e) {
+        if (e === void 0) { e = null; }
+        console.log("closed OK! $$$$$$$$$$$");
+    };
+    /** 打开完成后 */
+    gameOver.prototype.onOpened = function () {
+        this.fraction.text = this.Game.inGameView.fraction.text;
+        console.log("open OK! $$$$$$$$$$$");
     };
     return gameOver;
-}(ui.gameOverVIewUI));
-//# sourceMappingURL=GameOver.js.map
+}(ui.gameOverUI));
+//# sourceMappingURL=gameOver.js.map

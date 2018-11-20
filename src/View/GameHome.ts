@@ -4,30 +4,47 @@
 class GameHome extends ui.gameHomeUI {
     /** 红包倒计时 */
     public hb_timer: Laya.Text;
+    /** 时间线 */
     private timerLine = new Laya.TimeLine();
+    /** 邀请好礼 */
     public inviteGift = new inviteGift();
-    constructor() {
+    /** 我的红包 */
+    public myHB = new myHB();
+    /** 每日奖励 */
+    public dailyGift = new dailyGift;
+    /** 最大分数 */
+    public bigFraction: Laya.Text;
+    /** 砖石数量 */
+    public doNumber: Laya.Text;
+    /** 玩法介绍 */
+    public playDialog: playDialog = new playDialog();
+
+    /** 游戏主控 */
+    public Game: Game;
+    constructor(game?: Game) {
         super();
         // 初始化
         this.init();
+        this.Game = game;
     }
     /**
      * 初始化
      */
-    private init() {
+    public init() {
         // 时间线动画
         this.createTimerLine();
-        // 监听鼠标点击 
-        this.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);           //游戏主页界面
-        this.my_hb.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);     //红包
-        this.reward.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);    //每日奖励
-        this.tuiqian.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);   //推荐
-        this.jieshao.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);   //介绍
-        this.invite.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);    //邀请
+        //同步数据
+        this.synchronousData();
+        // 监听鼠标点击
+        this.my_hb.on(Laya.Event.MOUSE_DOWN, this, this.myHBao);                //我的红包
+        this.reward.on(Laya.Event.MOUSE_DOWN, this, this.openDailyGift);        //每日奖励
+        this.tuiqian.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);           //游戏推荐
+        this.jieshao.on(Laya.Event.MOUSE_DOWN, this, this.playJieShao);           //玩法介绍
+        this.invite.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);            //邀请有礼
+        this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);         //关闭音乐
         this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);    //球皮肤事件
-        this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);           //排行榜
-        this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //关闭音乐
-        this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startGame);
+        this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);           //好友排行
+        this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest);          //开始游戏
         //时钟倒计时
         Laya.timer.loop(1000, this, this.HBcountdown);
     }
@@ -46,7 +63,7 @@ class GameHome extends ui.gameHomeUI {
             this.hb_timer.text = msg;
             --maxTimer;
         } else {
-            console.log("时间到，可以领红包");
+            // console.log("时间到，可以领红包");
             // 关闭红包倒计时
             Laya.timer.clear(this, this.HBcountdown);
             // 给红包价格时间线 目的为了醒目
@@ -76,15 +93,49 @@ class GameHome extends ui.gameHomeUI {
         // 播放滑动动画并循环
         this.timerLine.play(0, true);
     }
-    /** 邀请按钮点击事件 */
-    private inviteFun(e: Laya.Event): this {
-        if (this.inviteGift.isPopup == false) {
+
+    /** 邀请有礼点击事件 */
+    private inviteFun(e: Laya.Event): GameHome {
+        //判断是否显示 否就显示
+        if (this.inviteGift.isPopup != true) {
             this.inviteGift.popup();
         }
         return this;
     }
-    private startGame(): void {
-        this.visible = false;
-        console.log("close View, start Game!! gogo!!");
+
+    /** 玩法介绍 */
+    private playJieShao(): void {
+        // 判断是否显示 否就显示
+        if (this.playDialog.isPopup != true) {
+            this.playDialog.popup();
+        }
     }
+
+    /** 每日奖励 */
+    public openDailyGift(): GameHome {
+        this.dailyGift.popup();
+        return this;
+    }
+
+    /** 我的红包 */
+    private myHBao(): void {
+        this.myHB.popup();
+    }
+
+    /** 开始游戏 */
+    public startTest(): void {
+        let VX = Laya.stage.mouseX
+        this.Game.startGame(VX);
+        this.visible = false;
+        console.log("start game gameHome " + VX);
+    }
+
+    /** 同步数据 */
+    public synchronousData(): GameHome {
+        // 更新数据
+        this.doNumber.text = String(888);
+        this.bigFraction.text = String(999);
+        return this;
+    }
+
 }
