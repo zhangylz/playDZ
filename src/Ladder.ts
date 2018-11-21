@@ -58,7 +58,7 @@ class Ladder extends Laya.Sprite {
             if (this.random_arr.indexOf(random_e) == -1) {
                 // 寄存随机数
                 this.random_arr.push(random_e);
-                console.log(this.sprX_arr[random_e]);
+                // console.log(this.sprX_arr[random_e]);
                 // 生成生成一个障碍的精灵实例
                 let spr_ob: Laya.Sprite = Laya.Pool.getItemByClass("spr_ob", Laya.Sprite);
                 spr_ob.name = "spr_ob";

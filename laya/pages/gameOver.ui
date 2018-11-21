@@ -476,16 +476,17 @@
                 {
                     "x":30,
                     "type":"Box",
-                    "props":{"y":136,"x":50,"name":"box_bill"},
+                    "props":{"y":136,"x":50,"var":"box_bill","name":"box_bill"},
                     "nodeParent":2,
                     "label":"Box(box_bill)",
-                    "isOpen":false,
+                    "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":40,
                     "child":[
                         {
+                            "x":45,
                             "type":"Text",
                             "props":{"y":3,"x":0,"text":"本次得分：","fontSize":35,"font":"Arial","color":"#000000","bold":true},
                             "nodeParent":40,
@@ -498,8 +499,9 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Text",
-                            "props":{"y":3,"x":380,"text":"砖石：","fontSize":35,"font":"Arial","color":"#000000","bold":true},
+                            "props":{"y":3,"x":380,"text":"钻石：","fontSize":35,"font":"Arial","color":"#000000","bold":true},
                             "nodeParent":40,
                             "label":"Text",
                             "isDirectory":false,
@@ -510,6 +512,7 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Text",
                             "props":{"y":1,"x":174,"var":"fraction","text":"0","name":"fraction","fontSize":40,"font":"Arial","color":"#d10b4a","bold":true},
                             "nodeParent":40,
@@ -522,10 +525,11 @@
                                 ]
                         },
                         {
+                            "x":45,
                             "type":"Text",
-                            "props":{"y":2,"x":478,"var":"od_n","text":"0","name":"od_n","fontSize":40,"font":"Arial","color":"#d10b4a","bold":true},
+                            "props":{"y":2,"x":478,"var":"do_n","text":"0","name":"do_n","fontSize":40,"font":"Arial","color":"#d10b4a","bold":true},
                             "nodeParent":40,
-                            "label":"Text(od_n)",
+                            "label":"Text(do_n)",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,

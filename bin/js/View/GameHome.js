@@ -8,7 +8,12 @@ var __extends = (this && this.__extends) || function (d, b) {
  */
 var GameHome = (function (_super) {
     __extends(GameHome, _super);
-    function GameHome(game) {
+    /**
+     * 构造初始化
+     * @param game 传入游戏中控
+     * @param dataCenter 数据中控
+     */
+    function GameHome(game, dataCenter) {
         var _this = _super.call(this) || this;
         /** 时间线 */
         _this.timerLine = new Laya.TimeLine();
@@ -24,8 +29,9 @@ var GameHome = (function (_super) {
         _this.maxTimer = 0;
         _this.HbtimeLine = new Laya.TimeLine();
         // 初始化
-        _this.init();
         _this.Game = game;
+        _this.dataCenter = dataCenter;
+        _this.init();
         return _this;
     }
     /**
@@ -45,6 +51,7 @@ var GameHome = (function (_super) {
         this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //关闭音乐
         this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //球皮肤事件
         this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //好友排行
+        this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);
         this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest); //开始游戏
         //时钟倒计时
         Laya.timer.loop(1000, this, this.HBcountdown);
@@ -130,8 +137,8 @@ var GameHome = (function (_super) {
     /** 同步数据 */
     GameHome.prototype.synchronousData = function () {
         // 更新数据
-        this.doNumber.text = String(888);
-        this.bigFraction.text = String(999);
+        this.doNumber.text = String(this.dataCenter.doNumber);
+        this.bigFraction.text = String(this.dataCenter.bigFraction);
         return this;
     };
     return GameHome;

@@ -8,7 +8,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 */
 var Ball = (function (_super) {
     __extends(Ball, _super);
-    function Ball() {
+    /** @param dataCenter 数据中控 */
+    function Ball(dataCenter) {
         var _this = _super.call(this) || this;
         /** 球宽度 */
         _this.ballWidth = 50;
@@ -21,6 +22,7 @@ var Ball = (function (_super) {
         /**重力加速度 */
         _this.gravity = 40 / 29;
         // 球初始化
+        _this.dataCenter = dataCenter;
         _this.init();
         return _this;
     }
@@ -76,15 +78,13 @@ var Ball = (function (_super) {
     /**
      * 球跳动,下落的时候改变检测的阶梯编号
      * @param ladderN 传入阶梯的编号，初始是4
-     * @param fraction 传入的
+     * @param dataCenter 数据中控
      */
-    Ball.prototype.ballUp = function (ladderN, fraction) {
+    Ball.prototype.ballUp = function (ladderN) {
         /** 阶梯编号 */
         var ladderNumber = ladderN;
-        /** 分数 */
-        var frac = Number(fraction.text);
-        // 字体居中
-        fraction.x = (720 - fraction.width) / 2;
+        /** 寄存数据中控 */
+        var data = this.dataCenter;
         // console.log("fraction:\t" + frac + "\t$$$$ width:\t" + fraction.width + "\t$$$$ x:\t" + fraction.x);
         // Y往上跳
         this.y -= this.upSpeed;
@@ -93,7 +93,8 @@ var Ball = (function (_super) {
             // 开始弹回去
             this.y = this.initialPoint.y;
             this.upSpeed = 20;
-            frac += 1;
+            data.fraction += 1;
+            this.onPlaySound();
         }
         if (this.upSpeed < 0 && this.upSpeed > -1) {
             ladderNumber--;
@@ -102,9 +103,13 @@ var Ball = (function (_super) {
             }
         }
         // 更新分数
-        fraction.text = String(frac);
+        // fraction.text = String(frac);
         //返回处理后编号
         return ladderNumber;
+    };
+    /** 播放音效 */
+    Ball.prototype.onPlaySound = function () {
+        Laya.SoundManager.playSound("res/sounds/ballSounds.mp3", 1, new Laya.Handler(this, function () { console.log("bang bang!"); }));
     };
     /** 球初始化 */
     Ball.prototype.ballRect = function () {

@@ -6,12 +6,14 @@ var __extends = (this && this.__extends) || function (d, b) {
 /** 游戏结束 */
 var gameOver = (function (_super) {
     __extends(gameOver, _super);
-    function gameOver(game) {
+    function gameOver(game, dataCenter) {
         var _this = _super.call(this) || this;
         _this.init();
         _this.Game = game;
+        _this.dataCenter = dataCenter;
         return _this;
     }
+    /** 初始化 */
     gameOver.prototype.init = function () {
         // 四个组件监听
         this.agin_img.on(Laya.Event.MOUSE_DOWN, this, this.gameAgin); //重新开始
@@ -68,7 +70,8 @@ var gameOver = (function (_super) {
     };
     /** 打开完成后 */
     gameOver.prototype.onOpened = function () {
-        this.fraction.text = this.Game.inGameView.fraction.text;
+        this.fraction.text = String(this.dataCenter.fraction);
+        this.do_n.text = String(this.dataCenter.doObtain);
         console.log("open OK! $$$$$$$$$$$");
     };
     return gameOver;

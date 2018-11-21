@@ -1,17 +1,29 @@
 /** 数据中心 */
 class dataCenter {
-    /** 砖石数量 */
-    public doNumber: number;
+    /** 砖石总数量 */
+    public doNumber: number = 1;
+    /** 局内获得钻石 */
+    public doObtain: number = 0;
     /** 最高分 */
-    public bigFraction: number;
+    public bigFraction: number = 11;
+    /** 分数 */
+    public fraction: number = 0;
     /** 余额 */
-    public balance: number;
+    public balance: number = 0;
+    /** 局内获得红包数 */
+    public hbNumber: number = 0;
     constructor() {
         this.init();
     }
-    private init() {
-        this.doNumber = 5;
-        this.bigFraction = 11;
-        this.balance = 10;
+    /**初始化 */
+    public init() {
+        console.log(new Date());
+    }
+
+    /** 局内数据初始化 */
+    public dataRest(): void {
+        this.hbNumber = 0;
+        this.fraction = 0;
+        this.doObtain = 0;
     }
 }

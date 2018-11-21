@@ -10,12 +10,16 @@ class gameOver extends ui.gameOverUI {
     public void_img: Laya.Image;
     /** Game类 */
     public Game: Game;
-
-    constructor(game: Game) {
+    /** 数据中心 */
+    public dataCenter: dataCenter;
+    constructor(game: Game, dataCenter: dataCenter) {
         super();
         this.init();
         this.Game = game;
+        this.dataCenter = dataCenter;
     }
+
+    /** 初始化 */
     private init(): void {
         // 四个组件监听
         this.agin_img.on(Laya.Event.MOUSE_DOWN, this, this.gameAgin);          //重新开始
@@ -76,7 +80,8 @@ class gameOver extends ui.gameOverUI {
     }
     /** 打开完成后 */
     public onOpened(): void {
-        this.fraction.text = this.Game.inGameView.fraction.text;
+        this.fraction.text = String(this.dataCenter.fraction);
+        this.do_n.text = String(this.dataCenter.doObtain);
         console.log("open OK! $$$$$$$$$$$");
     }
 }

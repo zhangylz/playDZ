@@ -32,6 +32,13 @@ var myHB = (function (_super) {
         }
         return this;
     };
+    /** 更新余额 */
+    myHB.prototype.updateMoney = function () {
+        var moeny = 5;
+        var msg = "余额: " + moeny + " (元)";
+        this.balance.text = msg;
+        return this;
+    };
     return myHB;
 }(ui.myHBUI));
 //# sourceMappingURL=myHB.js.map

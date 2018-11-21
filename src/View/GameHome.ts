@@ -18,14 +18,21 @@ class GameHome extends ui.gameHomeUI {
     public doNumber: Laya.Text;
     /** 玩法介绍 */
     public playDialog: playDialog = new playDialog();
-
+    /** 数据中心 */
+    public dataCenter: dataCenter;
     /** 游戏主控 */
     public Game: Game;
-    constructor(game?: Game) {
+    /**
+     * 构造初始化
+     * @param game 传入游戏中控
+     * @param dataCenter 数据中控
+     */
+    constructor(game: Game, dataCenter: dataCenter) {
         super();
         // 初始化
-        this.init();
         this.Game = game;
+        this.dataCenter = dataCenter;
+        this.init();
     }
     /**
      * 初始化
@@ -39,11 +46,12 @@ class GameHome extends ui.gameHomeUI {
         this.my_hb.on(Laya.Event.MOUSE_DOWN, this, this.myHBao);                //我的红包
         this.reward.on(Laya.Event.MOUSE_DOWN, this, this.openDailyGift);        //每日奖励
         this.tuiqian.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);           //游戏推荐
-        this.jieshao.on(Laya.Event.MOUSE_DOWN, this, this.playJieShao);           //玩法介绍
+        this.jieshao.on(Laya.Event.MOUSE_DOWN, this, this.playJieShao);         //玩法介绍
         this.invite.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);            //邀请有礼
         this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);         //关闭音乐
         this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);    //球皮肤事件
         this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);           //好友排行
+        this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);
         this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest);          //开始游戏
         //时钟倒计时
         Laya.timer.loop(1000, this, this.HBcountdown);
@@ -133,8 +141,8 @@ class GameHome extends ui.gameHomeUI {
     /** 同步数据 */
     public synchronousData(): GameHome {
         // 更新数据
-        this.doNumber.text = String(888);
-        this.bigFraction.text = String(999);
+        this.doNumber.text = String(this.dataCenter.doNumber);
+        this.bigFraction.text = String(this.dataCenter.bigFraction);
         return this;
     }
 

@@ -14,9 +14,11 @@ class Game {
     public inGameView: inGameView;
     /** 死亡的弹窗 */
     private gameOverDia: gameOver;
+    /** 数据中控 */
+    public dataCenter: dataCenter;
     /** 要加载的资源 */
-    public needResources: Array<string> = ["res/atlas/ladder.atlas", "res/ladder/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas", 
-    "res/atlas/invite_gift.atlas", "res/atlas/Game_Settlement.atlas", "res/atlas/myHbao.atlas", "res/atlas/everyDay.atlas", "res/atlas/player.atlas"];
+    public needResources: Array<string> = ["res/atlas/ladder.atlas", "res/ladder/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas",
+        "res/atlas/invite_gift.atlas", "res/atlas/Game_Settlement.atlas", "res/atlas/myHbao.atlas", "res/atlas/everyDay.atlas", "res/atlas/player.atlas"];
     constructor() {
         // 适配微信小游戏
         Laya.MiniAdpter.init();
@@ -33,6 +35,7 @@ class Game {
     /** 初始化 */
     public init(): void {
         Laya.stage.name = "Stage";
+        this.dataCenter = new dataCenter();
         // 实例化一个阶梯群
         this.ladderArr = new LadderArr(Laya.stage.height);
         // 设置阶梯的坐标
@@ -40,20 +43,20 @@ class Game {
         // 添加到舞台
         Laya.stage.addChild(this.ladderArr);
         // 实例化一个球
-        this.ball = new Ball();
+        this.ball = new Ball(this.dataCenter);
         // 添加到舞台
         Laya.stage.addChild(this.ball);
         // 实例化游戏主界面
-        this.gameHome = new GameHome(this);
+        this.gameHome = new GameHome(this, this.dataCenter);
         // 添加游戏主界面到舞台
         Laya.stage.addChild(this.gameHome);
         // 实例化游戏中的界面
-        this.inGameView = new inGameView();
-        this.inGameView.visible = false;        //先隐藏起来
+        this.inGameView = new inGameView(this.dataCenter);
         Laya.stage.addChild(this.inGameView);   //添加到舞台
-        this.gameOverDia = new gameOver(this);     //游戏结束的弹窗
+        this.gameOverDia = new gameOver(this, this.dataCenter);     //游戏结束的弹窗
         // 监听碰撞
-        this.spriteCollision = new spriteCollision();
+        this.spriteCollision = new spriteCollision(this.ball, this.dataCenter);
+        // 实例化数据中心
     }
 
     /** 
@@ -61,8 +64,8 @@ class Game {
      *@param VX 传入在gameHome的鼠标X坐标 
       */
     public startGame(VX?: number): void {
-        this.VX = VX;
         this.inGameView.visible = true;
+        this.VX = VX;
         Laya.timer.frameLoop(1, this, this.startDowm);
         // 监听鼠标
         Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
@@ -80,14 +83,13 @@ class Game {
         this.ladderArr.startDowm();
         // 检测碰撞
         this.collision();
+        this.inGameView.init();
     }
 
     private VX: number;
     /** 鼠标按下 */
     private mouseDown(): void {
         // 开始游戏
-        // this.startGame();
-        console.log("mouse down");
         Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove)
         this.VX = Laya.stage.mouseX;
     }
@@ -118,13 +120,13 @@ class Game {
         // 寄存阶梯群
         let ladderArr: Array<Ladder> = this.ladderArr._childs as Array<Ladder>;
         // 下落的时候返回新的阶梯编号
-        let newLadderN: number = this.ball.ballUp(this.ladderN, this.inGameView.fraction);
+        let newLadderN: number = this.ball.ballUp(this.ladderN);
         if (newLadderN != this.ladderN) {
             this.ladderN = newLadderN;
         }
         let ladder = ladderArr[newLadderN];
         this.spriteCollision.init(ladder);
-        this.spriteCollision.sprCenterPoint(this.ball);
+        this.spriteCollision.sprCenterPoint();
         /** 是否碰撞  type: boolean */
         let resultCollision: boolean = this.spriteCollision.resultCollision;
         //如果碰撞了
@@ -144,6 +146,8 @@ class Game {
 
     /** 游戏重置 */
     public gameReset(): Game {
+        this.gameHome.synchronousData();
+        this.dataCenter.dataRest();
         this.ball.ballRect();
         this.ladderArr.ladderArrRect().init();
         this.ladderN = 4;
@@ -153,8 +157,7 @@ class Game {
         return this;
     }
 
-
 }
 
 // 开始游戏
-// new Game();
+new Game();

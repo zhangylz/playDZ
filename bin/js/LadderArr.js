@@ -84,7 +84,6 @@ var LadderArr = (function (_super) {
             if (i == (ladder_qy - 1)) {
                 this.ladderArrHeigth = ladder_y; //ladderArrHeigth = 阶梯群的总高度
                 this.ladderArr_Y = this.stage_heigth - this.ladderArrHeigth;
-                console.log(" 阶梯群高度:  " + this.ladderArrHeigth);
             }
         }
     };

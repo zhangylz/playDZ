@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"Dialog",
-    "selectedBox":1,
-    "selecteID":20,
+    "selectedBox":2,
+    "selecteID":3,
     "props":{"width":640,"sceneColor":"#000000","height":1164},
     "nodeParent":-1,
     "label":"Dialog",
@@ -27,7 +27,7 @@
                 {
                     "x":30,
                     "type":"Image",
-                    "props":{"y":-28,"x":560,"var":"viewOff","skin":"invite_gift/off.png","name":"viewOff"},
+                    "props":{"y":-15,"x":560,"var":"viewOff","skin":"invite_gift/off.png","name":"viewOff"},
                     "nodeParent":2,
                     "label":"Image(viewOff)",
                     "isDirectory":false,

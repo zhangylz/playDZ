@@ -24,4 +24,4 @@ class Demo {
 }
 
 // 演示Demo
-new Demo();
+// new Demo();

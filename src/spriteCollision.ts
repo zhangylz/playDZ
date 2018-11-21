@@ -12,18 +12,32 @@ class spriteCollision {
     private sprArr: Array<Laya.Sprite>;
     /** 子精灵坐标组 */
     private sprPointArr;
-    /**是否碰撞 */
+    /** 是否碰撞 */
     public resultCollision = false;
+    /** 数据中心 */
+    public dataCenter: dataCenter;
+    /**
+     * 初始化构造
+     * @param Ladder 传入精灵阶梯
+     * @param ball 传入精灵球
+     * @param ballSprite 传入精灵球
+     */
+    constructor(ball: Ball, dataCenter?: dataCenter) {
+        /** 寄存数据中心 */
+        this.dataCenter = dataCenter;
+        //寄存球精灵
+        this.ballSprites = ball;
+    }
     /**
      * @param Ladder 传入精灵阶梯
+     * @param ball 传入精灵球
      * @param ballSprite 传入精灵球
      */
     public init(Ladder: Ladder) {
         // 赋值到全局阶梯精灵
         this.Ladder = Ladder;
-        // 子精灵组
+         // 子精灵组
         this.sprArr = this.Ladder._childs;
-        // 转换成全局坐标
         this.stageXY(this.countSprPoint());
     }
 
@@ -77,7 +91,8 @@ class spriteCollision {
      * 判断是否与球碰撞
      * @param spr_ball 传入sprite球
      */
-    public sprCenterPoint(spr_ball: Ball) {
+    public sprCenterPoint(): void {
+        let spr_ball = this.ballSprites;
         let
             x1 = spr_ball.x,
             y1 = spr_ball.y,
@@ -99,40 +114,64 @@ class spriteCollision {
         }
     }
 
-    private testFunction(spr: Laya.Sprite): string {
+    private testFunction(spr: Laya.Sprite): void {
         let name: string;
         if (spr != undefined) {
             name = spr.name;
             spr.destroy();
         }
-
         // console.log("撞上了" + spr.name + " $$$$$");
         switch (name) {
             case "spr_ov":
-                console.log("调用白圈");
-                return "白圈";
+                //调用白圈function
+                this.ovFun();
+                break;
             case "spr_ob":
-                console.log("调用障碍")
-                this.obTest();
-                return "障碍";
+                //调用障碍function
+                this.obFun();
+                break;
             case "spr_do":
-                console.log("调用砖石")
-                return "砖石";
+                // 调用钻石Fun
+                this.doFun();
+                break;
             case "spr_hb":
-                console.log("调用红包")
-                return "红包";
+                // 调用红包Fun
+                this.hbFun();
+                break;
             case undefined:
                 console.log("不知道为什么undefined!!!!!!!!")
                 break;
-            default:
+            default: 4
                 console.log("name undefined!");
         }
 
     }
 
+    /** 撞到白圈调用的方法 */
+    private ovFun(): spriteCollision {
+        console.log("调用白圈");
+        return this;
+    }
+
     /**撞到障碍后调用的方法 */
-    private obTest(): void {
+    private obFun(): spriteCollision {
+        console.log("调用障碍")
         this.resultCollision = true;
+        return this;
+    }
+
+    /** 撞到砖石调用的方法 */
+    private doFun(): spriteCollision {
+        this.dataCenter.doObtain += 1;
+        this.dataCenter.doNumber += 1;
+        console.log("调用砖石\t★★★★★★★★\t" + this.dataCenter.doObtain);
+        return this;
+    }
+    /** 撞到红包的函数 */
+    private hbFun(): spriteCollision {
+        this.dataCenter.hbNumber += 1;
+        console.log("调用红包\t▲▲▲▲▲▲▲▲▲▲▲\t" + this.dataCenter.hbNumber);
+        return this;
     }
 
 }

@@ -6,9 +6,25 @@ var __extends = (this && this.__extends) || function (d, b) {
 /** 游戏中 */
 var inGameView = (function (_super) {
     __extends(inGameView, _super);
-    function inGameView() {
-        return _super.call(this) || this;
+    /**
+     * @param dataCenter 数据中控
+     */
+    function inGameView(dataCenter) {
+        var _this = _super.call(this) || this;
+        _this.dataCenter = dataCenter;
+        _this.init();
+        return _this;
     }
+    /** 数据同步 */
+    inGameView.prototype.init = function () {
+        /** 分数 */
+        var fraction = this.dataCenter.fraction;
+        /** 红包数量 */
+        var hbNumber = this.dataCenter.hbNumber;
+        this.fraction.text = String(fraction);
+        this.hbNumber.text = String(hbNumber);
+        return this;
+    };
     /** 分数重置 */
     inGameView.prototype.reset = function () {
         this.fraction.text = String(0);

@@ -22,5 +22,5 @@ var Demo = (function () {
     return Demo;
 }());
 // 演示Demo
-new Demo();
+// new Demo(); 
 //# sourceMappingURL=Demo.js.map
