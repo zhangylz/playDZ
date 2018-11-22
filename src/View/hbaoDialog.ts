@@ -20,6 +20,8 @@ class hbaoDialog extends ui.hbDialogUI {
     public keepHB(): void {
         console.log("继续打开红包");
     }
+    
+    /** 提现函数 */
     public hbWIdthdraws(): void {
         console.log("hbWIdthdraw");
     }

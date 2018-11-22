@@ -12,9 +12,14 @@ class gameOver extends ui.gameOverUI {
     public Game: Game;
     /** 数据中心 */
     public dataCenter: dataCenter;
-    constructor(game: Game, dataCenter: dataCenter) {
+    /**
+     * 
+     * @param game 传入游戏中控
+     * @param dataCenter 传入数据中控
+     */
+    constructor(game?: Game, dataCenter?: dataCenter) {
         super();
-        this.init();
+        // this.init();
         this.Game = game;
         this.dataCenter = dataCenter;
     }
@@ -22,11 +27,42 @@ class gameOver extends ui.gameOverUI {
     /** 初始化 */
     private init(): void {
         // 四个组件监听
-        this.agin_img.on(Laya.Event.MOUSE_DOWN, this, this.gameAgin);          //重新开始
+        this.agin_img.on(Laya.Event.MOUSE_DOWN, this, this.gameAgin);       //重新开始
         this.home_img.on(Laya.Event.MOUSE_DOWN, this, this.gameHome);       //回到主页
         this.share_img.on(Laya.Event.MOUSE_DOWN, this, this.shareGeme);     //分享复活
         this.void_img.on(Laya.Event.MOUSE_DOWN, this, this.voidRelive);     //视频复活
     }
+
+    /** 红包点击检测 */
+    public HbOnOpen(): void {
+        //寄存红包数组
+        // this.HBao_1.on(Laya.Event.MOUSE_DOWN, this, this.HbOpenOk, [1]);
+        let hbArr: Array<Laya.Image> = this.HBao_box._childs as Array<Laya.Image>;
+        let len = this.dataCenter.hbNumber;
+        console.log("hbLen\t$$$$$$$$$$$$$\t" + len);
+        if (len > 4) { len = 4 };
+
+        /** 遍历监听红包 */
+        for (let i = 0; i < len; i++) {
+            /** 红包 */
+            let Hbao: Laya.Image = hbArr[i];
+            Hbao.on(Laya.Event.MOUSE_DOWN, this, this.HbOpenOk, [Hbao, i]);
+        }
+    }
+
+    /** 打开红包 */
+    public HbOpenOk(Hbao: Laya.Image, n: number): void {
+        let moneyAarr: Array<Laya.Text> = [this.hb_money_0, this.hb_money_1, this.hb_money_2, this.hb_money_3];     //红包
+        let HbOpenes: Array<Laya.Image> = this.HB_opeb_box._childs;
+        let getMoney: number = 5;
+        Hbao.visible = false;
+        moneyAarr[n].text = "￥ " + 0.99;
+        // moneyAarr[n].align = "center";
+        HbOpenes[n].visible = true;
+        console.log(" is OKer! \t" + n);
+    }
+
+
     /** 重新开始游戏 */
     public gameAgin(): void {
         //判断gameOver弹窗显示状态
@@ -75,13 +111,31 @@ class gameOver extends ui.gameOverUI {
      * @param e  e:String (default = null) — 如果是点击默认关闭按钮触发，则传入关闭按钮的名字(name)，否则为null
      */
     public onClosed(e: String = null): void {
-        console.log("closed OK! $$$$$$$$$$$")
-
+        let HB_opeb_box: Array<Laya.Image> = this.HB_opeb_box._childs;
+        let HBao_box: Array<Laya.Image> = this.HBao_box._childs;
+        let len = HBao_box.length;
+        // 遍历关掉监听
+        for (let i = 0; i < len; i++) {
+            HB_opeb_box[i].visible = false;
+            HBao_box[i].off(Laya.Event.MOUSE_DOWN, this, this.HbOpenOk);
+            HBao_box[i].visible = true;
+        }
+        console.log("closed OK! $$$$$$$$$$$");
     }
-    /** 打开完成后 */
+    /** 弹窗打开完成后 */
     public onOpened(): void {
+        this.HbOnOpen();
+        this.init();
+        console.log("open ok! $$$");
+    }
+    /** 弹窗打开前同步数据 */
+    public Opened(): gameOver {
         this.fraction.text = String(this.dataCenter.fraction);
         this.do_n.text = String(this.dataCenter.doObtain);
-        console.log("open OK! $$$$$$$$$$$");
+        //  同步最高分
+        if (this.dataCenter.fraction > this.dataCenter.bigFraction) {
+            this.dataCenter.bigFraction = this.dataCenter.fraction;
+        }
+        return this;
     }
 }

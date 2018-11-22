@@ -2,7 +2,7 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":1,
-    "selecteID":2,
+    "selecteID":1,
     "props":{"width":640,"sceneColor":"#000000","height":1164},
     "nodeParent":-1,
     "label":"Dialog",
@@ -15,7 +15,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":300,"x":10,"skin":"invite_gift/window.png"},
+            "props":{"y":300,"width":620,"skin":"invite_gift/window.png","centerX":0},
             "nodeParent":1,
             "label":"Image",
             "isOpen":true,
@@ -53,7 +53,7 @@
                 {
                     "x":30,
                     "type":"Label",
-                    "props":{"y":152,"x":52,"wordWrap":true,"width":515,"text":"    躲避障碍，跳中白圈可增加分数，砖石可以用来兑换皮肤，红包就几率获得现金红包（满20元可以提现）","height":300,"fontSize":50,"font":"Arial","color":"#0b6cc5","bold":true},
+                    "props":{"y":152,"wordWrap":true,"width":515,"text":"    躲避障碍，跳中白圈可增加分数，砖石可以用来兑换皮肤，红包就几率获得现金红包（满20元可以提现）","height":300,"fontSize":50,"font":"Arial","color":"#0b6cc5","centerX":0.5,"bold":true},
                     "nodeParent":2,
                     "label":"Label",
                     "isDirectory":false,

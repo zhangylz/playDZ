@@ -9,5 +9,6 @@ class dailyGift extends ui.dailyGiftUI {
     /** 初始化 */
     public init(): void {
         this.closeButton.on(Laya.Event.MOUSE_DOWN, this, this.close);
+        
     }
 }

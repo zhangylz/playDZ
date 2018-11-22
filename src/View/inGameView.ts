@@ -1,11 +1,11 @@
 /** 游戏中 */
 class inGameView extends ui.inGameViewUI {
     /** 分数 */
-    public fraction: Laya.Text;
+    public fraction: Laya.Label;
     /** 红包数量 */
     public hbNumber: Laya.Text;
     /** 即将超越的分数 */
-    public surpass_fraction: Laya.Text;
+    public surpass_fraction: Laya.Label;
     /** 数据中控 */
     public dataCenter: dataCenter;
     /**

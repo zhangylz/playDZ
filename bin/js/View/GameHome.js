@@ -79,8 +79,8 @@ var GameHome = (function (_super) {
             // 关闭红包倒计时
             Laya.timer.clear(this, this.HBcountdown);
             // 给红包价格时间线 目的为了醒目
-            this.HbtimeLine.addLabel("big", 0).to(this.my_hb, { x: 10, y: 10, scaleX: 1.5, scaleY: 1.5 }, 200, null, 0)
-                .addLabel("small", 0).to(this.my_hb, { x: 25, y: 20, scaleX: 1, scaleY: 1 }, 200, null, 0);
+            this.HbtimeLine.addLabel("big", 0).to(this.my_hb, { scaleX: 1.5, scaleY: 1.5 }, 200, null, 0)
+                .addLabel("small", 0).to(this.my_hb, { scaleX: 1, scaleY: 1 }, 200, null, 0);
             this.HbtimeLine.play(0, true);
         }
         // 刷新倒计时的时间
@@ -136,9 +136,11 @@ var GameHome = (function (_super) {
     };
     /** 同步数据 */
     GameHome.prototype.synchronousData = function () {
-        // 更新数据
+        // 同步数据数据
         this.doNumber.text = String(this.dataCenter.doNumber);
         this.bigFraction.text = String(this.dataCenter.bigFraction);
+        // 设置居中
+        this.box_fraction.getBounds();
         return this;
     };
     return GameHome;

@@ -3,7 +3,7 @@
  */
 class GameHome extends ui.gameHomeUI {
     /** 红包倒计时 */
-    public hb_timer: Laya.Text;
+    public hb_timer: Laya.Label;
     /** 时间线 */
     private timerLine = new Laya.TimeLine();
     /** 邀请好礼 */
@@ -13,7 +13,7 @@ class GameHome extends ui.gameHomeUI {
     /** 每日奖励 */
     public dailyGift = new dailyGift;
     /** 最大分数 */
-    public bigFraction: Laya.Text;
+    public bigFraction: Laya.Label;
     /** 砖石数量 */
     public doNumber: Laya.Text;
     /** 玩法介绍 */
@@ -75,8 +75,8 @@ class GameHome extends ui.gameHomeUI {
             // 关闭红包倒计时
             Laya.timer.clear(this, this.HBcountdown);
             // 给红包价格时间线 目的为了醒目
-            this.HbtimeLine.addLabel("big", 0).to(this.my_hb, { x: 10, y: 10, scaleX: 1.5, scaleY: 1.5 }, 200, null, 0)
-                .addLabel("small", 0).to(this.my_hb, { x: 25, y: 20, scaleX: 1, scaleY: 1 }, 200, null, 0);
+            this.HbtimeLine.addLabel("big", 0).to(this.my_hb, { scaleX: 1.5, scaleY: 1.5 }, 200, null, 0)
+                .addLabel("small", 0).to(this.my_hb, { scaleX: 1, scaleY: 1 }, 200, null, 0);
             this.HbtimeLine.play(0, true);
         }
         // 刷新倒计时的时间
@@ -140,9 +140,11 @@ class GameHome extends ui.gameHomeUI {
 
     /** 同步数据 */
     public synchronousData(): GameHome {
-        // 更新数据
+        // 同步数据数据
         this.doNumber.text = String(this.dataCenter.doNumber);
         this.bigFraction.text = String(this.dataCenter.bigFraction);
+        // 设置居中
+        this.box_fraction.getBounds();
         return this;
     }
 

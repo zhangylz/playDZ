@@ -5,7 +5,7 @@ class dataCenter {
     /** 局内获得钻石 */
     public doObtain: number = 0;
     /** 最高分 */
-    public bigFraction: number = 11;
+    public bigFraction: number = 0;
     /** 分数 */
     public fraction: number = 0;
     /** 余额 */

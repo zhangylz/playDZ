@@ -3,7 +3,8 @@
     "type":"Dialog",
     "selectedBox":1,
     "selecteID":2,
-    "props":{"var":"gameOverDialog","sceneWidth":640,"sceneHeight":1164,"sceneColor":"#efe3e2","name":"gameOverDialog"},
+    "referenceLines":null,
+    "props":{"var":"gameOverDialog","sceneWidth":640,"sceneHeight":1164,"sceneColor":"#efe3e2","name":"gameOverDialog","centerY":0.5},
     "nodeParent":-1,
     "label":"Dialog(gameOverDialog)",
     "isOpen":true,
@@ -15,15 +16,89 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":291,"x":10,"top":150,"skin":"Game_Settlement/window.png"},
+            "props":{"y":291,"width":619,"top":150,"skin":"Game_Settlement/window.png","centerX":0},
             "nodeParent":1,
             "label":"Image",
-            "isOpen":true,
+            "isOpen":false,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":2,
             "child":[
+                {
+                    "x":30,
+                    "type":"HBox",
+                    "props":{"y":137,"space":30,"left":30,"align":"middle"},
+                    "nodeParent":2,
+                    "label":"HBox",
+                    "isOpen":false,
+                    "isDirectory":true,
+                    "isAniNode":true,
+                    "hasChild":true,
+                    "compId":46,
+                    "child":[
+                        {
+                            "type":"Text",
+                            "props":{"y":0,"x":0,"width":255,"text":"本次得分:","fontSize":50,"font":"Arial","color":"#000000","bold":true},
+                            "nodeParent":46,
+                            "label":"Text",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":41,
+                            "child":[
+                                ]
+                        },
+                        {
+                            "type":"Text",
+                            "props":{"y":0,"x":238,"var":"fraction","text":0,"name":"fraction","fontSize":50,"font":"Arial","color":"#d10b4a","bold":true},
+                            "nodeParent":46,
+                            "label":"Text(fraction)",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":43,
+                            "child":[
+                                ]
+                        }]
+                },
+                {
+                    "x":30,
+                    "type":"HBox",
+                    "props":{"y":137,"x":385,"space":30},
+                    "nodeParent":2,
+                    "label":"HBox",
+                    "isOpen":false,
+                    "isDirectory":true,
+                    "isAniNode":true,
+                    "hasChild":true,
+                    "compId":47,
+                    "child":[
+                        {
+                            "type":"Text",
+                            "props":{"y":0,"x":0,"text":"钻石：","fontSize":50,"font":"Arial","color":"#000000","bold":true},
+                            "nodeParent":47,
+                            "label":"Text",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":42,
+                            "child":[
+                                ]
+                        },
+                        {
+                            "type":"Text",
+                            "props":{"y":1,"x":131,"var":"do_n","text":0,"name":"do_n","fontSize":50,"font":"Arial","color":"#d10b4a","bold":true},
+                            "nodeParent":47,
+                            "label":"Text(do_n)",
+                            "isDirectory":false,
+                            "isAniNode":true,
+                            "hasChild":false,
+                            "compId":44,
+                            "child":[
+                                ]
+                        }]
+                },
                 {
                     "x":30,
                     "type":"Image",
@@ -38,9 +113,9 @@
                     "child":[
                         {
                             "type":"Box",
-                            "props":{"y":43,"x":6},
+                            "props":{"y":43,"x":6,"var":"HB_opeb_box","name":"HB_opeb_box"},
                             "nodeParent":3,
-                            "label":"Box",
+                            "label":"Box(HB_opeb_box)",
                             "isOpen":false,
                             "isDirectory":true,
                             "isAniNode":true,
@@ -49,9 +124,9 @@
                             "child":[
                                 {
                                     "type":"Image",
-                                    "props":{"y":0,"x":0,"skin":"Game_Settlement/HBao_open.png"},
+                                    "props":{"y":0,"x":0,"visible":false,"var":"hb_open_0","skin":"Game_Settlement/HBao_open.png","name":"hb_open_0"},
                                     "nodeParent":4,
-                                    "label":"Image",
+                                    "label":"Image(hb_open_0)",
                                     "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
@@ -72,9 +147,9 @@
                                         },
                                         {
                                             "type":"Text",
-                                            "props":{"y":19,"x":20,"width":0,"text":"￥ 0.5","height":0,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true},
+                                            "props":{"y":19,"x":0,"width":108,"var":"hb_money_0","valign":"middle","text":"￥ 0","name":"hb_money_0","height":25,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
                                             "nodeParent":5,
-                                            "label":"Text",
+                                            "label":"Text(hb_money_0)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
@@ -85,10 +160,10 @@
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":0,"x":143,"skin":"Game_Settlement/HBao_open.png"},
+                                    "props":{"y":0,"x":143,"visible":false,"var":"hb_open_1","skin":"Game_Settlement/HBao_open.png","name":"hb_open_1"},
                                     "nodeParent":4,
-                                    "label":"Image",
-                                    "isOpen":false,
+                                    "label":"Image(hb_open_1)",
+                                    "isOpen":true,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
@@ -108,9 +183,9 @@
                                         },
                                         {
                                             "type":"Text",
-                                            "props":{"y":19,"x":20,"width":0,"text":"￥ 0.5","height":0,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true},
+                                            "props":{"y":19,"x":0,"width":108,"var":"hb_money_1","text":"￥ 0","name":"hb_money_1","height":0,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
                                             "nodeParent":8,
-                                            "label":"Text",
+                                            "label":"Text(hb_money_1)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
@@ -121,10 +196,10 @@
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":0,"x":287,"skin":"Game_Settlement/HBao_open.png"},
+                                    "props":{"y":0,"x":287,"visible":false,"var":"hb_open_2","skin":"Game_Settlement/HBao_open.png","name":"hb_open_2"},
                                     "nodeParent":4,
-                                    "label":"Image",
-                                    "isOpen":false,
+                                    "label":"Image(hb_open_2)",
+                                    "isOpen":true,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
@@ -144,9 +219,9 @@
                                         },
                                         {
                                             "type":"Text",
-                                            "props":{"y":19,"x":20,"width":0,"text":"￥ 0.5","height":0,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true},
+                                            "props":{"y":19,"x":0,"width":108,"var":"hb_money_2","text":"￥ 0","name":"hb_money_2","height":0,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
                                             "nodeParent":11,
-                                            "label":"Text",
+                                            "label":"Text(hb_money_2)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
@@ -157,10 +232,10 @@
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":-4,"x":430,"skin":"Game_Settlement/HBao_open.png"},
+                                    "props":{"y":-4,"x":430,"visible":false,"var":"hb_open_3","skin":"Game_Settlement/HBao_open.png","name":"hb_open_3"},
                                     "nodeParent":4,
-                                    "label":"Image",
-                                    "isOpen":false,
+                                    "label":"Image(hb_open_3)",
+                                    "isOpen":true,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
@@ -180,9 +255,9 @@
                                         },
                                         {
                                             "type":"Text",
-                                            "props":{"y":19,"x":20,"width":0,"text":"￥ 0.5","height":0,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true},
+                                            "props":{"y":19,"x":0,"width":108,"var":"hb_money_3","text":"￥ 0","name":"hb_money_3","height":0,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
                                             "nodeParent":14,
-                                            "label":"Text",
+                                            "label":"Text(hb_money_3)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
@@ -190,14 +265,13 @@
                                             "child":[
                                                 ]
                                         }]
-                                }],
-                            "$HIDDEN":false
+                                }]
                         },
                         {
                             "type":"Box",
-                            "props":{"y":16,"x":6},
+                            "props":{"y":16,"x":6,"var":"HBao_box","name":"HBao_box"},
                             "nodeParent":3,
-                            "label":"Box",
+                            "label":"Box(HBao_box)",
                             "isOpen":false,
                             "isDirectory":true,
                             "isAniNode":true,
@@ -206,119 +280,72 @@
                             "child":[
                                 {
                                     "type":"Image",
-                                    "props":{"y":10,"x":0,"skin":"Game_Settlement/HBao.png"},
+                                    "props":{"y":10,"x":0,"var":"HBao_1","skin":"Game_Settlement/HBao.png","name":"HBao_1"},
                                     "nodeParent":17,
-                                    "label":"Image",
-                                    "isOpen":false,
-                                    "isDirectory":true,
+                                    "label":"Image(HBao_1)",
+                                    "isDirectory":false,
                                     "isAniNode":true,
-                                    "hasChild":true,
+                                    "hasChild":false,
                                     "compId":18,
                                     "child":[
-                                        {
-                                            "type":"Label",
-                                            "props":{"y":65,"x":6,"wordWrap":true,"width":97,"valign":"middle","text":"点击分享\\n 拆开","height":52,"fontSize":20,"font":"Arial","color":"#ffffff","bold":true,"align":"center"},
-                                            "nodeParent":18,
-                                            "label":"Label",
-                                            "isDirectory":false,
-                                            "isAniNode":true,
-                                            "hasChild":false,
-                                            "compId":19,
-                                            "child":[
-                                                ]
-                                        }]
+                                        ]
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":10,"x":142,"skin":"Game_Settlement/HBao.png"},
+                                    "props":{"y":10,"x":142,"var":"HBao_2","skin":"Game_Settlement/HBao.png","name":"HBao_2"},
                                     "nodeParent":17,
-                                    "label":"Image",
-                                    "isOpen":false,
-                                    "isDirectory":true,
+                                    "label":"Image(HBao_2)",
+                                    "isDirectory":false,
                                     "isAniNode":true,
-                                    "hasChild":true,
+                                    "hasChild":false,
                                     "compId":20,
                                     "child":[
-                                        {
-                                            "type":"Label",
-                                            "props":{"y":65,"x":6,"wordWrap":true,"width":97,"valign":"middle","text":"点击分享\\n 拆开","height":52,"fontSize":20,"font":"Arial","color":"#ffffff","bold":true,"align":"center"},
-                                            "nodeParent":20,
-                                            "label":"Label",
-                                            "isDirectory":false,
-                                            "isAniNode":true,
-                                            "hasChild":false,
-                                            "compId":21,
-                                            "child":[
-                                                ]
-                                        }]
+                                        ]
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":10,"x":286,"skin":"Game_Settlement/HBao.png"},
+                                    "props":{"y":10,"x":286,"var":"HBao_3","skin":"Game_Settlement/HBao.png","name":"HBao_3"},
                                     "nodeParent":17,
-                                    "label":"Image",
-                                    "isOpen":false,
-                                    "isDirectory":true,
+                                    "label":"Image(HBao_3)",
+                                    "isDirectory":false,
                                     "isAniNode":true,
-                                    "hasChild":true,
+                                    "hasChild":false,
                                     "compId":22,
                                     "child":[
-                                        {
-                                            "type":"Label",
-                                            "props":{"y":65,"x":6,"width":97,"valign":"middle","text":"点击分享\\n 拆开","height":45,"fontSize":20,"font":"Arial","color":"#ffffff","bold":true,"align":"center"},
-                                            "nodeParent":22,
-                                            "label":"Label",
-                                            "isDirectory":false,
-                                            "isAniNode":true,
-                                            "hasChild":false,
-                                            "compId":23,
-                                            "child":[
-                                                ]
-                                        }]
+                                        ]
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":10,"x":429,"skin":"Game_Settlement/HBao.png"},
+                                    "props":{"y":10,"x":429,"var":"HBao_4","skin":"Game_Settlement/HBao.png","name":"HBao_4"},
                                     "nodeParent":17,
-                                    "label":"Image",
-                                    "isOpen":true,
-                                    "isDirectory":true,
+                                    "label":"Image(HBao_4)",
+                                    "isDirectory":false,
                                     "isAniNode":true,
-                                    "hasChild":true,
+                                    "hasChild":false,
                                     "compId":24,
                                     "child":[
-                                        {
-                                            "type":"Label",
-                                            "props":{"y":65,"x":6,"width":97,"valign":"middle","text":"点击分享\\n 拆开","height":45,"fontSize":20,"font":"Arial","color":"#ffffff","bold":true,"align":"center"},
-                                            "nodeParent":24,
-                                            "label":"Label",
-                                            "isDirectory":false,
-                                            "isAniNode":true,
-                                            "hasChild":false,
-                                            "compId":25,
-                                            "child":[
-                                                ]
-                                        }]
-                                }]
-                        }],
-                    "$HIDDEN":false
+                                        ]
+                                }],
+                            "$HIDDEN":false
+                        }]
                 },
                 {
                     "x":30,
-                    "type":"Box",
-                    "props":{"y":428,"x":33},
+                    "type":"HBox",
+                    "props":{"y":428,"x":24,"space":50,"align":"middle"},
                     "nodeParent":2,
-                    "label":"Box",
-                    "isOpen":false,
+                    "label":"HBox",
+                    "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
-                    "compId":26,
+                    "compId":45,
                     "child":[
                         {
+                            "x":45,
                             "type":"Image",
-                            "props":{"y":3,"x":0,"var":"agin_img","skin":"Game_Settlement/button.png","name":"agin_img"},
-                            "nodeParent":26,
+                            "props":{"y":3,"x":9,"var":"agin_img","skin":"Game_Settlement/button.png","name":"agin_img"},
+                            "nodeParent":45,
                             "label":"Image(agin_img)",
                             "isOpen":false,
                             "isDirectory":true,
@@ -340,11 +367,12 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
-                            "props":{"y":2,"x":149,"var":"home_img","skin":"Game_Settlement/button.png","name":"home_img"},
-                            "nodeParent":26,
+                            "props":{"y":2,"x":158,"var":"home_img","skin":"Game_Settlement/button.png","name":"home_img"},
+                            "nodeParent":45,
                             "label":"Image(home_img)",
-                            "isOpen":false,
+                            "isOpen":null,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
@@ -364,11 +392,12 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
-                            "props":{"x":298,"var":"share_img","skin":"Game_Settlement/button.png","name":"share_img"},
-                            "nodeParent":26,
+                            "props":{"y":0,"x":307,"var":"share_img","skin":"Game_Settlement/button.png","name":"share_img"},
+                            "nodeParent":45,
                             "label":"Image(share_img)",
-                            "isOpen":false,
+                            "isOpen":null,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
@@ -388,11 +417,12 @@
                                 }]
                         },
                         {
+                            "x":45,
                             "type":"Image",
-                            "props":{"y":1,"x":447,"var":"void_img","skin":"Game_Settlement/button.png","name":"void_img"},
-                            "nodeParent":26,
+                            "props":{"y":1,"x":456,"var":"void_img","skin":"Game_Settlement/button.png","name":"void_img"},
+                            "nodeParent":45,
                             "label":"Image(void_img)",
-                            "isOpen":false,
+                            "isOpen":null,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
@@ -412,128 +442,54 @@
                                 }]
                         },
                         {
-                            "type":"Box",
-                            "props":{"y":-47,"x":5,"width":0,"height":0},
-                            "nodeParent":26,
-                            "label":"Box",
-                            "isOpen":false,
-                            "isDirectory":true,
-                            "isAniNode":true,
-                            "hasChild":true,
-                            "compId":35,
-                            "child":[
-                                {
-                                    "type":"Text",
-                                    "props":{"y":145,"x":-14,"text":"重新开始","name":"restart_text","fontSize":30,"font":"Arial","color":"#06abec","bold":true},
-                                    "nodeParent":35,
-                                    "label":"Text(restart_text)",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":36,
-                                    "child":[
-                                        ],
-                                    "$HIDDEN":false
-                                },
-                                {
-                                    "type":"Text",
-                                    "props":{"y":146,"x":137,"text":"返回首页","name":"home_text","fontSize":30,"font":"Arial","color":"#06abec","bold":true},
-                                    "nodeParent":35,
-                                    "label":"Text(home_text)",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":37,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Text",
-                                    "props":{"y":146,"x":287,"text":"分享复活","name":"share_text","fontSize":30,"font":"Arial","color":"#06abec","bold":true},
-                                    "nodeParent":35,
-                                    "label":"Text(share_text)",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":38,
-                                    "child":[
-                                        ]
-                                },
-                                {
-                                    "type":"Text",
-                                    "props":{"y":148,"x":438,"text":"视频复活","name":"video_text","fontSize":30,"font":"Arial","color":"#06abec","bold":true},
-                                    "nodeParent":35,
-                                    "label":"Text(video_text)",
-                                    "isDirectory":false,
-                                    "isAniNode":true,
-                                    "hasChild":false,
-                                    "compId":39,
-                                    "child":[
-                                        ]
-                                }]
-                        }]
-                },
-                {
-                    "x":30,
-                    "type":"Box",
-                    "props":{"y":136,"x":50,"var":"box_bill","name":"box_bill"},
-                    "nodeParent":2,
-                    "label":"Box(box_bill)",
-                    "isOpen":true,
-                    "isDirectory":true,
-                    "isAniNode":true,
-                    "hasChild":true,
-                    "compId":40,
-                    "child":[
-                        {
                             "x":45,
                             "type":"Text",
-                            "props":{"y":3,"x":0,"text":"本次得分：","fontSize":35,"font":"Arial","color":"#000000","bold":true},
-                            "nodeParent":40,
-                            "label":"Text",
+                            "props":{"y":98,"x":0,"text":"重新开始","name":"restart_text","fontSize":30,"font":"Arial","color":"#06abec","bold":true},
+                            "nodeParent":45,
+                            "label":"Text(restart_text)",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
-                            "compId":41,
+                            "compId":36,
                             "child":[
                                 ]
                         },
                         {
                             "x":45,
                             "type":"Text",
-                            "props":{"y":3,"x":380,"text":"钻石：","fontSize":35,"font":"Arial","color":"#000000","bold":true},
-                            "nodeParent":40,
-                            "label":"Text",
+                            "props":{"y":99,"x":151,"text":"返回首页","name":"home_text","fontSize":30,"font":"Arial","color":"#06abec","bold":true},
+                            "nodeParent":45,
+                            "label":"Text(home_text)",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
-                            "compId":42,
+                            "compId":37,
                             "child":[
                                 ]
                         },
                         {
                             "x":45,
                             "type":"Text",
-                            "props":{"y":1,"x":174,"var":"fraction","text":"0","name":"fraction","fontSize":40,"font":"Arial","color":"#d10b4a","bold":true},
-                            "nodeParent":40,
-                            "label":"Text(fraction)",
+                            "props":{"y":99,"x":301,"text":"分享复活","name":"share_text","fontSize":30,"font":"Arial","color":"#06abec","bold":true},
+                            "nodeParent":45,
+                            "label":"Text(share_text)",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
-                            "compId":43,
+                            "compId":38,
                             "child":[
                                 ]
                         },
                         {
                             "x":45,
                             "type":"Text",
-                            "props":{"y":2,"x":478,"var":"do_n","text":"0","name":"do_n","fontSize":40,"font":"Arial","color":"#d10b4a","bold":true},
-                            "nodeParent":40,
-                            "label":"Text(do_n)",
+                            "props":{"y":101,"x":452,"text":"视频复活","name":"video_text","fontSize":30,"font":"Arial","color":"#06abec","bold":true},
+                            "nodeParent":45,
+                            "label":"Text(video_text)",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
-                            "compId":44,
+                            "compId":39,
                             "child":[
                                 ]
                         }]

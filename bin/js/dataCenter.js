@@ -6,7 +6,7 @@ var dataCenter = (function () {
         /** 局内获得钻石 */
         this.doObtain = 0;
         /** 最高分 */
-        this.bigFraction = 11;
+        this.bigFraction = 0;
         /** 分数 */
         this.fraction = 0;
         /** 余额 */

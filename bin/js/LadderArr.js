@@ -65,7 +65,7 @@ var LadderArr = (function (_super) {
             ladder.scale(scale_XY, scale_XY);
             // 设置居中的 X位置
             var ladder_x = (this.stageW - ladder.getBounds().width) / 2;
-            if (i > 3) {
+            if (i > 2) {
                 ladder.spr_clean();
             }
             // 添加到Box

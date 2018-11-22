@@ -136,7 +136,7 @@ var Ladder = (function (_super) {
                     if (this.random_arr.indexOf(random_e) == -1) {
                         this.random_arr.push(random_e);
                         // 随机数大雨0.85就放入红包 否则是砖石
-                        if (do_or_hb > 0.85) {
+                        if (do_or_hb > 0.1) {
                             // 自动射击宽高
                             spr_hb.autoSize = true;
                             // 添加红包的坐标
@@ -169,7 +169,7 @@ var Ladder = (function (_super) {
         return this;
     };
     /**
-     * 精灵左右滑动
+     * 阶梯左右滑动
      */
     Ladder.prototype.spr_slide = function () {
     };

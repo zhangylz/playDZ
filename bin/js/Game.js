@@ -118,9 +118,10 @@ var Game = (function () {
         Laya.stage.off(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
         Laya.stage.off(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
         Laya.timer.clear(this, this.startDowm);
+        this.gameHome.synchronousData(); //同步游戏主页的数据
         console.log("Game Over!");
         // 显示死亡弹窗
-        this.gameOverDia.show();
+        this.gameOverDia.Opened().show();
         return this;
     };
     /** 游戏重置 */
@@ -138,5 +139,5 @@ var Game = (function () {
     return Game;
 }());
 // 开始游戏
-new Game();
+// new Game(); 
 //# sourceMappingURL=Game.js.map

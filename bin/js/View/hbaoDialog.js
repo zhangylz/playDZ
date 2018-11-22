@@ -20,6 +20,7 @@ var hbaoDialog = (function (_super) {
     hbaoDialog.prototype.keepHB = function () {
         console.log("继续打开红包");
     };
+    /** 提现函数 */
     hbaoDialog.prototype.hbWIdthdraws = function () {
         console.log("hbWIdthdraw");
     };
