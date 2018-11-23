@@ -119,7 +119,7 @@ class Ball extends Laya.Sprite {
 
     /** 播放音效 */
     public onPlaySound(): void {
-        Laya.SoundManager.playSound("res/sounds/ballSounds.mp3", 1, new Laya.Handler(this, function(){console.log("bang bang!")}));
+        Laya.SoundManager.playSound("res/sounds/gameOver.mp3", 1, new Laya.Handler(this, function(){console.log("bang bang!")}));
     }
     /** 球初始化 */
     public ballRect(): Ball {

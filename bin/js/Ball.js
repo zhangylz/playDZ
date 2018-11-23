@@ -109,7 +109,7 @@ var Ball = (function (_super) {
     };
     /** 播放音效 */
     Ball.prototype.onPlaySound = function () {
-        Laya.SoundManager.playSound("res/sounds/ballSounds.mp3", 1, new Laya.Handler(this, function () { console.log("bang bang!"); }));
+        Laya.SoundManager.playSound("res/sounds/gameOver.mp3", 1, new Laya.Handler(this, function () { console.log("bang bang!"); }));
     };
     /** 球初始化 */
     Ball.prototype.ballRect = function () {

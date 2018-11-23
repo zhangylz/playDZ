@@ -58,6 +58,7 @@ var Game = (function () {
         // 监听鼠标
         Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
         Laya.stage.on(Laya.Event.MOUSE_UP, this, this.mouseUP); //监听鼠标抬起
+        this.onBgMusic();
     };
     /** 监听鼠标 */
     Game.prototype.monitorMouse = function () {
@@ -117,13 +118,18 @@ var Game = (function () {
     };
     /** 游戏结束 */
     Game.prototype.gameOver = function () {
+        // 取消鼠标监听
         Laya.stage.off(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
         Laya.stage.off(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
+        // 停止循环
         Laya.timer.clear(this, this.startDowm);
         this.gameHome.synchronousData(); //同步游戏主页的数据
         console.log("Game Over!");
         // 显示死亡弹窗
         this.gameOverDia.Opened().show();
+        Laya.SoundManager.playSound("res/sound/gameOver.mp3", 1);
+        //关闭音乐
+        // this.offBgMusic();
         return this;
     };
     /** 游戏重置 */
@@ -136,6 +142,18 @@ var Game = (function () {
         this.spriteCollision.resultCollision = false;
         // this.inGameView.init();
         console.log("game Reset!");
+        return this;
+    };
+    /** 开启音乐 */
+    Game.prototype.onBgMusic = function () {
+        // let musicUrl: string = "res/sounds/bgMusic2.mp3";
+        // Laya.SoundManager.setMusicVolume(0.2);
+        // Laya.SoundManager.playMusic(musicUrl, 0);
+        return this;
+    };
+    /** 关闭音乐 */
+    Game.prototype.offBgMusic = function () {
+        Laya.SoundManager.stopAll();
         return this;
     };
     return Game;

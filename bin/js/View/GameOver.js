@@ -129,4 +129,4 @@ var gameOver = (function (_super) {
     };
     return gameOver;
 }(ui.gameOverUI));
-//# sourceMappingURL=gameOver.js.map
+//# sourceMappingURL=GameOver.js.map

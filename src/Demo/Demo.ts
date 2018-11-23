@@ -19,8 +19,8 @@ class Demo {
 
     // 加载完成
     private onLoad(set: Laya.ParticleSetting): void {
-        this.LadderArr = new LadderArr(Laya.stage.height);
-        Laya.stage.addChild(this.LadderArr);
+        Laya.SoundManager.setMusicVolume(0.2);
+        Laya.SoundManager.playMusic("res/sounds/bgMusic.mp3", 0);
     }
 }
 
