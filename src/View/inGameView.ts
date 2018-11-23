@@ -3,7 +3,7 @@ class inGameView extends ui.inGameViewUI {
     /** 分数 */
     public fraction: Laya.Label;
     /** 红包数量 */
-    public hbNumber: Laya.Text;
+    public hbNumber: Laya.Label;
     /** 即将超越的分数 */
     public surpass_fraction: Laya.Label;
     /** 数据中控 */

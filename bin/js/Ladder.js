@@ -202,5 +202,5 @@ var Ladder = (function (_super) {
         return this;
     };
     return Ladder;
-}(Laya.Sprite));
+}(Laya.Image));
 //# sourceMappingURL=Ladder.js.map

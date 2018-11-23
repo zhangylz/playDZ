@@ -36,7 +36,6 @@ class gameOver extends ui.gameOverUI {
     /** 红包点击检测 */
     public HbOnOpen(): void {
         //寄存红包数组
-        // this.HBao_1.on(Laya.Event.MOUSE_DOWN, this, this.HbOpenOk, [1]);
         let hbArr: Array<Laya.Image> = this.HBao_box._childs as Array<Laya.Image>;
         let len = this.dataCenter.hbNumber;
         console.log("hbLen\t$$$$$$$$$$$$$\t" + len);
@@ -46,18 +45,19 @@ class gameOver extends ui.gameOverUI {
         for (let i = 0; i < len; i++) {
             /** 红包 */
             let Hbao: Laya.Image = hbArr[i];
+            //看是监听点击，传入监听的红包ID值
             Hbao.on(Laya.Event.MOUSE_DOWN, this, this.HbOpenOk, [Hbao, i]);
         }
     }
 
     /** 打开红包 */
     public HbOpenOk(Hbao: Laya.Image, n: number): void {
-        let moneyAarr: Array<Laya.Text> = [this.hb_money_0, this.hb_money_1, this.hb_money_2, this.hb_money_3];     //红包
+        let moneyAarr: Array<Laya.Label> = [this.hb_money_0, this.hb_money_1, this.hb_money_2, this.hb_money_3];     //红包
         let HbOpenes: Array<Laya.Image> = this.HB_opeb_box._childs;
         let getMoney: number = 5;
         Hbao.visible = false;
-        moneyAarr[n].text = "￥ " + 0.99;
-        // moneyAarr[n].align = "center";
+        let monet = Math.random()*5;
+        moneyAarr[n].text = "￥ " + monet.toFixed(2);
         HbOpenes[n].visible = true;
         console.log(" is OKer! \t" + n);
     }

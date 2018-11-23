@@ -2,9 +2,9 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":1,
-    "selecteID":2,
+    "selecteID":1,
     "referenceLines":null,
-    "props":{"var":"gameOverDialog","sceneWidth":640,"sceneHeight":1164,"sceneColor":"#efe3e2","name":"gameOverDialog","centerY":0.5},
+    "props":{"var":"gameOverDialog","sceneWidth":640,"sceneHeight":1164,"sceneColor":"#efe3e2","name":"gameOverDialog"},
     "nodeParent":-1,
     "label":"Dialog(gameOverDialog)",
     "isOpen":true,
@@ -16,10 +16,10 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":291,"width":619,"top":150,"skin":"Game_Settlement/window.png","centerX":0},
+            "props":{"y":291,"x":10,"skin":"Game_Settlement/window.png"},
             "nodeParent":1,
             "label":"Image",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
@@ -65,7 +65,7 @@
                 {
                     "x":30,
                     "type":"HBox",
-                    "props":{"y":137,"x":385,"space":30},
+                    "props":{"y":137,"x":385},
                     "nodeParent":2,
                     "label":"HBox",
                     "isOpen":false,
@@ -116,7 +116,7 @@
                             "props":{"y":43,"x":6,"var":"HB_opeb_box","name":"HB_opeb_box"},
                             "nodeParent":3,
                             "label":"Box(HB_opeb_box)",
-                            "isOpen":false,
+                            "isOpen":true,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
@@ -124,7 +124,7 @@
                             "child":[
                                 {
                                     "type":"Image",
-                                    "props":{"y":0,"x":0,"visible":false,"var":"hb_open_0","skin":"Game_Settlement/HBao_open.png","name":"hb_open_0"},
+                                    "props":{"y":0,"x":0,"width":108,"visible":false,"var":"hb_open_0","skin":"Game_Settlement/HBao_open.png","name":"hb_open_0","height":97},
                                     "nodeParent":4,
                                     "label":"Image(hb_open_0)",
                                     "isOpen":false,
@@ -146,24 +146,24 @@
                                                 ]
                                         },
                                         {
-                                            "type":"Text",
-                                            "props":{"y":19,"x":0,"width":108,"var":"hb_money_0","valign":"middle","text":"￥ 0","name":"hb_money_0","height":25,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
+                                            "type":"Label",
+                                            "props":{"y":20,"var":"hb_money_0","text":"￥ 0","name":"hb_money_0","fontSize":25,"font":"Arial","color":"#ff0c08","centerX":0,"bold":true},
                                             "nodeParent":5,
-                                            "label":"Text(hb_money_0)",
+                                            "label":"Label(hb_money_0)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":7,
+                                            "compId":51,
                                             "child":[
                                                 ]
                                         }]
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":0,"x":143,"visible":false,"var":"hb_open_1","skin":"Game_Settlement/HBao_open.png","name":"hb_open_1"},
+                                    "props":{"y":0,"x":143,"width":108,"visible":false,"var":"hb_open_1","skin":"Game_Settlement/HBao_open.png","name":"hb_open_1","height":97},
                                     "nodeParent":4,
                                     "label":"Image(hb_open_1)",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
@@ -182,24 +182,24 @@
                                                 ]
                                         },
                                         {
-                                            "type":"Text",
-                                            "props":{"y":19,"x":0,"width":108,"var":"hb_money_1","text":"￥ 0","name":"hb_money_1","height":0,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
+                                            "type":"Label",
+                                            "props":{"y":20,"var":"hb_money_1","text":"￥ 0","name":"hb_money_1","fontSize":25,"font":"Arial","color":"#ff0c08","centerX":0,"bold":true},
                                             "nodeParent":8,
-                                            "label":"Text(hb_money_1)",
+                                            "label":"Label(hb_money_1)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":10,
+                                            "compId":50,
                                             "child":[
                                                 ]
                                         }]
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":0,"x":287,"visible":false,"var":"hb_open_2","skin":"Game_Settlement/HBao_open.png","name":"hb_open_2"},
+                                    "props":{"y":0,"x":287,"width":108,"visible":false,"var":"hb_open_2","skin":"Game_Settlement/HBao_open.png","name":"hb_open_2","height":97},
                                     "nodeParent":4,
                                     "label":"Image(hb_open_2)",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
@@ -218,24 +218,24 @@
                                                 ]
                                         },
                                         {
-                                            "type":"Text",
-                                            "props":{"y":19,"x":0,"width":108,"var":"hb_money_2","text":"￥ 0","name":"hb_money_2","height":0,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
+                                            "type":"Label",
+                                            "props":{"y":20,"var":"hb_money_2","text":"￥ 0","name":"hb_money_2","fontSize":25,"font":"Arial","color":"#ff0c08","centerX":0,"bold":true},
                                             "nodeParent":11,
-                                            "label":"Text(hb_money_2)",
+                                            "label":"Label(hb_money_2)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":13,
+                                            "compId":49,
                                             "child":[
                                                 ]
                                         }]
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":-4,"x":430,"visible":false,"var":"hb_open_3","skin":"Game_Settlement/HBao_open.png","name":"hb_open_3"},
+                                    "props":{"x":430,"width":108,"visible":false,"var":"hb_open_3","skin":"Game_Settlement/HBao_open.png","name":"hb_open_3","height":97},
                                     "nodeParent":4,
                                     "label":"Image(hb_open_3)",
-                                    "isOpen":true,
+                                    "isOpen":false,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
@@ -254,14 +254,14 @@
                                                 ]
                                         },
                                         {
-                                            "type":"Text",
-                                            "props":{"y":19,"x":0,"width":108,"var":"hb_money_3","text":"￥ 0","name":"hb_money_3","height":0,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
+                                            "type":"Label",
+                                            "props":{"y":20,"var":"hb_money_3","text":"￥ 0","name":"hb_money_3","fontSize":25,"font":"Arial","color":"#ff0c08","centerX":0,"bold":true},
                                             "nodeParent":14,
-                                            "label":"Text(hb_money_3)",
+                                            "label":"Label(hb_money_3)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":16,
+                                            "compId":48,
                                             "child":[
                                                 ]
                                         }]
@@ -335,14 +335,13 @@
                     "props":{"y":428,"x":24,"space":50,"align":"middle"},
                     "nodeParent":2,
                     "label":"HBox",
-                    "isOpen":true,
+                    "isOpen":false,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":45,
                     "child":[
                         {
-                            "x":45,
                             "type":"Image",
                             "props":{"y":3,"x":9,"var":"agin_img","skin":"Game_Settlement/button.png","name":"agin_img"},
                             "nodeParent":45,
@@ -367,7 +366,6 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "props":{"y":2,"x":158,"var":"home_img","skin":"Game_Settlement/button.png","name":"home_img"},
                             "nodeParent":45,
@@ -392,7 +390,6 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "props":{"y":0,"x":307,"var":"share_img","skin":"Game_Settlement/button.png","name":"share_img"},
                             "nodeParent":45,
@@ -417,7 +414,6 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Image",
                             "props":{"y":1,"x":456,"var":"void_img","skin":"Game_Settlement/button.png","name":"void_img"},
                             "nodeParent":45,
@@ -442,7 +438,6 @@
                                 }]
                         },
                         {
-                            "x":45,
                             "type":"Text",
                             "props":{"y":98,"x":0,"text":"重新开始","name":"restart_text","fontSize":30,"font":"Arial","color":"#06abec","bold":true},
                             "nodeParent":45,
@@ -455,7 +450,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Text",
                             "props":{"y":99,"x":151,"text":"返回首页","name":"home_text","fontSize":30,"font":"Arial","color":"#06abec","bold":true},
                             "nodeParent":45,
@@ -468,7 +462,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Text",
                             "props":{"y":99,"x":301,"text":"分享复活","name":"share_text","fontSize":30,"font":"Arial","color":"#06abec","bold":true},
                             "nodeParent":45,
@@ -481,7 +474,6 @@
                                 ]
                         },
                         {
-                            "x":45,
                             "type":"Text",
                             "props":{"y":101,"x":452,"text":"视频复活","name":"video_text","fontSize":30,"font":"Arial","color":"#06abec","bold":true},
                             "nodeParent":45,

@@ -29,7 +29,6 @@ var gameOver = (function (_super) {
     /** 红包点击检测 */
     gameOver.prototype.HbOnOpen = function () {
         //寄存红包数组
-        // this.HBao_1.on(Laya.Event.MOUSE_DOWN, this, this.HbOpenOk, [1]);
         var hbArr = this.HBao_box._childs;
         var len = this.dataCenter.hbNumber;
         console.log("hbLen\t$$$$$$$$$$$$$\t" + len);
@@ -41,6 +40,7 @@ var gameOver = (function (_super) {
         for (var i = 0; i < len; i++) {
             /** 红包 */
             var Hbao = hbArr[i];
+            //看是监听点击，传入监听的红包ID值
             Hbao.on(Laya.Event.MOUSE_DOWN, this, this.HbOpenOk, [Hbao, i]);
         }
     };
@@ -50,8 +50,8 @@ var gameOver = (function (_super) {
         var HbOpenes = this.HB_opeb_box._childs;
         var getMoney = 5;
         Hbao.visible = false;
-        moneyAarr[n].text = "￥ " + 0.99;
-        // moneyAarr[n].align = "center";
+        var monet = Math.random() * 5;
+        moneyAarr[n].text = "￥ " + monet.toFixed(2);
         HbOpenes[n].visible = true;
         console.log(" is OKer! \t" + n);
     };

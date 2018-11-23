@@ -42,6 +42,11 @@ var GameHome = (function (_super) {
         this.createTimerLine();
         //同步数据
         this.synchronousData();
+        // 实例化皮肤界面
+        this.ballSkinView = new ballSkinView();
+        this.addChild(this.ballSkinView);
+        // 先隐藏皮肤界面起来
+        this.ballSkinView.visible = false;
         // 监听鼠标点击
         this.my_hb.on(Laya.Event.MOUSE_DOWN, this, this.myHBao); //我的红包
         this.reward.on(Laya.Event.MOUSE_DOWN, this, this.openDailyGift); //每日奖励
@@ -49,7 +54,7 @@ var GameHome = (function (_super) {
         this.jieshao.on(Laya.Event.MOUSE_DOWN, this, this.playJieShao); //玩法介绍
         this.invite.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun); //邀请有礼
         this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //关闭音乐
-        this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //球皮肤事件
+        this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.changeSkin); //球皮肤事件
         this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //好友排行
         this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);
         this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest); //开始游戏
@@ -142,6 +147,10 @@ var GameHome = (function (_super) {
         // 设置居中
         this.box_fraction.getBounds();
         return this;
+    };
+    /** 换皮肤 */
+    GameHome.prototype.changeSkin = function () {
+        this.ballSkinView.visible = true;
     };
     return GameHome;
 }(ui.gameHomeUI));

@@ -5,7 +5,8 @@ var Game = (function () {
     function Game() {
         /** 要加载的资源 */
         this.needResources = ["res/atlas/ladder.atlas", "res/ladder/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas",
-            "res/atlas/invite_gift.atlas", "res/atlas/Game_Settlement.atlas", "res/atlas/myHbao.atlas", "res/atlas/everyDay.atlas", "res/atlas/player.atlas"];
+            "res/atlas/invite_gift.atlas", "res/atlas/Game_Settlement.atlas", "res/atlas/myHbao.atlas", "res/atlas/everyDay.atlas", "res/atlas/player.atlas",
+            "res/atlas/ball_skin.atlas"];
         /** 初始的阶梯编号 */
         this.ladderN = 4;
         // 适配微信小游戏
@@ -15,13 +16,14 @@ var Game = (function () {
         // 性能面板
         // Laya.Stat.show(640, 0);
         Laya.stage.bgColor = "#EEE9E9";
-        Laya.stage.scaleMode = Laya.Stage.SCALE_SHOWALL;
+        Laya.stage.scaleMode = "showall";
         // 预加载资源
         Laya.loader.load(this.needResources, Laya.Handler.create(this, this.init));
     }
     /** 初始化 */
     Game.prototype.init = function () {
         Laya.stage.name = "Stage";
+        // 初始化数据中控
         this.dataCenter = new dataCenter();
         // 实例化一个阶梯群
         this.ladderArr = new LadderArr(Laya.stage.height);
@@ -139,5 +141,5 @@ var Game = (function () {
     return Game;
 }());
 // 开始游戏
-// new Game(); 
+new Game();
 //# sourceMappingURL=Game.js.map

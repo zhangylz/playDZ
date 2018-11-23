@@ -38,6 +38,8 @@ var LadderArr = (function (_super) {
      * 阶梯初始化
      */
     LadderArr.prototype.init = function () {
+        //设置box的宽度
+        this.width = 640;
         // 阶梯数量
         var ladder_qy = 7;
         // 阶梯的y坐标
@@ -63,23 +65,23 @@ var LadderArr = (function (_super) {
             // ladder.setBounds(new Laya.Rectangle(0, 0, 720, 150));
             // 给阶梯设置缩放
             ladder.scale(scale_XY, scale_XY);
-            // 设置居中的 X位置
-            var ladder_x = (this.stageW - ladder.getBounds().width) / 2;
             if (i > 2) {
                 ladder.spr_clean();
             }
             // 添加到Box
             this.addChild(ladder);
             // 设置位置  ladder_x是居中的位置。  vy的上一个阶梯的 ladder.y + ladder.heigth
-            ladder.pos(ladder_x, ladder_y);
-            // console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "\t  Y: " + ladder.getBounds().y + "\theigth:  " + ladder.getBounds().height);
-            // console.log("scaleXY: " + ladder.scaleX);
+            // ladder.pos(ladder_x, ladder_y);
+            //设置阶梯居中
+            ladder.centerX = 0;
+            ladder.y = ladder_y;
+            console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "\t  Y: " + ladder.getBounds().y + "\theigth:  " + ladder.getBounds().height + "\twidth:\t" + ladder.getBounds().width);
             // 设置阶梯的名字
             ladder.name = "ladder";
             // 下一个的阶梯的缩放值
             scale_XY *= this.nextScale;
             // 下一个阶梯的Y坐标
-            ladder_y += ladder.height * ladder.scaleX;
+            ladder_y += ladder.getBounds().height;
             //  计算阶梯群Y的坐标。   stage.heigth - 所有阶梯的高度总和
             if (i == (ladder_qy - 1)) {
                 this.ladderArrHeigth = ladder_y; //ladderArrHeigth = 阶梯群的总高度
@@ -105,7 +107,8 @@ var LadderArr = (function (_super) {
             var center = (stageWidth - ladderWidth) / 2;
             // 根据组件的大小来定位组件的位置
             var sY = (ladder.scaleY - this.initial_scale) / this.testB * ladderTotalY;
-            ladder.pos(center, sY);
+            ladder.y = sY;
+            //检测绝对值
             if (Math.abs(ladder.x) < 1e-5) {
                 ladder.x = 0;
             }

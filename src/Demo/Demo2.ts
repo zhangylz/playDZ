@@ -2,6 +2,8 @@
 class Demo2 {
     private myHB: myHB;
     constructor() {
+         // 适配微信小游戏
+        Laya.MiniAdpter.init();
         Laya.init(640, 1164, Laya.WebGL);
         Laya.stage.bgColor = "#EEE9E9";
         Laya.stage.scaleMode = "showall";

@@ -1,6 +1,8 @@
 /** 演示2 */
 var Demo2 = (function () {
     function Demo2() {
+        // 适配微信小游戏
+        Laya.MiniAdpter.init();
         Laya.init(640, 1164, Laya.WebGL);
         Laya.stage.bgColor = "#EEE9E9";
         Laya.stage.scaleMode = "showall";

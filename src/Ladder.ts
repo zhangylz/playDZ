@@ -1,7 +1,7 @@
 /**
  * 阶梯类
  */
-class Ladder extends Laya.Sprite {
+class Ladder extends Laya.Image {
     // 阶梯宽度
     public ladder_width: number = 640;
     // 阶梯高度

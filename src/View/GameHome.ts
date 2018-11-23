@@ -15,11 +15,13 @@ class GameHome extends ui.gameHomeUI {
     /** 最大分数 */
     public bigFraction: Laya.Label;
     /** 砖石数量 */
-    public doNumber: Laya.Text;
+    public doNumber: Laya.Label;
     /** 玩法介绍 */
     public playDialog: playDialog = new playDialog();
     /** 数据中心 */
     public dataCenter: dataCenter;
+    /** 皮肤页面 */
+    public ballSkinView: ballSkinView;
     /** 游戏主控 */
     public Game: Game;
     /**
@@ -42,6 +44,11 @@ class GameHome extends ui.gameHomeUI {
         this.createTimerLine();
         //同步数据
         this.synchronousData();
+        // 实例化皮肤界面
+        this.ballSkinView = new ballSkinView();
+        this.addChild(this.ballSkinView);
+        // 先隐藏皮肤界面起来
+        this.ballSkinView.visible = false;
         // 监听鼠标点击
         this.my_hb.on(Laya.Event.MOUSE_DOWN, this, this.myHBao);                //我的红包
         this.reward.on(Laya.Event.MOUSE_DOWN, this, this.openDailyGift);        //每日奖励
@@ -49,7 +56,7 @@ class GameHome extends ui.gameHomeUI {
         this.jieshao.on(Laya.Event.MOUSE_DOWN, this, this.playJieShao);         //玩法介绍
         this.invite.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);            //邀请有礼
         this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);         //关闭音乐
-        this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);    //球皮肤事件
+        this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.changeSkin);    //球皮肤事件
         this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);           //好友排行
         this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);
         this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest);          //开始游戏
@@ -148,4 +155,8 @@ class GameHome extends ui.gameHomeUI {
         return this;
     }
 
+    /** 换皮肤 */
+    private changeSkin(): void {
+        this.ballSkinView.visible = true;
+    }
 }
