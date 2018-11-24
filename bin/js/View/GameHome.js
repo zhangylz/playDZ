@@ -43,7 +43,7 @@ var GameHome = (function (_super) {
         //同步数据
         this.synchronousData();
         // 实例化皮肤界面
-        this.ballSkinView = new ballSkinView();
+        this.ballSkinView = new ballSkinView(this.Game.ball);
         this.addChild(this.ballSkinView);
         // 先隐藏皮肤界面起来
         this.ballSkinView.visible = false;
@@ -154,4 +154,4 @@ var GameHome = (function (_super) {
     };
     return GameHome;
 }(ui.gameHomeUI));
-//# sourceMappingURL=GameHome.js.map
+//# sourceMappingURL=gameHome.js.map

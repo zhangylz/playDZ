@@ -17,8 +17,9 @@ var Demo = (function () {
     }
     // 加载完成
     Demo.prototype.onLoad = function (set) {
-        Laya.SoundManager.setMusicVolume(0.2);
-        Laya.SoundManager.playMusic("res/sounds/bgMusic.mp3", 0);
+        this.ballSkinView = new ballSkinView();
+        this.ballSkinView.visible = true;
+        Laya.stage.addChild(this.ballSkinView);
     };
     return Demo;
 }());

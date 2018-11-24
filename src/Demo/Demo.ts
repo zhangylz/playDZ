@@ -2,7 +2,7 @@
  * 演示demo
  */
 class Demo {
-    public LadderArr: LadderArr;
+    public ballSkinView: ballSkinView;
     // 构造器
     constructor() {
         // 适配微信小游戏
@@ -19,8 +19,9 @@ class Demo {
 
     // 加载完成
     private onLoad(set: Laya.ParticleSetting): void {
-        Laya.SoundManager.setMusicVolume(0.2);
-        Laya.SoundManager.playMusic("res/sounds/bgMusic.mp3", 0);
+        this.ballSkinView = new ballSkinView();
+        this.ballSkinView.visible = true;
+        Laya.stage.addChild(this.ballSkinView);
     }
 }
 

@@ -13,6 +13,8 @@ var spriteCollision = (function () {
         this.arrXY = new Array(); //sprite全局坐标数组
         /** 是否碰撞 */
         this.resultCollision = false;
+        /** 游戏音效 */
+        this.gameSound = new Sounds.gameSounds();
         /** 寄存数据中心 */
         this.dataCenter = dataCenter;
         //寄存球精灵
@@ -125,6 +127,8 @@ var spriteCollision = (function () {
     };
     /** 撞到白圈调用的方法 */
     spriteCollision.prototype.ovFun = function () {
+        // 播放特效
+        this.gameSound.ovSounds();
         console.log("调用白圈");
         return this;
     };
@@ -138,13 +142,15 @@ var spriteCollision = (function () {
     spriteCollision.prototype.doFun = function () {
         this.dataCenter.doObtain += 1;
         this.dataCenter.doNumber += 1;
-        console.log("调用砖石\t★★★★★★★★\t" + this.dataCenter.doObtain);
+        this.gameSound.doSounds();
+        // console.log("调用砖石\t★★★★★★★★\t" + this.dataCenter.doObtain);
         return this;
     };
     /** 撞到红包的函数 */
     spriteCollision.prototype.hbFun = function () {
         this.dataCenter.hbNumber += 1;
-        console.log("调用红包\t▲▲▲▲▲▲▲▲▲▲▲\t" + this.dataCenter.hbNumber);
+        this.gameSound.hbSounds();
+        // console.log("调用红包\t▲▲▲▲▲▲▲▲▲▲▲\t" + this.dataCenter.hbNumber);
         return this;
     };
     return spriteCollision;

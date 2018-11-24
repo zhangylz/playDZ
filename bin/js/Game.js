@@ -3,6 +3,8 @@
  */
 var Game = (function () {
     function Game() {
+        /** 游戏背景音乐 */
+        this.gameSound = new Sounds.gameSounds();
         /** 要加载的资源 */
         this.needResources = ["res/atlas/ladder.atlas", "res/ladder/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas",
             "res/atlas/invite_gift.atlas", "res/atlas/Game_Settlement.atlas", "res/atlas/myHbao.atlas", "res/atlas/everyDay.atlas", "res/atlas/player.atlas",
@@ -58,7 +60,7 @@ var Game = (function () {
         // 监听鼠标
         Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
         Laya.stage.on(Laya.Event.MOUSE_UP, this, this.mouseUP); //监听鼠标抬起
-        this.onBgMusic();
+        this.gameSound.onBgMusic();
     };
     /** 监听鼠标 */
     Game.prototype.monitorMouse = function () {
@@ -127,9 +129,9 @@ var Game = (function () {
         console.log("Game Over!");
         // 显示死亡弹窗
         this.gameOverDia.Opened().show();
-        Laya.SoundManager.playSound("res/sound/gameOver.mp3", 1);
         //关闭音乐
         // this.offBgMusic();
+        this.gameSound.goSounds();
         return this;
     };
     /** 游戏重置 */
@@ -144,16 +146,8 @@ var Game = (function () {
         console.log("game Reset!");
         return this;
     };
-    /** 开启音乐 */
-    Game.prototype.onBgMusic = function () {
-        // let musicUrl: string = "res/sounds/bgMusic2.mp3";
-        // Laya.SoundManager.setMusicVolume(0.2);
-        // Laya.SoundManager.playMusic(musicUrl, 0);
-        return this;
-    };
     /** 关闭音乐 */
     Game.prototype.offBgMusic = function () {
-        Laya.SoundManager.stopAll();
         return this;
     };
     return Game;

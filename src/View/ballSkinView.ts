@@ -6,12 +6,14 @@ class ballSkinView extends ui.ballSkinViewUI {
     private allRingArr: Array<Laya.Image> = new Array();
     /** 当前的选择的皮肤坐标 */
     private onSkinPoinit: number = 0;
+    private Ball: Ball;
     /** 遮罩 */
     private maskBG: Laya.Sprite;
-    constructor() {
+    constructor(ball: Ball) {
         super();
         //先初始化
         this.init();
+        this.Ball = ball;
     }
 
     /** 初始化 */
@@ -78,11 +80,17 @@ class ballSkinView extends ui.ballSkinViewUI {
         return this;
     }
 
-    /** 蓝圈切换显示 */
+    /** 换肤和篮圈显示 */
     public ringSwitchn(n: number): ballSkinView {
+        // 寄存选中的皮肤地址
+        let newSkinUrl: string = this.allSkinArr[0].skin;
+        let oldSkinUrl: string = this.Ball._childs[0].skin;
+
         this.allRingArr[this.onSkinPoinit].visible = false;
         this.allRingArr[n].visible = true;
         this.onSkinPoinit = n;
+
+        console.log("old\t" + oldSkinUrl + "\tnew\t" + newSkinUrl);
         return this;
     }
 
@@ -97,6 +105,6 @@ class ballSkinView extends ui.ballSkinViewUI {
         this.maskBG = new Laya.Sprite();
         this.maskBG.graphics.drawRect(0, 0, 640, 1164, "#08f0f9");
         this.addChild(this.maskBG);
-        this.maskBG.zOrder = 0;
+        this.maskBG.zOrder = -1;
     }
 }

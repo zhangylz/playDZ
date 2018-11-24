@@ -16,6 +16,8 @@ class spriteCollision {
     public resultCollision = false;
     /** 数据中心 */
     public dataCenter: dataCenter;
+    /** 游戏音效 */
+    public gameSound: Sounds.gameSounds = new Sounds.gameSounds();
     /**
      * 初始化构造
      * @param Ladder 传入精灵阶梯
@@ -36,7 +38,7 @@ class spriteCollision {
     public init(Ladder: Ladder) {
         // 赋值到全局阶梯精灵
         this.Ladder = Ladder;
-         // 子精灵组
+        // 子精灵组
         this.sprArr = this.Ladder._childs;
         this.stageXY(this.countSprPoint());
     }
@@ -149,6 +151,8 @@ class spriteCollision {
 
     /** 撞到白圈调用的方法 */
     private ovFun(): spriteCollision {
+        // 播放特效
+        this.gameSound.ovSounds();
         console.log("调用白圈");
         return this;
     }
@@ -164,13 +168,15 @@ class spriteCollision {
     private doFun(): spriteCollision {
         this.dataCenter.doObtain += 1;
         this.dataCenter.doNumber += 1;
-        console.log("调用砖石\t★★★★★★★★\t" + this.dataCenter.doObtain);
+        this.gameSound.doSounds();
+        // console.log("调用砖石\t★★★★★★★★\t" + this.dataCenter.doObtain);
         return this;
     }
     /** 撞到红包的函数 */
     private hbFun(): spriteCollision {
         this.dataCenter.hbNumber += 1;
-        console.log("调用红包\t▲▲▲▲▲▲▲▲▲▲▲\t" + this.dataCenter.hbNumber);
+        this.gameSound.hbSounds();
+        // console.log("调用红包\t▲▲▲▲▲▲▲▲▲▲▲\t" + this.dataCenter.hbNumber);
         return this;
     }
 

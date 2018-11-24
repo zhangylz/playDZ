@@ -6,7 +6,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 /** 皮肤主页 */
 var ballSkinView = (function (_super) {
     __extends(ballSkinView, _super);
-    function ballSkinView() {
+    function ballSkinView(ball) {
         var _this = _super.call(this) || this;
         /** 皮肤数组 */
         _this.allSkinArr = new Array();
@@ -16,6 +16,7 @@ var ballSkinView = (function (_super) {
         _this.onSkinPoinit = 0;
         //先初始化
         _this.init();
+        _this.Ball = ball;
         return _this;
     }
     /** 初始化 */
@@ -79,11 +80,15 @@ var ballSkinView = (function (_super) {
         }
         return this;
     };
-    /** 蓝圈切换显示 */
+    /** 换肤和篮圈显示 */
     ballSkinView.prototype.ringSwitchn = function (n) {
+        // 寄存选中的皮肤地址
+        var newSkinUrl = this.allSkinArr[0].skin;
+        var oldSkinUrl = this.Ball._childs[0].skin;
         this.allRingArr[this.onSkinPoinit].visible = false;
         this.allRingArr[n].visible = true;
         this.onSkinPoinit = n;
+        console.log("old\t" + oldSkinUrl + "\tnew\t" + newSkinUrl);
         return this;
     };
     /** 隐藏界面 */
@@ -96,7 +101,7 @@ var ballSkinView = (function (_super) {
         this.maskBG = new Laya.Sprite();
         this.maskBG.graphics.drawRect(0, 0, 640, 1164, "#08f0f9");
         this.addChild(this.maskBG);
-        this.maskBG.zOrder = 0;
+        this.maskBG.zOrder = -1;
     };
     return ballSkinView;
 }(ui.ballSkinViewUI));

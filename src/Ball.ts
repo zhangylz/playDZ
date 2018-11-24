@@ -16,7 +16,8 @@ class Ball extends Laya.Sprite {
     private initialPoint: Laya.Point = new Laya.Point((640 - this.ballWidth) / 2, 705);
     /** 数据中控 */
     public dataCenter: dataCenter;
-
+    /** 游戏音效 */
+    public gameSound: Sounds.gameSounds = new Sounds.gameSounds();
     /** @param dataCenter 数据中控 */
     constructor(dataCenter: dataCenter) {
         super();
@@ -101,7 +102,9 @@ class Ball extends Laya.Sprite {
             this.y = this.initialPoint.y;
             this.upSpeed = 20;
             data.fraction += 1;
-            this.onPlaySound();
+
+            // 播放音效
+            // this.onPlaySound();
         }
         if (this.upSpeed < 0 && this.upSpeed > -1) {
             ladderNumber--;
@@ -111,15 +114,13 @@ class Ball extends Laya.Sprite {
             }
             // console.log("开始下落\t$$$$$$\t" + ladderN);
         }
-        // 更新分数
-        // fraction.text = String(frac);
         //返回处理后编号
         return ladderNumber;
     }
 
     /** 播放音效 */
     public onPlaySound(): void {
-        Laya.SoundManager.playSound("res/sounds/gameOver.mp3", 1, new Laya.Handler(this, function(){console.log("bang bang!")}));
+        this.gameSound.ballSounds();
     }
     /** 球初始化 */
     public ballRect(): Ball {

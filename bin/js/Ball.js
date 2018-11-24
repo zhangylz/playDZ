@@ -17,6 +17,8 @@ var Ball = (function (_super) {
         _this.ballHeigth = _this.ballWidth;
         /** 球的初始坐标 */
         _this.initialPoint = new Laya.Point((640 - _this.ballWidth) / 2, 705);
+        /** 游戏音效 */
+        _this.gameSound = new Sounds.gameSounds();
         /** 向上的速度 */
         _this.upSpeed = 20;
         /**重力加速度 */
@@ -94,7 +96,6 @@ var Ball = (function (_super) {
             this.y = this.initialPoint.y;
             this.upSpeed = 20;
             data.fraction += 1;
-            this.onPlaySound();
         }
         if (this.upSpeed < 0 && this.upSpeed > -1) {
             ladderNumber--;
@@ -102,14 +103,12 @@ var Ball = (function (_super) {
                 ladderNumber = 6;
             }
         }
-        // 更新分数
-        // fraction.text = String(frac);
         //返回处理后编号
         return ladderNumber;
     };
     /** 播放音效 */
     Ball.prototype.onPlaySound = function () {
-        Laya.SoundManager.playSound("res/sounds/gameOver.mp3", 1, new Laya.Handler(this, function () { console.log("bang bang!"); }));
+        this.gameSound.ballSounds();
     };
     /** 球初始化 */
     Ball.prototype.ballRect = function () {
