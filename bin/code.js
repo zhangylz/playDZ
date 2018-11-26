@@ -53762,7 +53762,7 @@ var Sounds;
     var gameSounds = (function () {
         function gameSounds() {
             /** 背景音乐地址 */
-            this.bgMusicUrl = "res/sounds/bgMusic2.mp3";
+            this.bgMusicUrl = "res/sounds/bgMusic.mp3";
             /** 球的撞击音效地址 */
             this.ballSoundsUrl = "res/sounds/ballSounds.mp3";
             /** 白圈的特效地址 */
@@ -53874,7 +53874,6 @@ var OnMouse = (function () {
     return OnMouse;
 }());
 //# sourceMappingURL=OnMouse.js.map
-//# sourceMappingURL=Motion.js.map
 /**
  * 开始游戏
  */
@@ -53927,6 +53926,10 @@ var Game = (function () {
         //用户登录
         if (Laya.Browser.onMiniGame) {
             this.gameLogin();
+            console.log("testMiniGame");
+        }
+        else {
+            console.log("not miniGame");
         }
         ;
     };
@@ -54040,9 +54043,17 @@ var Game = (function () {
     Game.prototype.offBgMusic = function () {
         return this;
     };
-    /** 登录游戏 */
     Game.prototype.gameLogin = function () {
-        console.log("game login");
+        wx.login({
+            success: function (res) {
+                if (res.code) {
+                    console.log("is OK!");
+                }
+                else {
+                    console.log("not OK!");
+                }
+            }
+        });
         return this;
     };
     return Game;
@@ -54525,7 +54536,7 @@ var LadderArr = (function (_super) {
             //设置阶梯居中
             ladder.centerX = 0;
             ladder.y = ladder_y;
-            console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "\t  Y: " + ladder.getBounds().y + "\theigth:  " + ladder.getBounds().height + "\twidth:\t" + ladder.getBounds().width);
+            // console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "\t  Y: " + ladder.getBounds().y + "\theigth:  " + ladder.getBounds().height + "\twidth:\t" + ladder.getBounds().width);
             // 设置阶梯的名字
             ladder.name = "ladder";
             // 下一个的阶梯的缩放值
@@ -54862,7 +54873,7 @@ var ballSkinView = (function (_super) {
     ballSkinView.prototype.skinProcess = function (skin, ring) {
         this.allSkinArr.push(skin);
         this.allRingArr.push(ring);
-        console.log(this.allSkinArr.length + "\t$$$$$\t" + this.allRingArr.length);
+        // console.log(this.allSkinArr.length + "\t$$$$$\t" + this.allRingArr.length);
         return this;
     };
     /** 皮肤点击监听 */
@@ -54897,11 +54908,11 @@ var ballSkinView = (function (_super) {
     ballSkinView.prototype.ringSwitchn = function (n) {
         // 寄存选中的皮肤地址
         var newSkinUrl = this.allSkinArr[0].skin;
-        var oldSkinUrl = this.Ball._childs[0].skin;
+        // let oldSkinUrl: string = this.Ball._childs[0].skin;
         this.allRingArr[this.onSkinPoinit].visible = false;
         this.allRingArr[n].visible = true;
         this.onSkinPoinit = n;
-        console.log("old\t" + oldSkinUrl + "\tnew\t" + newSkinUrl);
+        console.log("\tnew\t" + newSkinUrl);
         return this;
     };
     /** 隐藏界面 */
@@ -55095,7 +55106,7 @@ var GameHome = (function (_super) {
     };
     return GameHome;
 }(ui.gameHomeUI));
-//# sourceMappingURL=gameHome.js.map
+//# sourceMappingURL=GameHome.js.map
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -55227,7 +55238,7 @@ var gameOver = (function (_super) {
     };
     return gameOver;
 }(ui.gameOverUI));
-//# sourceMappingURL=gameOver.js.map
+//# sourceMappingURL=GameOver.js.map
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }

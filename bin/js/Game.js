@@ -18,7 +18,7 @@ var Game = (function () {
         // 性能面板
         // Laya.Stat.show(640, 0);
         Laya.stage.bgColor = "#EEE9E9";
-        Laya.stage.scaleMode = Laya.Stage.SCALE_FIXED_AUTO;
+        Laya.stage.scaleMode = "showall";
         // 预加载资源
         Laya.loader.load(this.needResources, Laya.Handler.create(this, this.init));
     }
@@ -50,6 +50,10 @@ var Game = (function () {
         //用户登录
         if (Laya.Browser.onMiniGame) {
             this.gameLogin();
+            console.log("testMiniGame");
+        }
+        else {
+            console.log("not miniGame");
         }
         ;
     };
@@ -163,9 +167,17 @@ var Game = (function () {
     Game.prototype.offBgMusic = function () {
         return this;
     };
-    /** 登录游戏 */
     Game.prototype.gameLogin = function () {
-        console.log("game login");
+        wx.login({
+            success: function (res) {
+                if (res.code) {
+                    console.log("is OK!");
+                }
+                else {
+                    console.log("not OK!");
+                }
+            }
+        });
         return this;
     };
     return Game;

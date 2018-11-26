@@ -75,7 +75,7 @@ var LadderArr = (function (_super) {
             //设置阶梯居中
             ladder.centerX = 0;
             ladder.y = ladder_y;
-            console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "\t  Y: " + ladder.getBounds().y + "\theigth:  " + ladder.getBounds().height + "\twidth:\t" + ladder.getBounds().width);
+            // console.log("第" + i + "个阶梯  X: " + ladder.getBounds().x + "\t  Y: " + ladder.getBounds().y + "\theigth:  " + ladder.getBounds().height + "\twidth:\t" + ladder.getBounds().width);
             // 设置阶梯的名字
             ladder.name = "ladder";
             // 下一个的阶梯的缩放值

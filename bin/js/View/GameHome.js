@@ -154,4 +154,4 @@ var GameHome = (function (_super) {
     };
     return GameHome;
 }(ui.gameHomeUI));
-//# sourceMappingURL=gameHome.js.map
+//# sourceMappingURL=GameHome.js.map

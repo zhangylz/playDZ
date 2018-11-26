@@ -47,7 +47,7 @@ class ballSkinView extends ui.ballSkinViewUI {
     private skinProcess(skin: Laya.Image, ring: Laya.Image): ballSkinView {
         this.allSkinArr.push(skin);
         this.allRingArr.push(ring);
-        console.log(this.allSkinArr.length + "\t$$$$$\t" + this.allRingArr.length);
+        // console.log(this.allSkinArr.length + "\t$$$$$\t" + this.allRingArr.length);
         return this;
     }
 
@@ -84,13 +84,13 @@ class ballSkinView extends ui.ballSkinViewUI {
     public ringSwitchn(n: number): ballSkinView {
         // 寄存选中的皮肤地址
         let newSkinUrl: string = this.allSkinArr[0].skin;
-        let oldSkinUrl: string = this.Ball._childs[0].skin;
+        // let oldSkinUrl: string = this.Ball._childs[0].skin;
 
         this.allRingArr[this.onSkinPoinit].visible = false;
         this.allRingArr[n].visible = true;
         this.onSkinPoinit = n;
 
-        console.log("old\t" + oldSkinUrl + "\tnew\t" + newSkinUrl);
+        console.log("\tnew\t" + newSkinUrl);
         return this;
     }
 

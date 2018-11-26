@@ -7,7 +7,7 @@ var Sounds;
     var gameSounds = (function () {
         function gameSounds() {
             /** 背景音乐地址 */
-            this.bgMusicUrl = "res/sounds/bgMusic2.mp3";
+            this.bgMusicUrl = "res/sounds/bgMusic.mp3";
             /** 球的撞击音效地址 */
             this.ballSoundsUrl = "res/sounds/ballSounds.mp3";
             /** 白圈的特效地址 */

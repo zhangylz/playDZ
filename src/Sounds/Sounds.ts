@@ -8,7 +8,7 @@ module Sounds {
     /** 游戏音乐&音效 */
     export class gameSounds {
         /** 背景音乐地址 */
-        private bgMusicUrl: string = "res/sounds/bgMusic2.mp3";
+        private bgMusicUrl: string = "res/sounds/bgMusic.mp3";
         /** 球的撞击音效地址 */
         private ballSoundsUrl: string = "res/sounds/ballSounds.mp3";
         /** 白圈的特效地址 */

@@ -49,7 +49,7 @@ var ballSkinView = (function (_super) {
     ballSkinView.prototype.skinProcess = function (skin, ring) {
         this.allSkinArr.push(skin);
         this.allRingArr.push(ring);
-        console.log(this.allSkinArr.length + "\t$$$$$\t" + this.allRingArr.length);
+        // console.log(this.allSkinArr.length + "\t$$$$$\t" + this.allRingArr.length);
         return this;
     };
     /** 皮肤点击监听 */
@@ -84,11 +84,11 @@ var ballSkinView = (function (_super) {
     ballSkinView.prototype.ringSwitchn = function (n) {
         // 寄存选中的皮肤地址
         var newSkinUrl = this.allSkinArr[0].skin;
-        var oldSkinUrl = this.Ball._childs[0].skin;
+        // let oldSkinUrl: string = this.Ball._childs[0].skin;
         this.allRingArr[this.onSkinPoinit].visible = false;
         this.allRingArr[n].visible = true;
         this.onSkinPoinit = n;
-        console.log("old\t" + oldSkinUrl + "\tnew\t" + newSkinUrl);
+        console.log("\tnew\t" + newSkinUrl);
         return this;
     };
     /** 隐藏界面 */
