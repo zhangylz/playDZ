@@ -11,9 +11,6 @@ class Demo2 {
     }
     /** 初始化 */
     private onLoad() {
-        this.myHB = new myHB();
-        // Laya.stage.addChild(this.inviteGift);
-        this.myHB.popup();
     }
 }
 

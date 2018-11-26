@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":24,
-    "selecteID":30,
+    "selectedBox":1,
+    "selecteID":37,
     "props":{"x":0,"width":640,"var":"gamehome","sceneColor":"#EEE9E9","name":"gamehome","height":1136},
     "nodeParent":-1,
     "label":"View(gamehome)",
@@ -168,14 +168,13 @@
             "props":{"y":850,"x":471,"width":169,"var":"ranking","skin":"gameHome/image_Leaderboard.png","right":0,"name":"ranking"},
             "nodeParent":1,
             "label":"Image(ranking)",
-            "isOpen":true,
+            "isOpen":false,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":24,
             "child":[
                 {
-                    "x":30,
                     "type":"Image",
                     "props":{"y":41,"skin":"gameHome/image_paihang.png","centerX":0},
                     "nodeParent":24,
@@ -188,7 +187,6 @@
                         ]
                 },
                 {
-                    "x":30,
                     "type":"Text",
                     "props":{"y":122,"x":23,"text":"好友排行","fontSize":30,"font":"Arial","color":"#ffffff","bold":true,"align":"center"},
                     "nodeParent":24,
@@ -283,13 +281,14 @@
             "props":{"y":270,"var":"box_fraction","space":20,"name":"box_fraction","centerX":0,"align":"middle"},
             "nodeParent":1,
             "label":"HBox(box_fraction)",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":34,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "props":{"x":0,"width":50,"var":"crown","skin":"gameHome/image_crown.png","name":"crown","height":50,"centerY":0},
                     "nodeParent":34,
@@ -302,6 +301,7 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Label",
                     "props":{"x":70,"var":"bigFraction","text":"0","name":"bigFraction","fontSize":60,"font":"Arial","color":"#2d71d6","centerY":0,"bold":true},
                     "nodeParent":34,
@@ -317,16 +317,17 @@
         {
             "x":15,
             "type":"HBox",
-            "props":{"y":20,"x":20,"var":"box_do","space":20,"name":"box_do","align":"middle"},
+            "props":{"y":20,"x":20,"var":"box_do","space":30,"name":"box_do","align":"middle"},
             "nodeParent":1,
             "label":"HBox(box_do)",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":37,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "props":{"var":"diamond","skin":"gameHome/image_do.png","name":"diamond"},
                     "nodeParent":37,
@@ -340,26 +341,28 @@
                     "$HIDDEN":false
                 },
                 {
-                    "type":"Label",
-                    "props":{"var":"doNumber","text":"0","name":"doNumber","fontSize":50,"font":"SimHei","color":"#2d71d6","bold":true},
-                    "nodeParent":37,
-                    "label":"Label(doNumber)",
-                    "isDirectory":false,
-                    "isAniNode":true,
-                    "hasChild":false,
-                    "compId":38,
-                    "child":[
-                        ]
-                },
-                {
+                    "x":30,
                     "type":"Image",
-                    "props":{"y":6,"x":51,"var":"button_doAdd","skin":"gameHome/add_do.png","name":"button_doAdd"},
+                    "props":{"y":7,"x":126,"var":"button_doAdd","skin":"gameHome/add_do.png","name":"button_doAdd"},
                     "nodeParent":37,
                     "label":"Image(button_doAdd)",
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
                     "compId":33,
+                    "child":[
+                        ]
+                },
+                {
+                    "x":30,
+                    "type":"Label",
+                    "props":{"y":0,"x":78,"var":"doNumber","text":"0","name":"doNumber","fontSize":50,"font":"SimHei","color":"#2d71d6","bold":true},
+                    "nodeParent":37,
+                    "label":"Label(doNumber)",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":38,
                     "child":[
                         ]
                 }]

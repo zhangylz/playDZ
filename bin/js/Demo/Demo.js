@@ -17,9 +17,6 @@ var Demo = (function () {
     }
     // 加载完成
     Demo.prototype.onLoad = function (set) {
-        this.ballSkinView = new ballSkinView();
-        this.ballSkinView.visible = true;
-        Laya.stage.addChild(this.ballSkinView);
     };
     return Demo;
 }());

@@ -19,9 +19,7 @@ class Demo {
 
     // 加载完成
     private onLoad(set: Laya.ParticleSetting): void {
-        this.ballSkinView = new ballSkinView();
-        this.ballSkinView.visible = true;
-        Laya.stage.addChild(this.ballSkinView);
+        
     }
 }
 

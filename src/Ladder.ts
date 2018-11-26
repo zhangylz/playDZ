@@ -186,7 +186,7 @@ class Ladder extends Laya.Image {
         this.spr_add_ob().spr_add_ov(this.random_arr).spr_add_gift(this.random_arr);
         // console.log("长度： " + this.random_arr.length);
     }
-
+    
     /**
      * 清除阶梯上的寄存精灵
      */

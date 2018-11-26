@@ -30,7 +30,7 @@ class Game {
         // 性能面板
         // Laya.Stat.show(640, 0);
         Laya.stage.bgColor = "#EEE9E9";
-        Laya.stage.scaleMode = "showall";
+        Laya.stage.scaleMode = Laya.Stage.SCALE_FIXED_AUTO;
         // 预加载资源
         Laya.loader.load(this.needResources, Laya.Handler.create(this, this.init));
     }
@@ -60,7 +60,8 @@ class Game {
         this.gameOverDia = new gameOver(this, this.dataCenter);     //游戏结束的弹窗
         // 监听碰撞
         this.spriteCollision = new spriteCollision(this.ball, this.dataCenter);
-        // 实例化数据中心
+        //用户登录
+        if (Laya.Browser.onMiniGame) { this.gameLogin() };
     }
 
     /** 
@@ -168,8 +169,23 @@ class Game {
         return this;
     }
 
+    /** 复活开始 */
+    public gameRelive(): Game {
+        this.gameHome.synchronousData();
+        this.ball.ballRect();
+        this.ladderArr.ladderArrRect().init();
+        this.ladderN = 4;
+        this.spriteCollision.resultCollision = false;
+        return this;
+    }
+
     /** 关闭音乐 */
     private offBgMusic(): Game {
+        return this;
+    }
+    /** 登录游戏 */
+    private gameLogin(): Game {
+        console.log("game login");
         return this;
     }
 

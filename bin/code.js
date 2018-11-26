@@ -53610,6 +53610,8 @@ var spriteCollision = (function () {
         this.arrXY = new Array(); //sprite全局坐标数组
         /** 是否碰撞 */
         this.resultCollision = false;
+        /** 游戏音效 */
+        this.gameSound = new Sounds.gameSounds();
         /** 寄存数据中心 */
         this.dataCenter = dataCenter;
         //寄存球精灵
@@ -53722,6 +53724,8 @@ var spriteCollision = (function () {
     };
     /** 撞到白圈调用的方法 */
     spriteCollision.prototype.ovFun = function () {
+        // 播放特效
+        this.gameSound.ovSounds();
         console.log("调用白圈");
         return this;
     };
@@ -53735,18 +53739,90 @@ var spriteCollision = (function () {
     spriteCollision.prototype.doFun = function () {
         this.dataCenter.doObtain += 1;
         this.dataCenter.doNumber += 1;
-        console.log("调用砖石\t★★★★★★★★\t" + this.dataCenter.doObtain);
+        this.gameSound.doSounds();
+        // console.log("调用砖石\t★★★★★★★★\t" + this.dataCenter.doObtain);
         return this;
     };
     /** 撞到红包的函数 */
     spriteCollision.prototype.hbFun = function () {
         this.dataCenter.hbNumber += 1;
-        console.log("调用红包\t▲▲▲▲▲▲▲▲▲▲▲\t" + this.dataCenter.hbNumber);
+        this.gameSound.hbSounds();
+        // console.log("调用红包\t▲▲▲▲▲▲▲▲▲▲▲\t" + this.dataCenter.hbNumber);
         return this;
     };
     return spriteCollision;
 }());
 //# sourceMappingURL=spriteCollision.js.map
+/** 游戏音效管理模块 */
+var Sounds;
+(function (Sounds) {
+    /** 音乐播放 */
+    var SoundManager = Laya.SoundManager;
+    /** 游戏音乐&音效 */
+    var gameSounds = (function () {
+        function gameSounds() {
+            /** 背景音乐地址 */
+            this.bgMusicUrl = "res/sounds/bgMusic2.mp3";
+            /** 球的撞击音效地址 */
+            this.ballSoundsUrl = "res/sounds/ballSounds.mp3";
+            /** 白圈的特效地址 */
+            this.ovSoundsUrl = "res/sounds/ballSounds.mp3";
+            /** 红包音效地址 */
+            this.hbSoundsUrl = "res/sounds/hbCome.mp3";
+            /** 砖石音效地址 */
+            this.doSoundsUrl = "res/sounds/doSound.mp3";
+            /** 游戏结束音效地址 */
+            this.goSoundsUrl = "res/sounds/goSound.mp3";
+        }
+        /** 球碰撞音效 */
+        gameSounds.prototype.ballSounds = function () {
+            SoundManager.playSound(this.ballSoundsUrl, 1);
+            return this;
+        };
+        /** 撞到白圈音效 */
+        gameSounds.prototype.ovSounds = function () {
+            SoundManager.playSound(this.ovSoundsUrl, 1);
+            return this;
+        };
+        /** 撞到红包音效 */
+        gameSounds.prototype.hbSounds = function () {
+            SoundManager.playSound(this.hbSoundsUrl, 1);
+            return this;
+        };
+        /** 撞到钻石💎音效 */
+        gameSounds.prototype.doSounds = function () {
+            SoundManager.playSound(this.doSoundsUrl, 1);
+            return this;
+        };
+        /** 游戏结束音效 */
+        gameSounds.prototype.goSounds = function () {
+            SoundManager.stopAll();
+            SoundManager.playSound(this.goSoundsUrl, 1);
+            return this;
+        };
+        /** 播放背景音乐 */
+        gameSounds.prototype.onBgMusic = function () {
+            SoundManager.setMusicVolume(0.3);
+            SoundManager.playMusic(this.bgMusicUrl, 0);
+            return this;
+        };
+        /** 游戏结束音效 */
+        gameSounds.prototype.onGoSounds = function () {
+            SoundManager.playSound(this.goSoundsUrl, 1);
+            return this;
+        };
+        return gameSounds;
+    }());
+    Sounds.gameSounds = gameSounds;
+    /** 按钮音效 */
+    var buttonSounds = (function () {
+        function buttonSounds() {
+        }
+        return buttonSounds;
+    }());
+    Sounds.buttonSounds = buttonSounds;
+})(Sounds || (Sounds = {}));
+//# sourceMappingURL=Sounds.js.map
 /**
  * 监听鼠标运动
  */
@@ -53804,6 +53880,8 @@ var OnMouse = (function () {
  */
 var Game = (function () {
     function Game() {
+        /** 游戏背景音乐 */
+        this.gameSound = new Sounds.gameSounds();
         /** 要加载的资源 */
         this.needResources = ["res/atlas/ladder.atlas", "res/ladder/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas",
             "res/atlas/invite_gift.atlas", "res/atlas/Game_Settlement.atlas", "res/atlas/myHbao.atlas", "res/atlas/everyDay.atlas", "res/atlas/player.atlas",
@@ -53817,7 +53895,7 @@ var Game = (function () {
         // 性能面板
         // Laya.Stat.show(640, 0);
         Laya.stage.bgColor = "#EEE9E9";
-        // Laya.stage.scaleMode = Laya.Stage.SCALE_SHOWALL;
+        Laya.stage.scaleMode = "showall";
         // 预加载资源
         Laya.loader.load(this.needResources, Laya.Handler.create(this, this.init));
     }
@@ -53846,7 +53924,11 @@ var Game = (function () {
         this.gameOverDia = new gameOver(this, this.dataCenter); //游戏结束的弹窗
         // 监听碰撞
         this.spriteCollision = new spriteCollision(this.ball, this.dataCenter);
-        // 实例化数据中心
+        //用户登录
+        if (Laya.Browser.onMiniGame) {
+            this.gameLogin();
+        }
+        ;
     };
     /**
      * 开始游戏
@@ -53859,6 +53941,7 @@ var Game = (function () {
         // 监听鼠标
         Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
         Laya.stage.on(Laya.Event.MOUSE_UP, this, this.mouseUP); //监听鼠标抬起
+        this.gameSound.onBgMusic();
     };
     /** 监听鼠标 */
     Game.prototype.monitorMouse = function () {
@@ -53918,13 +54001,18 @@ var Game = (function () {
     };
     /** 游戏结束 */
     Game.prototype.gameOver = function () {
+        // 取消鼠标监听
         Laya.stage.off(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
         Laya.stage.off(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
+        // 停止循环
         Laya.timer.clear(this, this.startDowm);
         this.gameHome.synchronousData(); //同步游戏主页的数据
         console.log("Game Over!");
         // 显示死亡弹窗
         this.gameOverDia.Opened().show();
+        //关闭音乐
+        // this.offBgMusic();
+        this.gameSound.goSounds();
         return this;
     };
     /** 游戏重置 */
@@ -53939,6 +54027,24 @@ var Game = (function () {
         console.log("game Reset!");
         return this;
     };
+    /** 复活开始 */
+    Game.prototype.gameRelive = function () {
+        this.gameHome.synchronousData();
+        this.ball.ballRect();
+        this.ladderArr.ladderArrRect().init();
+        this.ladderN = 4;
+        this.spriteCollision.resultCollision = false;
+        return this;
+    };
+    /** 关闭音乐 */
+    Game.prototype.offBgMusic = function () {
+        return this;
+    };
+    /** 登录游戏 */
+    Game.prototype.gameLogin = function () {
+        console.log("game login");
+        return this;
+    };
     return Game;
 }());
 // 开始游戏
@@ -53947,6 +54053,8 @@ new Game();
 /** 演示2 */
 var Demo2 = (function () {
     function Demo2() {
+        // 适配微信小游戏
+        Laya.MiniAdpter.init();
         Laya.init(640, 1164, Laya.WebGL);
         Laya.stage.bgColor = "#EEE9E9";
         Laya.stage.scaleMode = "showall";
@@ -53954,9 +54062,6 @@ var Demo2 = (function () {
     }
     /** 初始化 */
     Demo2.prototype.onLoad = function () {
-        this.myHB = new myHB();
-        // Laya.stage.addChild(this.inviteGift);
-        this.myHB.popup();
     };
     return Demo2;
 }());
@@ -53981,8 +54086,6 @@ var Demo = (function () {
     }
     // 加载完成
     Demo.prototype.onLoad = function (set) {
-        this.LadderArr = new LadderArr(Laya.stage.height);
-        Laya.stage.addChild(this.LadderArr);
     };
     return Demo;
 }());
@@ -54038,6 +54141,8 @@ var Ball = (function (_super) {
         _this.ballHeigth = _this.ballWidth;
         /** 球的初始坐标 */
         _this.initialPoint = new Laya.Point((640 - _this.ballWidth) / 2, 705);
+        /** 游戏音效 */
+        _this.gameSound = new Sounds.gameSounds();
         /** 向上的速度 */
         _this.upSpeed = 20;
         /**重力加速度 */
@@ -54115,7 +54220,6 @@ var Ball = (function (_super) {
             this.y = this.initialPoint.y;
             this.upSpeed = 20;
             data.fraction += 1;
-            this.onPlaySound();
         }
         if (this.upSpeed < 0 && this.upSpeed > -1) {
             ladderNumber--;
@@ -54123,14 +54227,12 @@ var Ball = (function (_super) {
                 ladderNumber = 6;
             }
         }
-        // 更新分数
-        // fraction.text = String(frac);
         //返回处理后编号
         return ladderNumber;
     };
     /** 播放音效 */
     Ball.prototype.onPlaySound = function () {
-        Laya.SoundManager.playSound("res/sounds/ballSounds.mp3", 1, new Laya.Handler(this, function () { console.log("bang bang!"); }));
+        this.gameSound.ballSounds();
     };
     /** 球初始化 */
     Ball.prototype.ballRect = function () {
@@ -54278,7 +54380,7 @@ var Ladder = (function (_super) {
                     if (this.random_arr.indexOf(random_e) == -1) {
                         this.random_arr.push(random_e);
                         // 随机数大雨0.85就放入红包 否则是砖石
-                        if (do_or_hb > 0.1) {
+                        if (do_or_hb > 0.9) {
                             // 自动射击宽高
                             spr_hb.autoSize = true;
                             // 添加红包的坐标
@@ -54569,7 +54671,7 @@ var ui;
         };
         return gameHomeUI;
     }(View));
-    gameHomeUI.uiView = { "type": "View", "props": { "x": 0, "width": 640, "name": "gamehome", "height": 1136 }, "child": [{ "type": "Box", "props": { "y": 0, "x": 0, "var": "startBox", "top": 0, "right": 0, "name": "srartBox", "left": 0, "bottom": 0 } }, { "type": "Image", "props": { "width": 150, "var": "right_frame", "skin": "gameHome/Icon_box_rigth.png", "right": 0, "name": "right_frame", "height": 450, "centerY": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "width": 100, "var": "my_hb", "skin": "gameHome/image_myhb.png", "name": "my_hb", "height": 100, "centerX": 0 }, "child": [{ "type": "Label", "props": { "var": "hb_timer", "text": "00:00", "name": "hb_timer", "fontSize": 20, "color": "#f8e4e4", "centerY": 0.5, "centerX": 4, "bold": true } }] }, { "type": "Image", "props": { "y": 170, "width": 100, "var": "reward", "skin": "gameHome/image_reward.png", "name": "reward", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 320, "width": 100, "var": "tuiqian", "skin": "gameHome/image_tuiqian.png", "name": "tuiqian", "height": 100, "centerX": 0 } }] }, { "type": "Image", "props": { "width": 150, "var": "left_frame", "skin": "gameHome/Icon_box_left.png", "name": "left_frame", "left": 0, "height": 450, "centerY": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "width": 100, "var": "music_off", "skin": "gameHome/music_off.png", "name": "music_off", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 170, "width": 100, "var": "invite", "skin": "gameHome/image_invite.png", "name": "invite", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 320, "width": 100, "var": "jieshao", "skin": "gameHome/image_jieshao.png", "name": "jieshao", "height": 100, "centerX": 0 } }] }, { "type": "Image", "props": { "var": "add_xcx", "top": 38, "skin": "gameHome/image_addxcx.png", "right": 0, "name": "add_xcx" } }, { "type": "Image", "props": { "y": 84, "width": 460, "var": "logo", "skin": "gameHome/image_game_log.png", "name": "logo", "height": 205, "centerX": 0 } }, { "type": "Image", "props": { "y": 850, "x": 471, "width": 169, "var": "ranking", "skin": "gameHome/image_Leaderboard.png", "right": 0, "name": "ranking" }, "child": [{ "type": "Image", "props": { "y": 41, "skin": "gameHome/image_paihang.png", "centerX": 0 } }, { "type": "Text", "props": { "y": 122, "x": 23, "text": "好友排行", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 850, "x": 0, "width": 169, "var": "changeBallSkin", "skin": "gameHome/image_ballSkin.png", "name": "changeBallSkin", "left": 0 }, "child": [{ "type": "Image", "props": { "y": 42, "skin": "gameHome/image_ball.png", "scaleY": 1, "scaleX": 1, "centerX": 0 } }, { "type": "Text", "props": { "y": 122, "x": 23, "text": "更换皮肤", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Box", "props": { "var": "prompt_box", "name": "prompt_box", "centerX": 0, "bottom": 0 }, "child": [{ "type": "Image", "props": { "var": "boot_prompt", "skin": "gameHome/image_boot_prompt.png", "name": "boot_prompt", "alpha": 0.8 } }, { "type": "Image", "props": { "x": 50, "var": "guide", "skin": "gameHome/image_guide.png", "name": "guide", "alpha": 0.8 } }] }, { "type": "HBox", "props": { "y": 270, "var": "box_fraction", "space": 20, "name": "box_fraction", "centerX": 0, "align": "middle" }, "child": [{ "type": "Image", "props": { "x": 0, "width": 50, "var": "crown", "skin": "gameHome/image_crown.png", "name": "crown", "height": 50, "centerY": 0 } }, { "type": "Label", "props": { "x": 70, "var": "bigFraction", "text": "0", "name": "bigFraction", "fontSize": 60, "font": "Arial", "color": "#2d71d6", "centerY": 0, "bold": true } }] }, { "type": "HBox", "props": { "y": 20, "x": 20, "var": "box_do", "space": 20, "name": "box_do", "align": "middle" }, "child": [{ "type": "Image", "props": { "var": "diamond", "skin": "gameHome/image_do.png", "name": "diamond" } }, { "type": "Label", "props": { "var": "doNumber", "text": "0", "name": "doNumber", "fontSize": 50, "font": "SimHei", "color": "#2d71d6", "bold": true } }, { "type": "Image", "props": { "y": 6, "x": 51, "var": "button_doAdd", "skin": "gameHome/add_do.png", "name": "button_doAdd" } }] }] };
+    gameHomeUI.uiView = { "type": "View", "props": { "x": 0, "width": 640, "name": "gamehome", "height": 1136 }, "child": [{ "type": "Box", "props": { "y": 0, "x": 0, "var": "startBox", "top": 0, "right": 0, "name": "srartBox", "left": 0, "bottom": 0 } }, { "type": "Image", "props": { "width": 150, "var": "right_frame", "skin": "gameHome/Icon_box_rigth.png", "right": 0, "name": "right_frame", "height": 450, "centerY": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "width": 100, "var": "my_hb", "skin": "gameHome/image_myhb.png", "name": "my_hb", "height": 100, "centerX": 0 }, "child": [{ "type": "Label", "props": { "var": "hb_timer", "text": "00:00", "name": "hb_timer", "fontSize": 20, "color": "#f8e4e4", "centerY": 0.5, "centerX": 4, "bold": true } }] }, { "type": "Image", "props": { "y": 170, "width": 100, "var": "reward", "skin": "gameHome/image_reward.png", "name": "reward", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 320, "width": 100, "var": "tuiqian", "skin": "gameHome/image_tuiqian.png", "name": "tuiqian", "height": 100, "centerX": 0 } }] }, { "type": "Image", "props": { "width": 150, "var": "left_frame", "skin": "gameHome/Icon_box_left.png", "name": "left_frame", "left": 0, "height": 450, "centerY": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "width": 100, "var": "music_off", "skin": "gameHome/music_off.png", "name": "music_off", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 170, "width": 100, "var": "invite", "skin": "gameHome/image_invite.png", "name": "invite", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 320, "width": 100, "var": "jieshao", "skin": "gameHome/image_jieshao.png", "name": "jieshao", "height": 100, "centerX": 0 } }] }, { "type": "Image", "props": { "var": "add_xcx", "top": 38, "skin": "gameHome/image_addxcx.png", "right": 0, "name": "add_xcx" } }, { "type": "Image", "props": { "y": 84, "width": 460, "var": "logo", "skin": "gameHome/image_game_log.png", "name": "logo", "height": 205, "centerX": 0 } }, { "type": "Image", "props": { "y": 850, "x": 471, "width": 169, "var": "ranking", "skin": "gameHome/image_Leaderboard.png", "right": 0, "name": "ranking" }, "child": [{ "type": "Image", "props": { "y": 41, "skin": "gameHome/image_paihang.png", "centerX": 0 } }, { "type": "Text", "props": { "y": 122, "x": 23, "text": "好友排行", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 850, "x": 0, "width": 169, "var": "changeBallSkin", "skin": "gameHome/image_ballSkin.png", "name": "changeBallSkin", "left": 0 }, "child": [{ "type": "Image", "props": { "y": 42, "skin": "gameHome/image_ball.png", "scaleY": 1, "scaleX": 1, "centerX": 0 } }, { "type": "Text", "props": { "y": 122, "x": 23, "text": "更换皮肤", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Box", "props": { "var": "prompt_box", "name": "prompt_box", "centerX": 0, "bottom": 0 }, "child": [{ "type": "Image", "props": { "var": "boot_prompt", "skin": "gameHome/image_boot_prompt.png", "name": "boot_prompt", "alpha": 0.8 } }, { "type": "Image", "props": { "x": 50, "var": "guide", "skin": "gameHome/image_guide.png", "name": "guide", "alpha": 0.8 } }] }, { "type": "HBox", "props": { "y": 270, "var": "box_fraction", "space": 20, "name": "box_fraction", "centerX": 0, "align": "middle" }, "child": [{ "type": "Image", "props": { "x": 0, "width": 50, "var": "crown", "skin": "gameHome/image_crown.png", "name": "crown", "height": 50, "centerY": 0 } }, { "type": "Label", "props": { "x": 70, "var": "bigFraction", "text": "0", "name": "bigFraction", "fontSize": 60, "font": "Arial", "color": "#2d71d6", "centerY": 0, "bold": true } }] }, { "type": "HBox", "props": { "y": 20, "x": 20, "var": "box_do", "space": 30, "name": "box_do", "align": "middle" }, "child": [{ "type": "Image", "props": { "var": "diamond", "skin": "gameHome/image_do.png", "name": "diamond" } }, { "type": "Image", "props": { "y": 7, "x": 126, "var": "button_doAdd", "skin": "gameHome/add_do.png", "name": "button_doAdd" } }, { "type": "Label", "props": { "y": 0, "x": 78, "var": "doNumber", "text": "0", "name": "doNumber", "fontSize": 50, "font": "SimHei", "color": "#2d71d6", "bold": true } }] }] };
     ui.gameHomeUI = gameHomeUI;
 })(ui || (ui = {}));
 (function (ui) {
@@ -54717,7 +54819,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 /** 皮肤主页 */
 var ballSkinView = (function (_super) {
     __extends(ballSkinView, _super);
-    function ballSkinView() {
+    function ballSkinView(ball) {
         var _this = _super.call(this) || this;
         /** 皮肤数组 */
         _this.allSkinArr = new Array();
@@ -54727,10 +54829,12 @@ var ballSkinView = (function (_super) {
         _this.onSkinPoinit = 0;
         //先初始化
         _this.init();
+        _this.Ball = ball;
         return _this;
     }
     /** 初始化 */
     ballSkinView.prototype.init = function () {
+        this.addMaskBG();
         // 默认隐藏界面
         this.visible = false;
         var bigSkinArr = this.inWindow._childs;
@@ -54789,17 +54893,28 @@ var ballSkinView = (function (_super) {
         }
         return this;
     };
-    /** 蓝圈切换显示 */
+    /** 换肤和篮圈显示 */
     ballSkinView.prototype.ringSwitchn = function (n) {
+        // 寄存选中的皮肤地址
+        var newSkinUrl = this.allSkinArr[0].skin;
+        var oldSkinUrl = this.Ball._childs[0].skin;
         this.allRingArr[this.onSkinPoinit].visible = false;
         this.allRingArr[n].visible = true;
         this.onSkinPoinit = n;
+        console.log("old\t" + oldSkinUrl + "\tnew\t" + newSkinUrl);
         return this;
     };
     /** 隐藏界面 */
     ballSkinView.prototype.hideView = function () {
         this.visible = false;
         return this;
+    };
+    /** 添加遮罩 */
+    ballSkinView.prototype.addMaskBG = function () {
+        this.maskBG = new Laya.Sprite();
+        this.maskBG.graphics.drawRect(0, 0, 640, 1164, "#08f0f9");
+        this.addChild(this.maskBG);
+        this.maskBG.zOrder = -1;
     };
     return ballSkinView;
 }(ui.ballSkinViewUI));
@@ -54869,7 +54984,7 @@ var GameHome = (function (_super) {
         //同步数据
         this.synchronousData();
         // 实例化皮肤界面
-        this.ballSkinView = new ballSkinView();
+        this.ballSkinView = new ballSkinView(this.Game.ball);
         this.addChild(this.ballSkinView);
         // 先隐藏皮肤界面起来
         this.ballSkinView.visible = false;
@@ -55065,7 +55180,7 @@ var gameOver = (function (_super) {
             this.close();
         }
         //重置然后开始游戏
-        this.Game.gameReset().startGame();
+        this.Game.gameRelive().startGame();
         console.log("share game to frinde");
     };
     /** 视频复活 */
@@ -55074,7 +55189,7 @@ var gameOver = (function (_super) {
             this.close();
         }
         // 重置然后开始游戏
-        this.Game.gameReset().startGame();
+        this.Game.gameRelive().startGame();
         console.log("Watch void to Relive");
     };
     /**

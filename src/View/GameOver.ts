@@ -92,7 +92,7 @@ class gameOver extends ui.gameOverUI {
             this.close();
         }
         //重置然后开始游戏
-        this.Game.gameReset().startGame();
+        this.Game.gameRelive().startGame();
         console.log("share game to frinde");
     }
 
@@ -102,7 +102,7 @@ class gameOver extends ui.gameOverUI {
             this.close();
         }
         // 重置然后开始游戏
-        this.Game.gameReset().startGame();
+        this.Game.gameRelive().startGame();
         console.log("Watch void to Relive");
     }
 

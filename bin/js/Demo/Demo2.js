@@ -10,9 +10,6 @@ var Demo2 = (function () {
     }
     /** 初始化 */
     Demo2.prototype.onLoad = function () {
-        this.myHB = new myHB();
-        // Laya.stage.addChild(this.inviteGift);
-        this.myHB.popup();
     };
     return Demo2;
 }());
