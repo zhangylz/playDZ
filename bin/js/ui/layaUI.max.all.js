@@ -174,19 +174,4 @@ var ui;
     playDialogUI.uiView = { "type": "Dialog", "props": { "width": 640, "height": 1164 }, "child": [{ "type": "Image", "props": { "y": 300, "width": 620, "skin": "invite_gift/window.png", "centerX": 0 }, "child": [{ "type": "Image", "props": { "y": -15, "x": 558, "var": "button_close", "skin": "invite_gift/off.png", "name": "button_close" } }, { "type": "Image", "props": { "y": 43, "x": 197, "skin": "player/wanfajies.png", "scaleY": 1.2, "scaleX": 1.2 } }, { "type": "Label", "props": { "y": 152, "wordWrap": true, "width": 515, "text": "    躲避障碍，跳中白圈可增加分数，砖石可以用来兑换皮肤，红包就几率获得现金红包（满20元可以提现）", "height": 300, "fontSize": 50, "font": "Arial", "color": "#0b6cc5", "centerX": 0.5, "bold": true } }] }] };
     ui.playDialogUI = playDialogUI;
 })(ui || (ui = {}));
-(function (ui) {
-    var testUI = (function (_super) {
-        __extends(testUI, _super);
-        function testUI() {
-            return _super.call(this) || this;
-        }
-        testUI.prototype.createChildren = function () {
-            _super.prototype.createChildren.call(this);
-            this.createView(ui.testUI.uiView);
-        };
-        return testUI;
-    }(View));
-    testUI.uiView = { "type": "View", "props": { "width": 640, "height": 1164 }, "child": [{ "type": "Image", "props": { "skin": "ladder/image_ldder.png", "scaleY": 1, "scaleX": 1, "centerY": 0 } }] };
-    ui.testUI = testUI;
-})(ui || (ui = {}));
 //# sourceMappingURL=layaUI.max.all.js.map

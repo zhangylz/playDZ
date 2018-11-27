@@ -255,18 +255,3 @@ module ui {
 
     }
 }
-
-module ui {
-    export class testUI extends View {
-
-        public static  uiView:any ={"type":"View","props":{"width":640,"height":1164},"child":[{"type":"Image","props":{"skin":"ladder/image_ldder.png","scaleY":1,"scaleX":1,"centerY":0}}]};
-        constructor(){ super()}
-        createChildren():void {
-        
-            super.createChildren();
-            this.createView(ui.testUI.uiView);
-
-        }
-
-    }
-}

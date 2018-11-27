@@ -53894,7 +53894,7 @@ var Game = (function () {
         // 性能面板
         // Laya.Stat.show(640, 0);
         Laya.stage.bgColor = "#EEE9E9";
-        Laya.stage.scaleMode = "showall";
+        // Laya.stage.scaleMode = "showall";
         // 预加载资源
         Laya.loader.load(this.needResources, Laya.Handler.create(this, this.init));
     }
@@ -53923,10 +53923,10 @@ var Game = (function () {
         this.gameOverDia = new gameOver(this, this.dataCenter); //游戏结束的弹窗
         // 监听碰撞
         this.spriteCollision = new spriteCollision(this.ball, this.dataCenter);
-        //用户登录
+        /** 实例化api对接 */
+        this.ApiDocking = new ApiDocking();
         if (Laya.Browser.onMiniGame) {
-            this.gameLogin();
-            console.log("testMiniGame");
+            console.log("in miniGame!");
         }
         else {
             console.log("not miniGame");
@@ -54043,66 +54043,11 @@ var Game = (function () {
     Game.prototype.offBgMusic = function () {
         return this;
     };
-    Game.prototype.gameLogin = function () {
-        wx.login({
-            success: function (res) {
-                if (res.code) {
-                    console.log("is OK!");
-                }
-                else {
-                    console.log("not OK!");
-                }
-            }
-        });
-        return this;
-    };
     return Game;
 }());
 // 开始游戏
 new Game();
 //# sourceMappingURL=Game.js.map
-/** 演示2 */
-var Demo2 = (function () {
-    function Demo2() {
-        // 适配微信小游戏
-        Laya.MiniAdpter.init();
-        Laya.init(640, 1164, Laya.WebGL);
-        Laya.stage.bgColor = "#EEE9E9";
-        Laya.stage.scaleMode = "showall";
-        Laya.loader.load(["res/atlas/myHBao.atlas"], Laya.Handler.create(this, this.onLoad));
-    }
-    /** 初始化 */
-    Demo2.prototype.onLoad = function () {
-    };
-    return Demo2;
-}());
-// new Demo2(); 
-//# sourceMappingURL=Demo2.js.map
-/**
- * 演示demo
- */
-var Demo = (function () {
-    // 构造器
-    function Demo() {
-        // 适配微信小游戏
-        Laya.MiniAdpter.init();
-        Laya.init(640, 1136, Laya.WebGL);
-        Laya.stage.bgColor = "EEE9E9";
-        Laya.stage.scaleMode = "showall";
-        Laya.Stat.show(0, 0);
-        // 预加载资源
-        Laya.loader.load(["res/atlas/ladder.atlas", "res/ladder/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas",
-            "res/atlas/invite_gift.atlas", "res/atlas/Game_Settlement.atlas", "res/atlas/myHbao.atlas", "res/atlas/everyDay.atlas", "res/atlas/one_Hbao.atlas",
-            "res/atlas/ball_skin.atlas"], Laya.Handler.create(this, this.onLoad));
-    }
-    // 加载完成
-    Demo.prototype.onLoad = function (set) {
-    };
-    return Demo;
-}());
-// 演示Demo
-// new Demo(); 
-//# sourceMappingURL=Demo.js.map
 /** 数据中心 */
 var dataCenter = (function () {
     function dataCenter() {
@@ -54133,6 +54078,123 @@ var dataCenter = (function () {
     return dataCenter;
 }());
 //# sourceMappingURL=dataCenter.js.map
+/** API对接 */
+var ApiDocking = (function () {
+    function ApiDocking() {
+        this.wxLogin();
+    }
+    /** 初始化登录获得数据 */
+    ApiDocking.prototype.wxLogin = function () {
+        var that = this;
+        wx.login({
+            //wx.login成功
+            success: function (res) {
+                if (res.code) {
+                    console.log("code OK!\t$$$$");
+                    var wx_sys = wx.getSystemInfoSync();
+                    wx.request({
+                        url: "https://wdz.f11911f.cn/api/login",
+                        data: {
+                            code: res.code,
+                            sys: wx_sys,
+                            query: wx.getLaunchOptionsSync().query,
+                            shareTicket: null,
+                            referrerInfo: null
+                        },
+                        header: {
+                            'Accept': 'application/json',
+                            'content-type': 'application/json'
+                        },
+                        method: "POST",
+                        success: function (res) {
+                            that.userData = res.data;
+                            that.userToken = res.data.data.token;
+                            console.log("成功");
+                            console.log(that.userData.data);
+                            var is_auth = res.data.data.user.is_auth;
+                            if (!is_auth) {
+                                that.sysData(is_auth);
+                            }
+                        }
+                    });
+                }
+                else {
+                    console.log("code NotOK! 登录失败!\t$$$$");
+                }
+            },
+            //wx.login失败
+            fail: function (res) {
+                console.log("wx.login 失败");
+            }
+        });
+        return this;
+    };
+    /**
+     * 保存用户信息
+     * @param is_auth  boolean服务器是否保存信息
+     */
+    ApiDocking.prototype.sysData = function (is_auth) {
+        /** 指向ApiDocking */
+        var that = this;
+        if (!is_auth) {
+            console.log("用户没有授权");
+            // console.log(that.userToken);
+            var wx_button = wx.createUserInfoButton({
+                type: "text",
+                text: "获取用户信息",
+                style: {
+                    left: 10,
+                    top: 76,
+                    width: 200,
+                    height: 40,
+                    lineHeight: 40,
+                    backgroundColor: '#ff0000',
+                    color: '#ffffff',
+                    textAlign: 'center',
+                    fontSize: 16,
+                    borderRadius: 4
+                },
+                withCredentials: false,
+                lang: "zh_CN"
+            });
+            wx_button.onTap(function (res) {
+                console.log("按钮按下了");
+                console.log(res);
+                that.userInfo = res.userInfo;
+                console.log(that.userInfo);
+                var userInfo = res.userInfo;
+                wx.request({
+                    url: "https://wdz.f11911f.cn/api/authLogin",
+                    data: {
+                        avatarUrl: userInfo.avatarUrl,
+                        city: userInfo.city,
+                        country: userInfo.country,
+                        gender: userInfo.gender,
+                        nickName: userInfo.nickName
+                    },
+                    header: {
+                        'Accept': 'application/json',
+                        'content-type': 'application/json',
+                        'Authorization': 'Bearer ' + that.userToken
+                    },
+                    method: "POST",
+                    success: function (res) {
+                        console.log("用户数据更新完成");
+                        console.log(res.data);
+                        that.userData = res.data;
+                        // this.wx_button.hide();
+                    }
+                });
+            });
+        }
+        else {
+            console.log("用户已经授权");
+        }
+        return this;
+    };
+    return ApiDocking;
+}());
+//# sourceMappingURL=ApiDocking.js.map
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -54805,21 +54867,6 @@ var ui;
     }(Dialog));
     playDialogUI.uiView = { "type": "Dialog", "props": { "width": 640, "height": 1164 }, "child": [{ "type": "Image", "props": { "y": 300, "width": 620, "skin": "invite_gift/window.png", "centerX": 0 }, "child": [{ "type": "Image", "props": { "y": -15, "x": 558, "var": "button_close", "skin": "invite_gift/off.png", "name": "button_close" } }, { "type": "Image", "props": { "y": 43, "x": 197, "skin": "player/wanfajies.png", "scaleY": 1.2, "scaleX": 1.2 } }, { "type": "Label", "props": { "y": 152, "wordWrap": true, "width": 515, "text": "    躲避障碍，跳中白圈可增加分数，砖石可以用来兑换皮肤，红包就几率获得现金红包（满20元可以提现）", "height": 300, "fontSize": 50, "font": "Arial", "color": "#0b6cc5", "centerX": 0.5, "bold": true } }] }] };
     ui.playDialogUI = playDialogUI;
-})(ui || (ui = {}));
-(function (ui) {
-    var testUI = (function (_super) {
-        __extends(testUI, _super);
-        function testUI() {
-            return _super.call(this) || this;
-        }
-        testUI.prototype.createChildren = function () {
-            _super.prototype.createChildren.call(this);
-            this.createView(ui.testUI.uiView);
-        };
-        return testUI;
-    }(View));
-    testUI.uiView = { "type": "View", "props": { "width": 640, "height": 1164 }, "child": [{ "type": "Image", "props": { "skin": "ladder/image_ldder.png", "scaleY": 1, "scaleX": 1, "centerY": 0 } }] };
-    ui.testUI = testUI;
 })(ui || (ui = {}));
 //# sourceMappingURL=layaUI.max.all.js.map
 var __extends = (this && this.__extends) || function (d, b) {
