@@ -11,15 +11,14 @@ var ApiDocking = (function () {
             success: function (res) {
                 if (res.code) {
                     console.log("code OK!\t$$$$");
-                    var wx_sys = wx.getSystemInfoSync();
                     wx.request({
                         url: "https://wdz.f11911f.cn/api/login",
                         data: {
                             code: res.code,
-                            sys: wx_sys,
+                            sys: wx.getSystemInfoSync(),
                             query: wx.getLaunchOptionsSync().query,
-                            shareTicket: null,
-                            referrerInfo: null
+                            shareTicket: wx.getLaunchOptionsSync().shareTicket,
+                            referrerInfo: wx.getLaunchOptionsSync().referrerInfo
                         },
                         header: {
                             'Accept': 'application/json',
@@ -33,7 +32,7 @@ var ApiDocking = (function () {
                             console.log(that.userData.data);
                             var is_auth = res.data.data.user.is_auth;
                             if (!is_auth) {
-                                that.sysData(is_auth);
+                                that.authLogin(is_auth);
                             }
                         }
                     });
@@ -50,10 +49,43 @@ var ApiDocking = (function () {
         return this;
     };
     /**
-     * 保存用户信息
+     * 获取用户信息
+     */
+    ApiDocking.prototype.getUser = function () {
+        // 发起请求
+        wx.request({
+            //请求地址
+            url: "https://wdz.f11911f.cn/api/getUser",
+            //请求参数
+            data: {
+                query: wx.getLaunchOptionsSync().query,
+                shareTicket: wx.getLaunchOptionsSync().shareTicket,
+                object: wx.getLaunchOptionsSync().object
+            },
+            //头信息
+            header: {
+                'Accept': 'application/json',
+                'content-type': 'application/json'
+            },
+            // 请求方式
+            method: "POST",
+            //获取用户信息成功
+            success: function (res) {
+                console.log("获取用户信息成功");
+                console.log(res.data);
+            },
+            //获取用户信息失败
+            fail: function (res) {
+                console.log(res.data);
+            }
+        });
+        return this;
+    };
+    /**
+     * 保存用户授权信息
      * @param is_auth  boolean服务器是否保存信息
      */
-    ApiDocking.prototype.sysData = function (is_auth) {
+    ApiDocking.prototype.authLogin = function (is_auth) {
         /** 指向ApiDocking */
         var that = this;
         if (!is_auth) {
