@@ -3,8 +3,6 @@
  */
 var Game = (function () {
     function Game() {
-        /** 游戏背景音乐 */
-        this.gameSound = new Sounds.gameSounds();
         /** 要加载的资源 */
         this.needResources = ["res/atlas/ladder.atlas", "res/ladder/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas",
             "res/atlas/invite_gift.atlas", "res/atlas/Game_Settlement.atlas", "res/atlas/myHbao.atlas", "res/atlas/everyDay.atlas", "res/atlas/player.atlas",
@@ -47,9 +45,9 @@ var Game = (function () {
         this.gameOverDia = new gameOver(this, this.dataCenter); //游戏结束的弹窗
         // 监听碰撞
         this.spriteCollision = new spriteCollision(this.ball, this.dataCenter);
-        /** 实例化api对接 */
-        this.ApiDocking = new ApiDocking();
         if (Laya.Browser.onMiniGame) {
+            /** 实例化api对接 */
+            this.ApiDocking = new ApiDocking();
             console.log("in miniGame!");
         }
         else {

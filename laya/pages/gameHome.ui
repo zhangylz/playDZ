@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":1,
-    "selecteID":37,
+    "selectedBox":7,
+    "selecteID":36,
     "props":{"x":0,"width":640,"var":"gamehome","sceneColor":"#EEE9E9","name":"gamehome","height":1136},
     "nodeParent":-1,
     "label":"View(gamehome)",
@@ -31,28 +31,30 @@
             "props":{"width":150,"var":"right_frame","skin":"gameHome/Icon_box_rigth.png","right":0,"name":"right_frame","height":450,"centerY":0},
             "nodeParent":1,
             "label":"Image(right_frame)",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":16,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "props":{"y":20,"width":100,"var":"my_hb","skin":"gameHome/image_myhb.png","name":"my_hb","height":100,"centerX":0},
                     "nodeParent":16,
                     "label":"Image(my_hb)",
-                    "isOpen":false,
+                    "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":7,
                     "child":[
                         {
+                            "x":45,
                             "type":"Label",
-                            "props":{"var":"hb_timer","text":"00:00","name":"hb_timer","fontSize":20,"color":"#f8e4e4","centerY":0.5,"centerX":4,"bold":true},
+                            "props":{"var":"hb_money","text":"0","name":"hb_money","fontSize":20,"color":"#f8e4e4","centerY":0,"centerX":3,"bold":true},
                             "nodeParent":7,
-                            "label":"Label(hb_timer)",
+                            "label":"Label(hb_money)",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
@@ -62,6 +64,7 @@
                         }]
                 },
                 {
+                    "x":30,
                     "type":"Image",
                     "props":{"y":170,"width":100,"var":"reward","skin":"gameHome/image_reward.png","name":"reward","height":100,"centerX":0},
                     "nodeParent":16,
@@ -75,6 +78,7 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Image",
                     "props":{"y":320,"width":100,"var":"tuiqian","skin":"gameHome/image_tuiqian.png","name":"tuiqian","height":100,"centerX":0},
                     "nodeParent":16,

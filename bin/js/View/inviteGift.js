@@ -9,23 +9,23 @@ var inviteGift = (function (_super) {
     function inviteGift() {
         var _this = _super.call(this) || this;
         _this.testJson = {
-            "gift_1": false,
-            "gift_2": false
+            gift_1: false,
+            gift_2: false
         };
         /** 已邀请人数 */
-        _this.invitedN = 5;
+        _this.invitedN = 0;
         _this.init();
         return _this;
     }
     /** 初始化 */
     inviteGift.prototype.init = function () {
-        // test
-        this.test();
+        // 同步已经邀请的人数
+        this.syNumber();
         //监听事件
         this.monitor();
     };
-    /** test */
-    inviteGift.prototype.test = function () {
+    /** 同步已经邀请的人数 */
+    inviteGift.prototype.syNumber = function () {
         /** 已经邀请的人数 */
         var invitedN = this.invitedN;
         /** 邀请公告的通告文字 */
@@ -35,14 +35,14 @@ var inviteGift = (function (_super) {
         this.schedule_1.text = "（目标：" + invitedN + "/5）";
         this.schedule_2.text = "（目标：" + invitedN + "/10）";
         if (invitedN >= 5) {
-            if (this.testJson["gift_1"] == false) {
+            if (this.testJson.gift_1 == false) {
                 this.button_one.disabled = false;
             }
             this.schedule_1.text = "（目标：5/5）";
         }
         ;
         if (invitedN >= 10) {
-            if (this.testJson["gift_2"] == false) {
+            if (this.testJson.gift_2 == false) {
                 this.button_two.disabled = false;
             }
             this.schedule_2.text = "（目标：10/10）";

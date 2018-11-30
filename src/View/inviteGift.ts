@@ -12,23 +12,20 @@ class inviteGift extends ui.inviteGiftUI {
     }
     /** 初始化 */
     private init(): void {
-        // test
-        this.test();
-
+        // 同步已经邀请的人数
+        this.syNumber();
         //监听事件
         this.monitor();
     }
 
-
-
     public testJson = {
-        "gift_1": false,
-        "gift_2": false
+        gift_1: false,
+        gift_2: false
     }
     /** 已邀请人数 */
-    private invitedN: number = 5;
-    /** test */
-    private test() {
+    private invitedN: number = 0;
+    /** 同步已经邀请的人数 */
+    private syNumber() {
         /** 已经邀请的人数 */
         let invitedN = this.invitedN;
         /** 邀请公告的通告文字 */
@@ -38,14 +35,15 @@ class inviteGift extends ui.inviteGiftUI {
         this.schedule_1.text = "（目标：" + invitedN + "/5）";
         this.schedule_2.text = "（目标：" + invitedN + "/10）"
         if (invitedN >= 5) {
-            if (this.testJson["gift_1"] == false) { this.button_one.disabled = false }
+            if (this.testJson.gift_1 == false) { this.button_one.disabled = false }
             this.schedule_1.text = "（目标：5/5）";
         };
         if (invitedN >= 10) {
-            if (this.testJson["gift_2"] == false) { this.button_two.disabled = false }
+            if (this.testJson.gift_2 == false) { this.button_two.disabled = false }
             this.schedule_2.text = "（目标：10/10）"
         }
     }
+
     /** 关闭完成后，调用此方法（如果有关闭动画，则在动画完成后执行）*/
     public onClosed(e: String = null): void {
         console.log(e);
@@ -60,8 +58,8 @@ class inviteGift extends ui.inviteGiftUI {
     /** 监听事件 */
     private monitor(): inviteGift {
         this.viewOff.on(Laya.Event.MOUSE_DOWN, this, this.close);   // 关闭按钮
-        this.button_one.on(Laya.Event.MOUSE_DOWN, this, this.receivingGift, [50]);      //第一个领奖按钮
-        this.button_two.on(Laya.Event.MOUSE_DOWN, this, this.receivingGift, [200]);     //第二个领奖按钮
+        this.button_one.on(Laya.Event.MOUSE_DOWN, this, this.receivingGift, [200]);      //第一个领奖按钮
+        this.button_two.on(Laya.Event.MOUSE_DOWN, this, this.receivingGift, [500]);     //第二个领奖按钮
         this.now_invite.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);
         return this;
     }

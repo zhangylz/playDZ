@@ -53823,64 +53823,326 @@ var Sounds;
     Sounds.buttonSounds = buttonSounds;
 })(Sounds || (Sounds = {}));
 //# sourceMappingURL=Sounds.js.map
-/**
- * 监听鼠标运动
- */
-var OnMouse = (function () {
-    /**
-     * @param ball 传入的球
-     * @param stage Laya舞台
-     */
-    function OnMouse(stage, ball) {
-        // 寄存到全局
-        this.stage = stage;
-        // 寄存到全局
-        this.ball = ball;
+var MD5 = (function () {
+    function MD5() {
+        this.hexcase = 0; /* hex output format. 0 - lowercase; 1 - uppercase        */
+        this.b64pad = ""; /* base-64 pad character. "=" for strict RFC compliance   */
     }
-    /**
-     * 初始化监听鼠标移动
-     */
-    OnMouse.prototype.init = function () {
-        this.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);
-        this.stage.on(Laya.Event.MOUSE_UP, this, this.mouseUp);
-    };
-    /**
-     * 鼠标点击动作
-     */
-    OnMouse.prototype.mouseDowm = function () {
-        this.mouseX = this.stage.mouseX;
-        this.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
-    };
-    /**
-    * 监听鼠标放开
+    /*
+    * These are the privates you'll usually want to call
+    * They take string arguments and return either hex or base-64 encoded strings
     */
-    OnMouse.prototype.mouseUp = function () {
-        this.stage.off(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
+    MD5.prototype.hex_md5 = function (s) { return this.rstr2hex(this.rstr_md5(this.str2rstr_utf8(s))); }; //这个函数就行了，
+    MD5.prototype.b64_md5 = function (s) { return this.rstr2b64(this.rstr_md5(this.str2rstr_utf8(s))); };
+    MD5.prototype.any_md5 = function (s, e) { return this.rstr2any(this.rstr_md5(this.str2rstr_utf8(s)), e); };
+    MD5.prototype.hex_hmac_md5 = function (k, d) { return this.rstr2hex(this.rstr_hmac_md5(this.str2rstr_utf8(k), this.str2rstr_utf8(d))); };
+    MD5.prototype.b64_hmac_md5 = function (k, d) { return this.rstr2b64(this.rstr_hmac_md5(this.str2rstr_utf8(k), this.str2rstr_utf8(d))); };
+    MD5.prototype.any_hmac_md5 = function (k, d, e) { return this.rstr2any(this.rstr_hmac_md5(this.str2rstr_utf8(k), this.str2rstr_utf8(d)), e); };
+    /*
+    * Perform a simple self-test to see if the VM is working
+    */
+    MD5.prototype.md5_vm_test = function () {
+        return this.hex_md5("abc").toLowerCase() == "900150983cd24fb0d6963f7d28e17f72";
     };
-    /**
-     * 鼠标移动动作
-     */
-    OnMouse.prototype.mouseMove = function () {
-        var x = Laya.stage.mouseX;
-        if (x < this.mouseX) {
-            this.ball.x += (x - this.mouseX);
-            this.mouseX = x;
-        }
-        else if (x > this.mouseX) {
-            this.ball.x += (x - this.mouseX);
-            this.mouseX = x;
-        }
+    /*
+    * Calculate the MD5 of a raw string
+    */
+    MD5.prototype.rstr_md5 = function (s) {
+        return this.binl2rstr(this.binl_md5(this.rstr2binl(s), s.length * 8));
     };
-    return OnMouse;
+    /*
+    * Calculate the HMAC-MD5, of a key and some data (raw strings)
+    */
+    MD5.prototype.rstr_hmac_md5 = function (key, data) {
+        var bkey = this.rstr2binl(key);
+        if (bkey.length > 16)
+            bkey = this.binl_md5(bkey, key.length * 8);
+        var ipad = Array(16), opad = Array(16);
+        for (var i = 0; i < 16; i++) {
+            ipad[i] = bkey[i] ^ 0x36363636;
+            opad[i] = bkey[i] ^ 0x5C5C5C5C;
+        }
+        var hash = this.binl_md5(ipad.concat(this.rstr2binl(data)), 512 + data.length * 8);
+        return this.binl2rstr(this.binl_md5(opad.concat(hash), 512 + 128));
+    };
+    /*
+    * Convert a raw string to a hex string
+    */
+    MD5.prototype.rstr2hex = function (input) {
+        try {
+            this.hexcase;
+        }
+        catch (e) {
+            this.hexcase = 0;
+        }
+        var hex_tab = this.hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+        var output = "";
+        var x;
+        for (var i = 0; i < input.length; i++) {
+            x = input.charCodeAt(i);
+            output += hex_tab.charAt((x >>> 4) & 0x0F)
+                + hex_tab.charAt(x & 0x0F);
+        }
+        return output;
+    };
+    /*
+    * Convert a raw string to a base-64 string
+    */
+    MD5.prototype.rstr2b64 = function (input) {
+        try {
+            this.b64pad;
+        }
+        catch (e) {
+            this.b64pad = '';
+        }
+        var tab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        var output = "";
+        var len = input.length;
+        for (var i = 0; i < len; i += 3) {
+            var triplet = (input.charCodeAt(i) << 16)
+                | (i + 1 < len ? input.charCodeAt(i + 1) << 8 : 0)
+                | (i + 2 < len ? input.charCodeAt(i + 2) : 0);
+            for (var j = 0; j < 4; j++) {
+                if (i * 8 + j * 6 > input.length * 8)
+                    output += this.b64pad;
+                else
+                    output += tab.charAt((triplet >>> 6 * (3 - j)) & 0x3F);
+            }
+        }
+        return output;
+    };
+    /*
+    * Convert a raw string to an arbitrary string encoding
+    */
+    MD5.prototype.rstr2any = function (input, encoding) {
+        var divisor = encoding.length;
+        var i, j, q, x, quotient;
+        /* Convert to an array of 16-bit big-endian values, forming the dividend */
+        var dividend = Array(Math.ceil(input.length / 2));
+        for (i = 0; i < dividend.length; i++) {
+            dividend[i] = (input.charCodeAt(i * 2) << 8) | input.charCodeAt(i * 2 + 1);
+        }
+        /*
+        * Repeatedly perform a long division. The binary array forms the dividend,
+        * the length of the encoding is the divisor. Once computed, the quotient
+        * forms the dividend for the next step. All remainders are stored for later
+        * use.
+        */
+        var full_length = Math.ceil(input.length * 8 /
+            (Math.log(encoding.length) / Math.log(2)));
+        var remainders = Array(full_length);
+        for (j = 0; j < full_length; j++) {
+            quotient = Array();
+            x = 0;
+            for (i = 0; i < dividend.length; i++) {
+                x = (x << 16) + dividend[i];
+                q = Math.floor(x / divisor);
+                x -= q * divisor;
+                if (quotient.length > 0 || q > 0)
+                    quotient[quotient.length] = q;
+            }
+            remainders[j] = x;
+            dividend = quotient;
+        }
+        /* Convert the remainders to the output string */
+        var output = "";
+        for (i = remainders.length - 1; i >= 0; i--)
+            output += encoding.charAt(remainders[i]);
+        return output;
+    };
+    /*
+    * Encode a string as utf-8.
+    * For efficiency, this assumes the input is valid utf-16.
+    */
+    MD5.prototype.str2rstr_utf8 = function (input) {
+        var output = "";
+        var i = -1;
+        var x, y;
+        while (++i < input.length) {
+            /* Decode utf-16 surrogate pairs */
+            x = input.charCodeAt(i);
+            y = i + 1 < input.length ? input.charCodeAt(i + 1) : 0;
+            if (0xD800 <= x && x <= 0xDBFF && 0xDC00 <= y && y <= 0xDFFF) {
+                x = 0x10000 + ((x & 0x03FF) << 10) + (y & 0x03FF);
+                i++;
+            }
+            /* Encode output as utf-8 */
+            if (x <= 0x7F)
+                output += String.fromCharCode(x);
+            else if (x <= 0x7FF)
+                output += String.fromCharCode(0xC0 | ((x >>> 6) & 0x1F), 0x80 | (x & 0x3F));
+            else if (x <= 0xFFFF)
+                output += String.fromCharCode(0xE0 | ((x >>> 12) & 0x0F), 0x80 | ((x >>> 6) & 0x3F), 0x80 | (x & 0x3F));
+            else if (x <= 0x1FFFFF)
+                output += String.fromCharCode(0xF0 | ((x >>> 18) & 0x07), 0x80 | ((x >>> 12) & 0x3F), 0x80 | ((x >>> 6) & 0x3F), 0x80 | (x & 0x3F));
+        }
+        return output;
+    };
+    /*
+    * Encode a string as utf-16
+    */
+    MD5.prototype.str2rstr_utf16le = function (input) {
+        var output = "";
+        for (var i = 0; i < input.length; i++)
+            output += String.fromCharCode(input.charCodeAt(i) & 0xFF, (input.charCodeAt(i) >>> 8) & 0xFF);
+        return output;
+    };
+    MD5.prototype.str2rstr_utf16be = function (input) {
+        var output = "";
+        for (var i = 0; i < input.length; i++)
+            output += String.fromCharCode((input.charCodeAt(i) >>> 8) & 0xFF, input.charCodeAt(i) & 0xFF);
+        return output;
+    };
+    /*
+    * Convert a raw string to an array of little-endian words
+    * Characters >255 have their high-byte silently ignored.
+    */
+    MD5.prototype.rstr2binl = function (input) {
+        var output = Array(input.length >> 2);
+        for (var i = 0; i < output.length; i++)
+            output[i] = 0;
+        for (var i = 0; i < input.length * 8; i += 8)
+            output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (i % 32);
+        return output;
+    };
+    /*
+    * Convert an array of little-endian words to a string
+    */
+    MD5.prototype.binl2rstr = function (input) {
+        var output = "";
+        for (var i = 0; i < input.length * 32; i += 8)
+            output += String.fromCharCode((input[i >> 5] >>> (i % 32)) & 0xFF);
+        return output;
+    };
+    /*
+    * Calculate the MD5 of an array of little-endian words, and a bit length.
+    */
+    MD5.prototype.binl_md5 = function (x, len) {
+        /* append padding */
+        x[len >> 5] |= 0x80 << ((len) % 32);
+        x[(((len + 64) >>> 9) << 4) + 14] = len;
+        var a = 1732584193;
+        var b = -271733879;
+        var c = -1732584194;
+        var d = 271733878;
+        for (var i = 0; i < x.length; i += 16) {
+            var olda = a;
+            var oldb = b;
+            var oldc = c;
+            var oldd = d;
+            a = this.md5_ff(a, b, c, d, x[i + 0], 7, -680876936);
+            d = this.md5_ff(d, a, b, c, x[i + 1], 12, -389564586);
+            c = this.md5_ff(c, d, a, b, x[i + 2], 17, 606105819);
+            b = this.md5_ff(b, c, d, a, x[i + 3], 22, -1044525330);
+            a = this.md5_ff(a, b, c, d, x[i + 4], 7, -176418897);
+            d = this.md5_ff(d, a, b, c, x[i + 5], 12, 1200080426);
+            c = this.md5_ff(c, d, a, b, x[i + 6], 17, -1473231341);
+            b = this.md5_ff(b, c, d, a, x[i + 7], 22, -45705983);
+            a = this.md5_ff(a, b, c, d, x[i + 8], 7, 1770035416);
+            d = this.md5_ff(d, a, b, c, x[i + 9], 12, -1958414417);
+            c = this.md5_ff(c, d, a, b, x[i + 10], 17, -42063);
+            b = this.md5_ff(b, c, d, a, x[i + 11], 22, -1990404162);
+            a = this.md5_ff(a, b, c, d, x[i + 12], 7, 1804603682);
+            d = this.md5_ff(d, a, b, c, x[i + 13], 12, -40341101);
+            c = this.md5_ff(c, d, a, b, x[i + 14], 17, -1502002290);
+            b = this.md5_ff(b, c, d, a, x[i + 15], 22, 1236535329);
+            a = this.md5_gg(a, b, c, d, x[i + 1], 5, -165796510);
+            d = this.md5_gg(d, a, b, c, x[i + 6], 9, -1069501632);
+            c = this.md5_gg(c, d, a, b, x[i + 11], 14, 643717713);
+            b = this.md5_gg(b, c, d, a, x[i + 0], 20, -373897302);
+            a = this.md5_gg(a, b, c, d, x[i + 5], 5, -701558691);
+            d = this.md5_gg(d, a, b, c, x[i + 10], 9, 38016083);
+            c = this.md5_gg(c, d, a, b, x[i + 15], 14, -660478335);
+            b = this.md5_gg(b, c, d, a, x[i + 4], 20, -405537848);
+            a = this.md5_gg(a, b, c, d, x[i + 9], 5, 568446438);
+            d = this.md5_gg(d, a, b, c, x[i + 14], 9, -1019803690);
+            c = this.md5_gg(c, d, a, b, x[i + 3], 14, -187363961);
+            b = this.md5_gg(b, c, d, a, x[i + 8], 20, 1163531501);
+            a = this.md5_gg(a, b, c, d, x[i + 13], 5, -1444681467);
+            d = this.md5_gg(d, a, b, c, x[i + 2], 9, -51403784);
+            c = this.md5_gg(c, d, a, b, x[i + 7], 14, 1735328473);
+            b = this.md5_gg(b, c, d, a, x[i + 12], 20, -1926607734);
+            a = this.md5_hh(a, b, c, d, x[i + 5], 4, -378558);
+            d = this.md5_hh(d, a, b, c, x[i + 8], 11, -2022574463);
+            c = this.md5_hh(c, d, a, b, x[i + 11], 16, 1839030562);
+            b = this.md5_hh(b, c, d, a, x[i + 14], 23, -35309556);
+            a = this.md5_hh(a, b, c, d, x[i + 1], 4, -1530992060);
+            d = this.md5_hh(d, a, b, c, x[i + 4], 11, 1272893353);
+            c = this.md5_hh(c, d, a, b, x[i + 7], 16, -155497632);
+            b = this.md5_hh(b, c, d, a, x[i + 10], 23, -1094730640);
+            a = this.md5_hh(a, b, c, d, x[i + 13], 4, 681279174);
+            d = this.md5_hh(d, a, b, c, x[i + 0], 11, -358537222);
+            c = this.md5_hh(c, d, a, b, x[i + 3], 16, -722521979);
+            b = this.md5_hh(b, c, d, a, x[i + 6], 23, 76029189);
+            a = this.md5_hh(a, b, c, d, x[i + 9], 4, -640364487);
+            d = this.md5_hh(d, a, b, c, x[i + 12], 11, -421815835);
+            c = this.md5_hh(c, d, a, b, x[i + 15], 16, 530742520);
+            b = this.md5_hh(b, c, d, a, x[i + 2], 23, -995338651);
+            a = this.md5_ii(a, b, c, d, x[i + 0], 6, -198630844);
+            d = this.md5_ii(d, a, b, c, x[i + 7], 10, 1126891415);
+            c = this.md5_ii(c, d, a, b, x[i + 14], 15, -1416354905);
+            b = this.md5_ii(b, c, d, a, x[i + 5], 21, -57434055);
+            a = this.md5_ii(a, b, c, d, x[i + 12], 6, 1700485571);
+            d = this.md5_ii(d, a, b, c, x[i + 3], 10, -1894986606);
+            c = this.md5_ii(c, d, a, b, x[i + 10], 15, -1051523);
+            b = this.md5_ii(b, c, d, a, x[i + 1], 21, -2054922799);
+            a = this.md5_ii(a, b, c, d, x[i + 8], 6, 1873313359);
+            d = this.md5_ii(d, a, b, c, x[i + 15], 10, -30611744);
+            c = this.md5_ii(c, d, a, b, x[i + 6], 15, -1560198380);
+            b = this.md5_ii(b, c, d, a, x[i + 13], 21, 1309151649);
+            a = this.md5_ii(a, b, c, d, x[i + 4], 6, -145523070);
+            d = this.md5_ii(d, a, b, c, x[i + 11], 10, -1120210379);
+            c = this.md5_ii(c, d, a, b, x[i + 2], 15, 718787259);
+            b = this.md5_ii(b, c, d, a, x[i + 9], 21, -343485551);
+            a = this.safe_add(a, olda);
+            b = this.safe_add(b, oldb);
+            c = this.safe_add(c, oldc);
+            d = this.safe_add(d, oldd);
+        }
+        return [a, b, c, d];
+    };
+    /*
+    * These privates implement the four basic operations the algorithm uses.
+    */
+    MD5.prototype.md5_cmn = function (q, a, b, x, s, t) {
+        return this.safe_add(this.bit_rol(this.safe_add(this.safe_add(a, q), this.safe_add(x, t)), s), b);
+    };
+    MD5.prototype.md5_ff = function (a, b, c, d, x, s, t) {
+        return this.md5_cmn((b & c) | ((~b) & d), a, b, x, s, t);
+    };
+    MD5.prototype.md5_gg = function (a, b, c, d, x, s, t) {
+        return this.md5_cmn((b & d) | (c & (~d)), a, b, x, s, t);
+    };
+    MD5.prototype.md5_hh = function (a, b, c, d, x, s, t) {
+        return this.md5_cmn(b ^ c ^ d, a, b, x, s, t);
+    };
+    MD5.prototype.md5_ii = function (a, b, c, d, x, s, t) {
+        return this.md5_cmn(c ^ (b | (~d)), a, b, x, s, t);
+    };
+    /*
+    * Add integers, wrapping at 2^32. This uses 16-bit operations internally
+    * to work around bugs in some JS interpreters.
+    */
+    MD5.prototype.safe_add = function (x, y) {
+        var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+        var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+        return (msw << 16) | (lsw & 0xFFFF);
+    };
+    /*
+    * Bitwise rotate a 32-bit number to the left.
+    */
+    MD5.prototype.bit_rol = function (num, cnt) {
+        return (num << cnt) | (num >>> (32 - cnt));
+    };
+    return MD5;
 }());
-//# sourceMappingURL=OnMouse.js.map
+var md5 = new MD5();
+//# sourceMappingURL=Md5.js.map
 /**
  * 开始游戏
  */
 var Game = (function () {
     function Game() {
-        /** 游戏背景音乐 */
-        this.gameSound = new Sounds.gameSounds();
         /** 要加载的资源 */
         this.needResources = ["res/atlas/ladder.atlas", "res/ladder/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas",
             "res/atlas/invite_gift.atlas", "res/atlas/Game_Settlement.atlas", "res/atlas/myHbao.atlas", "res/atlas/everyDay.atlas", "res/atlas/player.atlas",
@@ -53923,9 +54185,9 @@ var Game = (function () {
         this.gameOverDia = new gameOver(this, this.dataCenter); //游戏结束的弹窗
         // 监听碰撞
         this.spriteCollision = new spriteCollision(this.ball, this.dataCenter);
-        /** 实例化api对接 */
-        this.ApiDocking = new ApiDocking();
         if (Laya.Browser.onMiniGame) {
+            /** 实例化api对接 */
+            this.ApiDocking = new ApiDocking();
             console.log("in miniGame!");
         }
         else {
@@ -54081,6 +54343,8 @@ var dataCenter = (function () {
 /** API对接 */
 var ApiDocking = (function () {
     function ApiDocking() {
+        /** API接口地址 */
+        this.ApiUrl = "https://wdz.f11911f.cn/api/";
         this.wxLogin();
     }
     /** 初始化登录获得数据 */
@@ -54091,15 +54355,14 @@ var ApiDocking = (function () {
             success: function (res) {
                 if (res.code) {
                     console.log("code OK!\t$$$$");
-                    var wx_sys = wx.getSystemInfoSync();
                     wx.request({
-                        url: "https://wdz.f11911f.cn/api/login",
+                        url: that.ApiUrl + "login",
                         data: {
                             code: res.code,
-                            sys: wx_sys,
+                            sys: wx.getSystemInfoSync(),
                             query: wx.getLaunchOptionsSync().query,
-                            shareTicket: null,
-                            referrerInfo: null
+                            shareTicket: wx.getLaunchOptionsSync().shareTicket,
+                            referrerInfo: wx.getLaunchOptionsSync().referrerInfo
                         },
                         header: {
                             'Accept': 'application/json',
@@ -54109,13 +54372,19 @@ var ApiDocking = (function () {
                         success: function (res) {
                             that.userData = res.data;
                             that.userToken = res.data.data.token;
-                            console.log("成功");
+                            console.log("成功 结果↓↓↓↓↓↓");
                             console.log(that.userData.data);
                             var is_auth = res.data.data.user.is_auth;
                             if (!is_auth) {
-                                that.sysData(is_auth);
+                                that.authLogin(is_auth);
                             }
-                        }
+                            else {
+                                that.getSign();
+                            }
+                        },
+                        fail: function (res) {
+                            console.log("微信请求失败");
+                        },
                     });
                 }
                 else {
@@ -54125,15 +54394,308 @@ var ApiDocking = (function () {
             //wx.login失败
             fail: function (res) {
                 console.log("wx.login 失败");
+                console.log(res);
             }
         });
         return this;
     };
+    ;
     /**
-     * 保存用户信息
+     * 获取用户信息
+     */
+    ApiDocking.prototype.getUser = function () {
+        var that = this;
+        // 发起请求
+        wx.request({
+            //请求地址
+            url: that.ApiUrl + "getUser",
+            //请求参数
+            data: {
+                sys: wx.getSystemInfoSync(),
+                query: wx.getLaunchOptionsSync().query,
+                shareTicket: wx.getLaunchOptionsSync().shareTicket,
+                object: wx.getLaunchOptionsSync().referrerInfo
+            },
+            //头信息
+            header: {
+                'Accept': 'application/json',
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + that.userToken
+            },
+            // 请求方式
+            method: "POST",
+            //获取用户信息成功
+            success: function (res) {
+                console.log("获取用户信息成功 结果↓↓↓↓↓↓");
+                console.log(res.data);
+                return res.data;
+            },
+            //获取用户信息失败
+            fail: function (res) {
+                console.log(res.data);
+                console.log(res);
+            }
+        });
+    };
+    ;
+    /** 检测今日是否领取签到红包*/
+    ApiDocking.prototype.checkTodaySignRedPacket = function () {
+        var that = this;
+        var res_data;
+        console.log(that.userToken);
+        wx.request({
+            url: that.ApiUrl + "checkTodaySignRedPacket",
+            data: {
+                sys: wx.getSystemInfoSync()
+            },
+            header: {
+                'Accept': 'application/json',
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + that.userToken
+            },
+            method: "POST",
+            // 请求成功
+            success: function (res) {
+                console.log("成功检测今日是否领取红包  结果↓↓↓↓↓↓");
+                console.log(res.data);
+                return res.data;
+            },
+            // 请求失败
+            fail: function (res) {
+                console.log("检测今日签到失败");
+                console.log(res);
+            }
+        });
+    };
+    ;
+    /** 获取每星期签到列表 */
+    ApiDocking.prototype.getSign = function () {
+        var that = this;
+        wx.request({
+            url: that.ApiUrl + "getSign",
+            data: {
+                sys: wx.getSystemInfoSync()
+            },
+            header: {
+                'Accept': 'application/json',
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + that.userToken
+            },
+            method: "POST",
+            //请求成功
+            success: function (res) {
+                console.log("获取每星期签到列表成功 结果↓↓↓↓↓↓");
+                console.log(res.data);
+                return res.data;
+            },
+            fail: function (res) {
+                console.log("获取每星期签到列表失败");
+                console.log(res);
+            }
+        });
+    };
+    ;
+    /** 添加签到 */
+    ApiDocking.prototype.addSign = function () {
+        var that = this;
+        wx.request({
+            url: that.ApiUrl + "addSign",
+            data: {
+                sys: wx.getSystemInfoSync()
+            },
+            header: {
+                'Accept': 'application/json',
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + that.userToken
+            },
+            method: "POST",
+            success: function (res) {
+                console.log("添加签到成功");
+                return res.data;
+            },
+            fail: function (res) {
+                console.log("添加签到失败");
+                console.log(res);
+            }
+        });
+    };
+    ;
+    /** 打开红包 */
+    ApiDocking.prototype.openRedPacket = function () {
+        var that = this;
+        wx.request({
+            url: that.ApiUrl + "openRedPacket",
+            data: {
+                id: 555,
+                sys: wx.getSystemInfoSync()
+            },
+            header: {
+                'Accept': 'application/json',
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + that.userToken
+            },
+            method: "POST",
+            success: function (res) {
+                console.log("成功打开红包");
+                console.log("res.data");
+                return res.data;
+            },
+            fail: function (res) {
+                console.log("打开红包失败");
+                console.log(res);
+            }
+        });
+    };
+    ;
+    /** 获取分享素材 */
+    ApiDocking.prototype.getShare = function () {
+        var that = this;
+        wx.request({
+            url: that.ApiUrl + "getshare",
+            data: {
+                sys: wx.getSystemInfoSync()
+            },
+            header: {
+                'Accept': 'application/json',
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + that.userToken
+            },
+            method: "POST",
+            success: function (res) {
+                console.log("获取分享素材成功");
+                console.log(res.data);
+                return res.data;
+            },
+            fail: function (res) {
+                console.log("获取分享素材失败");
+                console.log(res);
+            }
+        });
+    };
+    /** 游戏分数上传
+     * @param newScore 上传新的分数
+     */
+    ApiDocking.prototype.ScoreUpload = function (newScore) {
+        var that = this;
+        var tObj = {
+            url: that.ApiUrl + "gameOver",
+            data: {
+                score: newScore,
+                sys: wx.getSystemInfoSync()
+            },
+            header: {
+                'Accept': 'application/json',
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + that.userToken
+            },
+            method: "POST",
+            success: function (res) {
+                console.log("分数上传成功");
+                console.log(res);
+                return res.data;
+            },
+            fail: function (res) {
+                console.log("分数上传失败");
+                console.log(res);
+            },
+        };
+        wx.request(tObj);
+    };
+    /** 游戏金币设置 */
+    ApiDocking.prototype.setGold = function (newGold) {
+        var that = this;
+        var key = "hvOapDPFm7sEv$uQle@A627zqKNkBzMhR5Tr!0NWmaox60itf@5ZspzeQSQ6wTzL";
+        /** 金币数量 */
+        var gold = newGold;
+        /** 签名 */
+        var sign = md5.hex_md5(gold + key + gold + key);
+        wx.request({
+            url: that.ApiUrl + "setGold",
+            data: {
+                gold: gold,
+                sign: sign,
+                sys: wx.getSystemInfoSync()
+            },
+            header: {
+                'Accept': 'application/json',
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + that.userToken
+            },
+            method: "POST",
+            success: function (res) {
+                console.log("金币设置成功");
+                console.log(res.data);
+                return res.data;
+            },
+            fail: function (res) {
+                console.log("金币上传失败");
+                console.log(res);
+            }
+        });
+    };
+    /**
+     * 游戏其他数据设置
+     * @param Data 要设置的Data, 类型object
+     * */
+    ApiDocking.prototype.setData = function (Data) {
+        var that = this;
+        var key = "hvOapDPFm7sEv$uQle@A627zqKNkBzMhR5Tr!0NWmaox60itf@5ZspzeQSQ6wTzL";
+        var data = Data;
+        var sign = md5.hex_md5(JSON.stringify(data) + key + JSON.stringify(data) + key);
+        wx.request({
+            url: that.ApiUrl + "setData",
+            data: {
+                data: data,
+                sign: sign,
+                sys: wx.getSystemInfoSync()
+            },
+            header: {
+                'Accept': 'application/json',
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + that.userToken
+            },
+            method: "POST",
+            success: function (res) {
+                console.log("游戏的其他数据设置成功");
+                console.log(res.data);
+                return res.data;
+            },
+            fail: function (res) {
+                console.log("游戏其他数据设置失败");
+                console.log(res);
+            }
+        });
+    };
+    /** 获取下线列表 */
+    ApiDocking.prototype.getFriendList = function () {
+        var that = this;
+        wx.request({
+            url: that.ApiUrl + "getFriendList",
+            data: {
+                sys: wx.getSystemInfoSync()
+            },
+            header: {
+                'Accept': 'application/json',
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + that.userToken
+            },
+            method: "POST",
+            success: function (res) {
+                console.log("成功获取下线列表");
+                console.log(res.data);
+                return res.data;
+            },
+            fail: function (res) {
+                console.log("获取谢爱西安列表失败");
+                console.log(res.data);
+            }
+        });
+    };
+    /**
+     * 保存用户授权信息
      * @param is_auth  boolean服务器是否保存信息
      */
-    ApiDocking.prototype.sysData = function (is_auth) {
+    ApiDocking.prototype.authLogin = function (is_auth) {
         /** 指向ApiDocking */
         var that = this;
         if (!is_auth) {
@@ -54164,13 +54726,14 @@ var ApiDocking = (function () {
                 console.log(that.userInfo);
                 var userInfo = res.userInfo;
                 wx.request({
-                    url: "https://wdz.f11911f.cn/api/authLogin",
+                    url: that.ApiUrl + "authLogin",
                     data: {
                         avatarUrl: userInfo.avatarUrl,
                         city: userInfo.city,
                         country: userInfo.country,
                         gender: userInfo.gender,
-                        nickName: userInfo.nickName
+                        nickName: userInfo.nickName,
+                        sys: wx.getSystemInfoSync()
                     },
                     header: {
                         'Accept': 'application/json',
@@ -54182,7 +54745,10 @@ var ApiDocking = (function () {
                         console.log("用户数据更新完成");
                         console.log(res.data);
                         that.userData = res.data;
+                        that.checkTodaySignRedPacket();
                         // this.wx_button.hide();
+                    },
+                    fail: function (res) {
                     }
                 });
             });
@@ -54192,6 +54758,7 @@ var ApiDocking = (function () {
         }
         return this;
     };
+    ;
     return ApiDocking;
 }());
 //# sourceMappingURL=ApiDocking.js.map
@@ -54744,7 +55311,7 @@ var ui;
         };
         return gameHomeUI;
     }(View));
-    gameHomeUI.uiView = { "type": "View", "props": { "x": 0, "width": 640, "name": "gamehome", "height": 1136 }, "child": [{ "type": "Box", "props": { "y": 0, "x": 0, "var": "startBox", "top": 0, "right": 0, "name": "srartBox", "left": 0, "bottom": 0 } }, { "type": "Image", "props": { "width": 150, "var": "right_frame", "skin": "gameHome/Icon_box_rigth.png", "right": 0, "name": "right_frame", "height": 450, "centerY": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "width": 100, "var": "my_hb", "skin": "gameHome/image_myhb.png", "name": "my_hb", "height": 100, "centerX": 0 }, "child": [{ "type": "Label", "props": { "var": "hb_timer", "text": "00:00", "name": "hb_timer", "fontSize": 20, "color": "#f8e4e4", "centerY": 0.5, "centerX": 4, "bold": true } }] }, { "type": "Image", "props": { "y": 170, "width": 100, "var": "reward", "skin": "gameHome/image_reward.png", "name": "reward", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 320, "width": 100, "var": "tuiqian", "skin": "gameHome/image_tuiqian.png", "name": "tuiqian", "height": 100, "centerX": 0 } }] }, { "type": "Image", "props": { "width": 150, "var": "left_frame", "skin": "gameHome/Icon_box_left.png", "name": "left_frame", "left": 0, "height": 450, "centerY": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "width": 100, "var": "music_off", "skin": "gameHome/music_off.png", "name": "music_off", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 170, "width": 100, "var": "invite", "skin": "gameHome/image_invite.png", "name": "invite", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 320, "width": 100, "var": "jieshao", "skin": "gameHome/image_jieshao.png", "name": "jieshao", "height": 100, "centerX": 0 } }] }, { "type": "Image", "props": { "var": "add_xcx", "top": 38, "skin": "gameHome/image_addxcx.png", "right": 0, "name": "add_xcx" } }, { "type": "Image", "props": { "y": 84, "width": 460, "var": "logo", "skin": "gameHome/image_game_log.png", "name": "logo", "height": 205, "centerX": 0 } }, { "type": "Image", "props": { "y": 850, "x": 471, "width": 169, "var": "ranking", "skin": "gameHome/image_Leaderboard.png", "right": 0, "name": "ranking" }, "child": [{ "type": "Image", "props": { "y": 41, "skin": "gameHome/image_paihang.png", "centerX": 0 } }, { "type": "Text", "props": { "y": 122, "x": 23, "text": "好友排行", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 850, "x": 0, "width": 169, "var": "changeBallSkin", "skin": "gameHome/image_ballSkin.png", "name": "changeBallSkin", "left": 0 }, "child": [{ "type": "Image", "props": { "y": 42, "skin": "gameHome/image_ball.png", "scaleY": 1, "scaleX": 1, "centerX": 0 } }, { "type": "Text", "props": { "y": 122, "x": 23, "text": "更换皮肤", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Box", "props": { "var": "prompt_box", "name": "prompt_box", "centerX": 0, "bottom": 0 }, "child": [{ "type": "Image", "props": { "var": "boot_prompt", "skin": "gameHome/image_boot_prompt.png", "name": "boot_prompt", "alpha": 0.8 } }, { "type": "Image", "props": { "x": 50, "var": "guide", "skin": "gameHome/image_guide.png", "name": "guide", "alpha": 0.8 } }] }, { "type": "HBox", "props": { "y": 270, "var": "box_fraction", "space": 20, "name": "box_fraction", "centerX": 0, "align": "middle" }, "child": [{ "type": "Image", "props": { "x": 0, "width": 50, "var": "crown", "skin": "gameHome/image_crown.png", "name": "crown", "height": 50, "centerY": 0 } }, { "type": "Label", "props": { "x": 70, "var": "bigFraction", "text": "0", "name": "bigFraction", "fontSize": 60, "font": "Arial", "color": "#2d71d6", "centerY": 0, "bold": true } }] }, { "type": "HBox", "props": { "y": 20, "x": 20, "var": "box_do", "space": 30, "name": "box_do", "align": "middle" }, "child": [{ "type": "Image", "props": { "var": "diamond", "skin": "gameHome/image_do.png", "name": "diamond" } }, { "type": "Image", "props": { "y": 7, "x": 126, "var": "button_doAdd", "skin": "gameHome/add_do.png", "name": "button_doAdd" } }, { "type": "Label", "props": { "y": 0, "x": 78, "var": "doNumber", "text": "0", "name": "doNumber", "fontSize": 50, "font": "SimHei", "color": "#2d71d6", "bold": true } }] }] };
+    gameHomeUI.uiView = { "type": "View", "props": { "x": 0, "width": 640, "name": "gamehome", "height": 1136 }, "child": [{ "type": "Box", "props": { "y": 0, "x": 0, "var": "startBox", "top": 0, "right": 0, "name": "srartBox", "left": 0, "bottom": 0 } }, { "type": "Image", "props": { "width": 150, "var": "right_frame", "skin": "gameHome/Icon_box_rigth.png", "right": 0, "name": "right_frame", "height": 450, "centerY": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "width": 100, "var": "my_hb", "skin": "gameHome/image_myhb.png", "name": "my_hb", "height": 100, "centerX": 0 }, "child": [{ "type": "Label", "props": { "var": "hb_money", "text": "0", "name": "hb_money", "fontSize": 20, "color": "#f8e4e4", "centerY": 0, "centerX": 3, "bold": true } }] }, { "type": "Image", "props": { "y": 170, "width": 100, "var": "reward", "skin": "gameHome/image_reward.png", "name": "reward", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 320, "width": 100, "var": "tuiqian", "skin": "gameHome/image_tuiqian.png", "name": "tuiqian", "height": 100, "centerX": 0 } }] }, { "type": "Image", "props": { "width": 150, "var": "left_frame", "skin": "gameHome/Icon_box_left.png", "name": "left_frame", "left": 0, "height": 450, "centerY": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "width": 100, "var": "music_off", "skin": "gameHome/music_off.png", "name": "music_off", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 170, "width": 100, "var": "invite", "skin": "gameHome/image_invite.png", "name": "invite", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 320, "width": 100, "var": "jieshao", "skin": "gameHome/image_jieshao.png", "name": "jieshao", "height": 100, "centerX": 0 } }] }, { "type": "Image", "props": { "var": "add_xcx", "top": 38, "skin": "gameHome/image_addxcx.png", "right": 0, "name": "add_xcx" } }, { "type": "Image", "props": { "y": 84, "width": 460, "var": "logo", "skin": "gameHome/image_game_log.png", "name": "logo", "height": 205, "centerX": 0 } }, { "type": "Image", "props": { "y": 850, "x": 471, "width": 169, "var": "ranking", "skin": "gameHome/image_Leaderboard.png", "right": 0, "name": "ranking" }, "child": [{ "type": "Image", "props": { "y": 41, "skin": "gameHome/image_paihang.png", "centerX": 0 } }, { "type": "Text", "props": { "y": 122, "x": 23, "text": "好友排行", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 850, "x": 0, "width": 169, "var": "changeBallSkin", "skin": "gameHome/image_ballSkin.png", "name": "changeBallSkin", "left": 0 }, "child": [{ "type": "Image", "props": { "y": 42, "skin": "gameHome/image_ball.png", "scaleY": 1, "scaleX": 1, "centerX": 0 } }, { "type": "Text", "props": { "y": 122, "x": 23, "text": "更换皮肤", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Box", "props": { "var": "prompt_box", "name": "prompt_box", "centerX": 0, "bottom": 0 }, "child": [{ "type": "Image", "props": { "var": "boot_prompt", "skin": "gameHome/image_boot_prompt.png", "name": "boot_prompt", "alpha": 0.8 } }, { "type": "Image", "props": { "x": 50, "var": "guide", "skin": "gameHome/image_guide.png", "name": "guide", "alpha": 0.8 } }] }, { "type": "HBox", "props": { "y": 270, "var": "box_fraction", "space": 20, "name": "box_fraction", "centerX": 0, "align": "middle" }, "child": [{ "type": "Image", "props": { "x": 0, "width": 50, "var": "crown", "skin": "gameHome/image_crown.png", "name": "crown", "height": 50, "centerY": 0 } }, { "type": "Label", "props": { "x": 70, "var": "bigFraction", "text": "0", "name": "bigFraction", "fontSize": 60, "font": "Arial", "color": "#2d71d6", "centerY": 0, "bold": true } }] }, { "type": "HBox", "props": { "y": 20, "x": 20, "var": "box_do", "space": 30, "name": "box_do", "align": "middle" }, "child": [{ "type": "Image", "props": { "var": "diamond", "skin": "gameHome/image_do.png", "name": "diamond" } }, { "type": "Image", "props": { "y": 7, "x": 126, "var": "button_doAdd", "skin": "gameHome/add_do.png", "name": "button_doAdd" } }, { "type": "Label", "props": { "y": 0, "x": 78, "var": "doNumber", "text": "0", "name": "doNumber", "fontSize": 50, "font": "SimHei", "color": "#2d71d6", "bold": true } }] }] };
     ui.gameHomeUI = gameHomeUI;
 })(ui || (ui = {}));
 (function (ui) {
@@ -55024,9 +55591,6 @@ var GameHome = (function (_super) {
         _this.dailyGift = new dailyGift;
         /** 玩法介绍 */
         _this.playDialog = new playDialog();
-        /** 倒计时时间 */
-        _this.maxTimer = 0;
-        _this.HbtimeLine = new Laya.TimeLine();
         // 初始化
         _this.Game = game;
         _this.dataCenter = dataCenter;
@@ -55052,44 +55616,11 @@ var GameHome = (function (_super) {
         this.tuiqian.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //游戏推荐
         this.jieshao.on(Laya.Event.MOUSE_DOWN, this, this.playJieShao); //玩法介绍
         this.invite.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun); //邀请有礼
-        this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //关闭音乐
+        this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.musicOFF); //关闭音乐
         this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.changeSkin); //球皮肤事件
         this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //好友排行
-        this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);
+        this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun); //添加钻石
         this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest); //开始游戏
-        //时钟倒计时
-        Laya.timer.loop(1000, this, this.HBcountdown);
-    };
-    /** 红包倒计时 */
-    GameHome.prototype.HBcountdown = function (e) {
-        var maxTimer = this.maxTimer;
-        if (maxTimer >= 0) {
-            var min = String(Math.floor(maxTimer / 60));
-            if (min.length == 1) {
-                min = "0" + min;
-            }
-            ;
-            var s = String(Math.floor(maxTimer % 60));
-            if (s.length == 1) {
-                s = "0" + s;
-            }
-            ;
-            var msg = min + ":" + s;
-            this.hb_timer.text = msg;
-            --maxTimer;
-        }
-        else {
-            // console.log("时间到，可以领红包");
-            // 关闭红包倒计时
-            Laya.timer.clear(this, this.HBcountdown);
-            // 给红包价格时间线 目的为了醒目
-            this.HbtimeLine.addLabel("big", 0).to(this.my_hb, { scaleX: 1.5, scaleY: 1.5 }, 200, null, 0)
-                .addLabel("small", 0).to(this.my_hb, { scaleX: 1, scaleY: 1 }, 200, null, 0);
-            this.HbtimeLine.play(0, true);
-        }
-        // 刷新倒计时的时间
-        this.maxTimer = maxTimer;
-        return this;
     };
     /**
      * 鼠标点击绑定出发的事件
@@ -55121,6 +55652,12 @@ var GameHome = (function (_super) {
         if (this.playDialog.isPopup != true) {
             this.playDialog.popup();
         }
+    };
+    /** 关闭音乐 */
+    GameHome.prototype.musicOFF = function () {
+        console.log("关闭音乐🎵");
+        this.Game.ApiDocking.checkTodaySignRedPacket();
+        return this;
     };
     /** 每日奖励 */
     GameHome.prototype.openDailyGift = function () {

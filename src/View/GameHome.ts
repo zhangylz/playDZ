@@ -2,8 +2,8 @@
  * 游戏主界面
  */
 class GameHome extends ui.gameHomeUI {
-    /** 红包倒计时 */
-    public hb_timer: Laya.Label;
+    /** 红包余额 */
+    public hb_money: Laya.Label;
     /** 时间线 */
     private timerLine = new Laya.TimeLine();
     /** 邀请好礼 */
@@ -55,41 +55,14 @@ class GameHome extends ui.gameHomeUI {
         this.tuiqian.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);           //游戏推荐
         this.jieshao.on(Laya.Event.MOUSE_DOWN, this, this.playJieShao);         //玩法介绍
         this.invite.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);            //邀请有礼
-        this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);         //关闭音乐
-        this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.changeSkin);    //球皮肤事件
+        this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.musicOFF);          //关闭音乐
+        this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.changeSkin);   //球皮肤事件
         this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);           //好友排行
-        this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);
+        this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);      //添加钻石
         this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest);          //开始游戏
-        //时钟倒计时
-        Laya.timer.loop(1000, this, this.HBcountdown);
     }
-    /** 倒计时时间 */
-    public maxTimer: number = 0;
-    private HbtimeLine = new Laya.TimeLine();
-    /** 红包倒计时 */
-    public HBcountdown(e: Laya.Event): this {
-        let maxTimer = this.maxTimer;
-        if (maxTimer >= 0) {
-            let min = String(Math.floor(maxTimer / 60));
-            if (min.length == 1) { min = "0" + min };
-            let s = String(Math.floor(maxTimer % 60));
-            if (s.length == 1) { s = "0" + s };
-            let msg: string = min + ":" + s;
-            this.hb_timer.text = msg;
-            --maxTimer;
-        } else {
-            // console.log("时间到，可以领红包");
-            // 关闭红包倒计时
-            Laya.timer.clear(this, this.HBcountdown);
-            // 给红包价格时间线 目的为了醒目
-            this.HbtimeLine.addLabel("big", 0).to(this.my_hb, { scaleX: 1.5, scaleY: 1.5 }, 200, null, 0)
-                .addLabel("small", 0).to(this.my_hb, { scaleX: 1, scaleY: 1 }, 200, null, 0);
-            this.HbtimeLine.play(0, true);
-        }
-        // 刷新倒计时的时间
-        this.maxTimer = maxTimer;
-        return this;
-    }
+
+    
 
     /**
      * 鼠标点击绑定出发的事件
@@ -126,6 +99,12 @@ class GameHome extends ui.gameHomeUI {
         }
     }
 
+    /** 关闭音乐 */
+    private musicOFF(): GameHome {
+        console.log("关闭音乐🎵");
+        this.Game.ApiDocking.checkTodaySignRedPacket();
+        return this;
+    }
     /** 每日奖励 */
     public openDailyGift(): GameHome {
         this.dailyGift.popup();

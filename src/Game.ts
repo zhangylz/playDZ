@@ -17,7 +17,7 @@ class Game {
     /** 数据中控 */
     public dataCenter: dataCenter;
     /** 游戏背景音乐 */
-    public gameSound: Sounds.gameSounds = new Sounds.gameSounds();
+    // public gameSound: Sounds.gameSounds = new Sounds.gameSounds();
     /** 对接api */
     public ApiDocking: ApiDocking;
     /** 要加载的资源 */
@@ -62,9 +62,9 @@ class Game {
         this.gameOverDia = new gameOver(this, this.dataCenter);     //游戏结束的弹窗
         // 监听碰撞
         this.spriteCollision = new spriteCollision(this.ball, this.dataCenter);
-        /** 实例化api对接 */
-        this.ApiDocking = new ApiDocking();
         if (Laya.Browser.onMiniGame) {
+            /** 实例化api对接 */
+            this.ApiDocking = new ApiDocking();
             console.log("in miniGame!");
         } else { console.log("not miniGame") };
     }
@@ -169,7 +169,6 @@ class Game {
         this.ladderArr.ladderArrRect().init();
         this.ladderN = 4;
         this.spriteCollision.resultCollision = false;
-        // this.inGameView.init();
         console.log("game Reset!");
         return this;
     }
