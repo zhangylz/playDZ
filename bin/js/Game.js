@@ -43,6 +43,7 @@ var Game = (function () {
         this.inGameView = new inGameView(this.dataCenter);
         Laya.stage.addChild(this.inGameView); //添加到舞台
         this.gameOverDia = new gameOver(this, this.dataCenter); //游戏结束的弹窗
+        this.gameSound = new Sounds.gameSounds(); //实例化背景音乐
         // 监听碰撞
         this.spriteCollision = new spriteCollision(this.ball, this.dataCenter);
         if (Laya.Browser.onMiniGame) {
@@ -148,7 +149,6 @@ var Game = (function () {
         this.ladderArr.ladderArrRect().init();
         this.ladderN = 4;
         this.spriteCollision.resultCollision = false;
-        // this.inGameView.init();
         console.log("game Reset!");
         return this;
     };
@@ -168,5 +168,5 @@ var Game = (function () {
     return Game;
 }());
 // 开始游戏
-new Game();
+// new Game(); 
 //# sourceMappingURL=Game.js.map

@@ -5,10 +5,12 @@ class hbaoDialog extends ui.hbDialogUI {
     public keepOnHbao: Laya.Image;
     /** 提现 */
     public withdraw: Laya.Label;
+    
     constructor() {
         super();
         this.init();
     }
+
     /** 初始化 */
     public init(): void {
         this.button_close.on(Laya.Event.MOUSE_DOWN, this, this.close);
@@ -23,6 +25,6 @@ class hbaoDialog extends ui.hbDialogUI {
     
     /** 提现函数 */
     public hbWIdthdraws(): void {
-        console.log("hbWIdthdraw");
+        console.log("hb WIdthdraw");
     }
 }

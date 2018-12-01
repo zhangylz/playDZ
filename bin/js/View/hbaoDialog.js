@@ -22,7 +22,7 @@ var hbaoDialog = (function (_super) {
     };
     /** 提现函数 */
     hbaoDialog.prototype.hbWIdthdraws = function () {
-        console.log("hbWIdthdraw");
+        console.log("hb WIdthdraw");
     };
     return hbaoDialog;
 }(ui.hbDialogUI));

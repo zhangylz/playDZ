@@ -61,8 +61,8 @@ var inviteGift = (function (_super) {
     /** 监听事件 */
     inviteGift.prototype.monitor = function () {
         this.viewOff.on(Laya.Event.MOUSE_DOWN, this, this.close); // 关闭按钮
-        this.button_one.on(Laya.Event.MOUSE_DOWN, this, this.receivingGift, [50]); //第一个领奖按钮
-        this.button_two.on(Laya.Event.MOUSE_DOWN, this, this.receivingGift, [200]); //第二个领奖按钮
+        this.button_one.on(Laya.Event.MOUSE_DOWN, this, this.receivingGift, [200]); //第一个领奖按钮
+        this.button_two.on(Laya.Event.MOUSE_DOWN, this, this.receivingGift, [500]); //第二个领奖按钮
         this.now_invite.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);
         return this;
     };

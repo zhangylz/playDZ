@@ -17,7 +17,7 @@ class Game {
     /** 数据中控 */
     public dataCenter: dataCenter;
     /** 游戏背景音乐 */
-    // public gameSound: Sounds.gameSounds = new Sounds.gameSounds();
+    public gameSound: Sounds.gameSounds;
     /** 对接api */
     public ApiDocking: ApiDocking;
     /** 要加载的资源 */
@@ -60,6 +60,7 @@ class Game {
         this.inGameView = new inGameView(this.dataCenter);
         Laya.stage.addChild(this.inGameView);   //添加到舞台
         this.gameOverDia = new gameOver(this, this.dataCenter);     //游戏结束的弹窗
+        this.gameSound = new Sounds.gameSounds();   //实例化背景音乐
         // 监听碰撞
         this.spriteCollision = new spriteCollision(this.ball, this.dataCenter);
         if (Laya.Browser.onMiniGame) {
@@ -191,4 +192,4 @@ class Game {
 }
 
 // 开始游戏
-new Game();
+// new Game();

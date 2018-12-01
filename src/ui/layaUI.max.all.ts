@@ -255,3 +255,19 @@ module ui {
 
     }
 }
+
+module ui {
+    export class ProgressUI extends View {
+		public percentage:Laya.Label;
+
+        public static  uiView:any ={"type":"View","props":{"width":640,"height":1164},"child":[{"type":"Label","props":{"var":"percentage","text":"0%","name":"percentage","fontSize":80,"color":"#51e721","centerY":0,"centerX":0,"bold":true}}]};
+        constructor(){ super()}
+        createChildren():void {
+        
+            super.createChildren();
+            this.createView(ui.ProgressUI.uiView);
+
+        }
+
+    }
+}
