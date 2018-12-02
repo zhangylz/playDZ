@@ -22,9 +22,7 @@ var GameHome = (function (_super) {
         /** 我的红包 */
         _this.myHB = new myHB();
         /** 每日奖励 */
-        _this.dailyGift = new dailyGift;
-        /** 玩法介绍 */
-        _this.playDialog = new playDialog();
+        _this.dailyGift = new dailyGift();
         // 初始化
         _this.Game = game;
         _this.dataCenter = dataCenter;
@@ -41,6 +39,7 @@ var GameHome = (function (_super) {
         this.synchronousData();
         // 实例化皮肤界面
         this.ballSkinView = new ballSkinView(this.Game.ball);
+        this.playDialog = new playDialog();
         this.addChild(this.ballSkinView);
         // 先隐藏皮肤界面起来
         this.ballSkinView.visible = false;
@@ -54,7 +53,8 @@ var GameHome = (function (_super) {
         this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.changeSkin); //球皮肤事件
         this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //好友排行
         this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun); //添加钻石
-        this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest); //开始游戏
+        // this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest);          //开始游戏
+        this.starGame.on(Laya.Event.MOUSE_DOWN, this, this.startTest);
     };
     /**
      * 鼠标点击绑定出发的事件
@@ -90,7 +90,7 @@ var GameHome = (function (_super) {
     /** 关闭音乐 */
     GameHome.prototype.musicOFF = function () {
         console.log("关闭音乐🎵");
-        this.Game.ApiDocking.checkTodaySignRedPacket();
+        this.Game.ApiDocking.getUser();
         return this;
     };
     /** 每日奖励 */

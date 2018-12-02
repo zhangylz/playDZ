@@ -40,5 +40,5 @@ var myHB = (function (_super) {
         return this;
     };
     return myHB;
-}(ui.myHBUI));
+}(ui.myHbUI));
 //# sourceMappingURL=myHB.js.map

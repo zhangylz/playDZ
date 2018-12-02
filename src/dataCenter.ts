@@ -12,6 +12,9 @@ class dataCenter {
     public balance: number = 0;
     /** 局内获得红包数 */
     public hbNumber: number = 0;
+    /** token */
+    public token: string;
+
     constructor() {
         this.init();
     }
@@ -25,5 +28,11 @@ class dataCenter {
         this.hbNumber = 0;
         this.fraction = 0;
         this.doObtain = 0;
+    }
+
+    /** 接收数据并初始化 */
+    public receive(res): any {
+        console.log("测试接收数据");
+        console.log(res);
     }
 }

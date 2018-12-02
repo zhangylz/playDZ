@@ -1,10 +1,12 @@
 /** API对接 */
 var ApiDocking = (function () {
-    function ApiDocking() {
+    function ApiDocking(game) {
         /** API接口地址 */
         this.ApiUrl = "https://wdz.f11911f.cn/api/";
         this.wxLogin();
+        this.Game = game;
     }
+    ;
     /** 初始化登录获得数据 */
     ApiDocking.prototype.wxLogin = function () {
         var that = this;
@@ -37,6 +39,7 @@ var ApiDocking = (function () {
                                 that.authLogin(is_auth);
                             }
                             else {
+                                that.Game.gameHome.starGame.visible = true;
                                 that.getSign();
                             }
                         },
@@ -86,7 +89,6 @@ var ApiDocking = (function () {
             success: function (res) {
                 console.log("获取用户信息成功 结果    ↓↓↓↓↓↓");
                 console.log(res.data);
-                return res.data;
             },
             //获取用户信息失败
             fail: function (res) {
@@ -360,19 +362,20 @@ var ApiDocking = (function () {
             console.log("用户没有授权");
             // console.log(that.userToken);
             var wx_button = wx.createUserInfoButton({
-                type: "text",
-                text: "获取用户信息",
+                type: "image",
+                image: Laya.ResourceVersion.addVersionPrefix(this.Game.gameHome.starGame.skin),
                 style: {
-                    left: 10,
-                    top: 76,
+                    left: 100,
+                    top: 300,
                     width: 200,
                     height: 40,
-                    lineHeight: 40,
-                    backgroundColor: '#ff0000',
-                    color: '#ffffff',
+                    backgroundColor: '#ffffff',
+                    borderColor: '#ffffff',
+                    borderWidth: 0,
+                    borderRadius: 0,
                     textAlign: 'center',
-                    fontSize: 16,
-                    borderRadius: 4
+                    fontSize: 0,
+                    lineHeight: 1,
                 },
                 withCredentials: false,
                 lang: "zh_CN"

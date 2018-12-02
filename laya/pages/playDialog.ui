@@ -3,9 +3,9 @@
     "type":"Dialog",
     "selectedBox":1,
     "selecteID":1,
-    "props":{"width":640,"sceneColor":"#000000","height":1164},
+    "props":{"width":640,"var":"playDialog","sceneColor":"#000000","name":"playDialog","height":1164},
     "nodeParent":-1,
-    "label":"Dialog",
+    "label":"Dialog(playDialog)",
     "isOpen":true,
     "isDirectory":true,
     "isAniNode":true,
@@ -15,9 +15,9 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":300,"width":620,"skin":"invite_gift/window.png","centerX":0},
+            "props":{"y":300,"width":620,"var":"testI","skin":"invite_gift/window.png","name":"testI","centerX":0},
             "nodeParent":1,
-            "label":"Image",
+            "label":"Image(testI)",
             "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
@@ -62,7 +62,8 @@
                     "compId":3,
                     "child":[
                         ]
-                }]
+                }],
+            "$HIDDEN":false
         }],
     "animations":[
         {
@@ -72,5 +73,6 @@
             "id":1,
             "frameRate":24,
             "action":0
-        }]
+        }],
+    "$HIDDEN":false
 }

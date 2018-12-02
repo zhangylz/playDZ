@@ -9,15 +9,15 @@ class GameHome extends ui.gameHomeUI {
     /** 邀请好礼 */
     public inviteGift = new inviteGift();
     /** 我的红包 */
-    public myHB = new myHB();
+    public myHB: myHB = new myHB();
     /** 每日奖励 */
-    public dailyGift = new dailyGift;
+    public dailyGift = new dailyGift();
     /** 最大分数 */
     public bigFraction: Laya.Label;
     /** 砖石数量 */
     public doNumber: Laya.Label;
     /** 玩法介绍 */
-    public playDialog: playDialog = new playDialog();
+    public playDialog: playDialog;
     /** 数据中心 */
     public dataCenter: dataCenter;
     /** 皮肤页面 */
@@ -46,6 +46,7 @@ class GameHome extends ui.gameHomeUI {
         this.synchronousData();
         // 实例化皮肤界面
         this.ballSkinView = new ballSkinView(this.Game.ball);
+        this.playDialog = new playDialog();
         this.addChild(this.ballSkinView);
         // 先隐藏皮肤界面起来
         this.ballSkinView.visible = false;
@@ -59,10 +60,11 @@ class GameHome extends ui.gameHomeUI {
         this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.changeSkin);   //球皮肤事件
         this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);           //好友排行
         this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);      //添加钻石
-        this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest);          //开始游戏
+        // this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest);          //开始游戏
+        this.starGame.on(Laya.Event.MOUSE_DOWN, this, this.startTest);
     }
 
-    
+
 
     /**
      * 鼠标点击绑定出发的事件
@@ -102,9 +104,10 @@ class GameHome extends ui.gameHomeUI {
     /** 关闭音乐 */
     private musicOFF(): GameHome {
         console.log("关闭音乐🎵");
-        this.Game.ApiDocking.checkTodaySignRedPacket();
+        this.Game.ApiDocking.getUser();
         return this;
     }
+
     /** 每日奖励 */
     public openDailyGift(): GameHome {
         this.dailyGift.popup();

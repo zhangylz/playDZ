@@ -3,22 +3,9 @@
  */
 var Game = (function () {
     function Game() {
-        /** 要加载的资源 */
-        this.needResources = ["res/atlas/ladder.atlas", "res/ladder/image_ladder.png", "res/atlas/gameHome.atlas", "res/atlas/inGame.atlas",
-            "res/atlas/invite_gift.atlas", "res/atlas/Game_Settlement.atlas", "res/atlas/myHbao.atlas", "res/atlas/everyDay.atlas", "res/atlas/player.atlas",
-            "res/atlas/ball_skin.atlas"];
         /** 初始的阶梯编号 */
         this.ladderN = 4;
-        // 适配微信小游戏
-        Laya.MiniAdpter.init();
-        // 初始化引擎
-        Laya.init(640, 1136, Laya.WebGL);
-        // 性能面板
-        // Laya.Stat.show(640, 0);
-        Laya.stage.bgColor = "#EEE9E9";
-        // Laya.stage.scaleMode = "showall";
-        // 预加载资源
-        Laya.loader.load(this.needResources, Laya.Handler.create(this, this.init));
+        this.init();
     }
     /** 初始化 */
     Game.prototype.init = function () {
@@ -48,7 +35,7 @@ var Game = (function () {
         this.spriteCollision = new spriteCollision(this.ball, this.dataCenter);
         if (Laya.Browser.onMiniGame) {
             /** 实例化api对接 */
-            this.ApiDocking = new ApiDocking();
+            this.ApiDocking = new ApiDocking(this);
             console.log("in miniGame!");
         }
         else {

@@ -343,7 +343,7 @@
                     "child":[
                         {
                             "type":"Image",
-                            "props":{"y":3,"x":9,"var":"agin_img","skin":"Game_Settlement/button.png","name":"agin_img"},
+                            "props":{"y":3,"x":9,"var":"agin_img","skin":"Game_Settlement/image_button.png","name":"agin_img"},
                             "nodeParent":45,
                             "label":"Image(agin_img)",
                             "isOpen":false,
@@ -367,7 +367,7 @@
                         },
                         {
                             "type":"Image",
-                            "props":{"y":2,"x":158,"var":"home_img","skin":"Game_Settlement/button.png","name":"home_img"},
+                            "props":{"y":2,"x":158,"var":"home_img","skin":"Game_Settlement/image_button.png","name":"home_img"},
                             "nodeParent":45,
                             "label":"Image(home_img)",
                             "isOpen":null,
@@ -391,7 +391,7 @@
                         },
                         {
                             "type":"Image",
-                            "props":{"y":0,"x":307,"var":"share_img","skin":"Game_Settlement/button.png","name":"share_img"},
+                            "props":{"y":0,"x":307,"var":"share_img","skin":"Game_Settlement/image_button.png","name":"share_img"},
                             "nodeParent":45,
                             "label":"Image(share_img)",
                             "isOpen":null,
@@ -415,7 +415,7 @@
                         },
                         {
                             "type":"Image",
-                            "props":{"y":1,"x":456,"var":"void_img","skin":"Game_Settlement/button.png","name":"void_img"},
+                            "props":{"y":1,"x":456,"var":"void_img","skin":"Game_Settlement/image_button.png","name":"void_img"},
                             "nodeParent":45,
                             "label":"Image(void_img)",
                             "isOpen":null,

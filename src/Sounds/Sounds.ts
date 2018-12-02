@@ -52,7 +52,7 @@ module Sounds {
         }
         /** 播放背景音乐 */
         public onBgMusic(): gameSounds {
-            SoundManager.setMusicVolume(0.3);
+            SoundManager.setMusicVolume(0.1);
             SoundManager.playMusic(this.bgMusicUrl, 0);
             return this;
         }

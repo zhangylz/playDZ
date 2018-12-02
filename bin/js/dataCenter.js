@@ -25,6 +25,11 @@ var dataCenter = (function () {
         this.fraction = 0;
         this.doObtain = 0;
     };
+    /** 接收数据并初始化 */
+    dataCenter.prototype.receive = function (res) {
+        console.log("测试接收数据");
+        console.log(res);
+    };
     return dataCenter;
 }());
 //# sourceMappingURL=dataCenter.js.map

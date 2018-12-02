@@ -190,7 +190,7 @@ declare const wx: {
     /**
      * 发起网络请求。
      */
-    request(object: { url: string, data: string | Object, header: Object, method: string, success: (res: any) => void, fail?: (res: any) => void, dataType?: string, complete?: (res: any) => void }): RequestTask;
+    request(object: { url: string, data: string | Object, header: Object, method: string, success: (res: any) => void, fail: (res: any) => void, dataType?: string, complete?: (res: any) => void }): RequestTask;
     /**
      * 创建一个 WebSocket 连接。最多同时存在 2 个 WebSocket 连接。
      */

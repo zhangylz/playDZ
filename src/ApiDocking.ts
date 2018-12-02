@@ -1,3 +1,15 @@
+/** 请求接口 */
+interface requestFace {
+    url: string,
+    data: string | Object,
+    header: Object,
+    method: string,
+    success: (res: any) => void,
+    fail?: (res: any) => void,
+    dataType?: string,
+    complete?: (res: any) => void
+}
+
 
 /** API对接 */
 class ApiDocking {
@@ -9,9 +21,14 @@ class ApiDocking {
     private userInfo;
     /** API接口地址 */
     private ApiUrl: string = "https://wdz.f11911f.cn/api/"
-    constructor() {
+    /** 游戏中控 */
+    public Game: Game;
+
+    constructor(game: Game) {
         this.wxLogin();
-    }
+        this.Game = game;
+    };
+
     /** 初始化登录获得数据 */
     public wxLogin(): ApiDocking {
         let that = this;
@@ -43,6 +60,7 @@ class ApiDocking {
                             if (!is_auth) {
                                 that.authLogin(is_auth);
                             } else {
+                                that.Game.gameHome.starGame.visible = true;
                                 that.getSign();
                             }
                         },
@@ -66,7 +84,7 @@ class ApiDocking {
     /**
      * 获取用户信息
      */
-    private getUser(): any {
+    public getUser(): any {
         let that = this;
         // 发起请求
         wx.request({
@@ -91,7 +109,6 @@ class ApiDocking {
             success(res) {
                 console.log("获取用户信息成功 结果    ↓↓↓↓↓↓");
                 console.log(res.data);
-                return res.data;
             },
             //获取用户信息失败
             fail(res) {
@@ -134,6 +151,7 @@ class ApiDocking {
     /** 获取每星期签到列表 */
     public getSign(): any {
         let that = this;
+
         wx.request({
             url: that.ApiUrl + "getSign",
             data: {
@@ -371,19 +389,20 @@ class ApiDocking {
             console.log("用户没有授权");
             // console.log(that.userToken);
             let wx_button = wx.createUserInfoButton({
-                type: "text",
-                text: "获取用户信息",
+                type: "image",
+                image: Laya.ResourceVersion.addVersionPrefix(this.Game.gameHome.starGame.skin),
                 style: {
-                    left: 10,
-                    top: 76,
+                    left: 100,
+                    top: 300,
                     width: 200,
                     height: 40,
-                    lineHeight: 40,
-                    backgroundColor: '#ff0000',
-                    color: '#ffffff',
+                    backgroundColor: '#ffffff',
+                    borderColor: '#ffffff',
+                    borderWidth: 0,
+                    borderRadius: 0,
                     textAlign: 'center',
-                    fontSize: 16,
-                    borderRadius: 4
+                    fontSize: 0,
+                    lineHeight: 1,
                 },
                 withCredentials: false,
                 lang: "zh_CN"
@@ -429,14 +448,3 @@ class ApiDocking {
     };
 }
 
-/** 请求接口 */
-interface requestFace {
-    url: string,
-    data: string | Object,
-    header: Object,
-    method: string,
-    success: (res: any) => void,
-    fail?: (res: any) => void,
-    dataType?: string,
-    complete?: (res: any) => void
-}

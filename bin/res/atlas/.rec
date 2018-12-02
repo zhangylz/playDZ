@@ -41,10 +41,10 @@ P AA802773 off.png
 P 409D7CDF single_4.png
 R 65DF3AEE window.png
 D Game_Settlement
-P B91B46F9 button.png
 P CC611F65 HBao.png
 P 74ED523A HBao_open.png
 P 557E3305 home.png
+P B91B46F9 image_button.png
 P B7CE0F1B image_rect.png
 R 89D4BA87 inWindow.png
 P 843D39A7 share.png
@@ -59,6 +59,7 @@ P 1DA20B9E image_addxcx.png
 P EDF1A7D8 image_ball.png
 P A0BA5B3E image_ballSkin.png
 P 4D7FD54A image_boot_prompt.png
+P F6C82181 image_button.png
 P 01704DF3 image_crown.png
 P 8AF93B98 image_do.png
 P A5C7961E image_fraction_dowm.png
@@ -75,7 +76,7 @@ P 228E042F image_tuiqian.png
 P 2A7A4CB0 music_off.png
 P 28A1B8DA music_on.png
 D HBao
-P F6C82181 buttom.png
+P F6C82181 image_button.png
 P 370E4E39 off.png
 R 67A197AE window.png
 D inGame
@@ -101,7 +102,7 @@ D ladder
 P EB34EDAD image_ball_red.png
 P 35834BC9 image_diamond.png
 P 02EC08F9 image_hongbaop.png
-R B470D296 image_ldder.png
+R B470D296 image_ladder.png
 P E0A9516C image_obstacle.png
 P FBE0B808 image_oval_black.png
 P DCACC863 image_oval_white.png

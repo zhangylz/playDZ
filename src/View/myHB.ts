@@ -1,5 +1,5 @@
 /** 我的红包 */
-class myHB extends ui.myHBUI {
+class myHB extends ui.myHbUI {
     /** 关闭按钮*/
     public close_button: Laya.Image;
     /** 提现按钮 */
