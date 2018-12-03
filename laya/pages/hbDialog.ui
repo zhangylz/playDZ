@@ -2,10 +2,10 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":1,
-    "selecteID":2,
-    "props":{"width":640,"sceneColor":"#000000","height":1164},
+    "selecteID":10,
+    "props":{"width":640,"var":"hbDialog","sceneColor":"#000000","name":"hbDialog","height":1164},
     "nodeParent":-1,
-    "label":"Dialog",
+    "label":"Dialog(hbDialog)",
     "isOpen":true,
     "isDirectory":true,
     "isAniNode":true,
@@ -15,31 +15,33 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":352,"width":536,"skin":"HBao/window.png","centerX":0.5},
+            "props":{"y":352,"width":536,"skin":"HBao/window.png","height":480,"centerX":0.5},
             "nodeParent":1,
             "label":"Image",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":2,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "props":{"y":320,"width":351,"var":"keepOnHbao","skin":"HBao/image_button.png","name":"keepOnHbao","centerX":0},
                     "nodeParent":2,
                     "label":"Image(keepOnHbao)",
-                    "isOpen":false,
+                    "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":4,
                     "child":[
                         {
+                            "x":45,
                             "type":"Label",
-                            "props":{"y":14,"text":"继续打开红包","fontSize":40,"font":"Microsoft YaHei","color":"#e51512","centerX":0.5,"bold":true},
+                            "props":{"y":14,"var":"prompt","name":"prompt","fontSize":40,"font":"Microsoft YaHei","color":"#e51512","centerX":0,"bold":true},
                             "nodeParent":4,
-                            "label":"Label",
+                            "label":"Label(prompt)",
                             "isDirectory":false,
                             "isAniNode":true,
                             "hasChild":false,
@@ -50,6 +52,7 @@
                     "$HIDDEN":false
                 },
                 {
+                    "x":30,
                     "type":"Image",
                     "props":{"y":45,"x":436,"width":40,"var":"button_close","skin":"HBao/off.png","name":"button_close","height":40},
                     "nodeParent":2,
@@ -62,8 +65,9 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Label",
-                    "props":{"y":110,"var":"getMoney","text":"￥0.5","name":"getMoney","fontSize":100,"font":"Arial","color":"#db4a2e","centerX":0,"bold":true},
+                    "props":{"y":110,"var":"getMoney","text":"￥0","name":"getMoney","fontSize":100,"font":"Arial","color":"#db4a2e","centerX":0,"bold":true},
                     "nodeParent":2,
                     "label":"Label(getMoney)",
                     "isDirectory":false,
@@ -74,6 +78,7 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Label",
                     "props":{"y":422,"var":"withdraw","underline":true,"text":"我要提现","name":"withdraw","fontSize":30,"font":"SimHei","color":"#e3d3d3","centerX":0,"bold":false,"alpha":0.8},
                     "nodeParent":2,
@@ -86,8 +91,9 @@
                         ]
                 },
                 {
+                    "x":30,
                     "type":"Label",
-                    "props":{"y":269,"x":154,"var":"deposit","text":"已存入我的红包","name":"deposit","fontSize":30,"font":"Microsoft YaHei","color":"#fff3da","centerX":0.5,"bold":false,"alpha":0.8},
+                    "props":{"y":269,"var":"deposit","text":"已存入我的红包","name":"deposit","fontSize":30,"font":"Microsoft YaHei","color":"#fff3da","centerX":0,"bold":false,"alpha":0.8},
                     "nodeParent":2,
                     "label":"Label(deposit)",
                     "isDirectory":false,

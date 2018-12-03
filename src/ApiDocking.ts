@@ -16,8 +16,14 @@ interface res_Data {
     "share": Array<any>,
     "token": string,
     "user": userData
-}
+};
 
+/** 签到返回的数据 */
+interface sgin_Data {
+    "status": string,
+    "code": number,
+    "data": {}
+}
 
 /** API对接 */
 class ApiDocking {
@@ -76,6 +82,7 @@ class ApiDocking {
                                     console.log("保存数据用户成功，开始同步数据");
                                     that.Game.dataCenter.sytsData();
                                     that.Game.gameHome.synchronousData();
+                                    
 
                                 });
                             };
@@ -170,9 +177,8 @@ class ApiDocking {
     };
 
     /** 获取每星期签到列表 */
-    public getSign(): any {
+    public getSign(): ApiDocking {
         let that = this;
-
         wx.request({
             url: that.ApiUrl + "getSign",
             data: {
@@ -188,13 +194,15 @@ class ApiDocking {
             success(res) {
                 console.log("获取每星期签到列表成功 结果 ↓↓↓↓↓↓");
                 console.log(res.data);
-                return res.data;
+                // return res.data;
+                that.Game.gameHome.dailyGift.sysData(res.data.data);
             },
             fail(res) {
                 console.log("获取每星期签到列表失败");
                 console.log(res);
             }
         });
+        return this;
     };
 
     /** 添加签到 */

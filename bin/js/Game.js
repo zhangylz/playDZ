@@ -80,7 +80,7 @@ var Game = (function () {
         Laya.stage.off(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
         this.VX = null;
     };
-    //监听鼠标移动
+    /** 监听鼠标移动 */
     Game.prototype.mouseMove = function () {
         var addX = Laya.stage.mouseX - this.VX;
         this.ball.x += addX;

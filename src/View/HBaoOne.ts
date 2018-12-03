@@ -28,10 +28,8 @@ class HBaoOne extends ui.HBaoOneUI {
     }
 
     /** 打开红包 */
-    public openHB(): Promise<any> {
-        return new Promise((res) => {
-            res();
-        });
+    public openHB(): void {
+        console.log("打开红包");
     }
 
     //添加滤镜

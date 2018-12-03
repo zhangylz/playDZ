@@ -11,7 +11,7 @@ class GameHome extends ui.gameHomeUI {
     /** 我的红包 */
     public myHB: myHB = new myHB();
     /** 每日奖励 */
-    public dailyGift = new dailyGift();
+    public dailyGift: dailyGift;
     /** 最大分数 */
     public bigFraction: Laya.Label;
     /** 砖石数量 */
@@ -60,7 +60,7 @@ class GameHome extends ui.gameHomeUI {
         this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.changeSkin);   //球皮肤事件
         this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm);           //好友排行
         this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);      //添加钻石
-        // this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest);          //开始游戏
+        this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest);          //开始游戏
         this.starGame.on(Laya.Event.MOUSE_DOWN, this, this.startTest);
     };
 
@@ -105,13 +105,20 @@ class GameHome extends ui.gameHomeUI {
     private musicOFF(): void {
         console.log("关闭音乐🎵");
         let that = this;
-        that.Game.ApiDocking.getUser();
+        let oneHbao = new HBaoOne(this.Game);
     };
 
     /** 每日奖励 */
-    public openDailyGift(): GameHome {
+    public openDailyGift(): Promise<any> {
+        this.dailyGift = new dailyGift();
         this.dailyGift.popup();
-        return this;
+
+        /** 获得签到列表 */
+        this.Game.ApiDocking.getSign();
+
+        return new Promise((res) => {
+            console.log("test   openDailyGift");
+        });
     };
 
     /** 我的红包 */
@@ -121,10 +128,7 @@ class GameHome extends ui.gameHomeUI {
 
     /** 开始游戏 */
     public startTest(): void {
-        let VX = Laya.stage.mouseX
-        this.Game.startGame(VX);
-        this.visible = false;
-        console.log("start game gameHome " + VX);
+        console.log("测试一下，回调完成就关闭")
     };
 
     /** 同步数据 */
@@ -134,6 +138,9 @@ class GameHome extends ui.gameHomeUI {
         this.bigFraction.text = String(this.dataCenter.maxFraction);
         this.hb_money.text = String(this.dataCenter.balance);
         console.log("game home sysData ok!");
+        if (this.startBox.visible) {
+            this.startBox.visible = false;
+        }
         return this;
     };
 

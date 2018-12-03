@@ -124,9 +124,10 @@ var gameOver = (function (_super) {
         this.fraction.text = String(this.dataCenter.fraction);
         this.do_n.text = String(this.dataCenter.doObtain);
         //  同步最高分
-        if (this.dataCenter.fraction > this.dataCenter.bigFraction) {
-            this.dataCenter.bigFraction = this.dataCenter.fraction;
+        if (this.dataCenter.fraction > this.dataCenter.maxFraction) {
+            this.dataCenter.maxFraction = this.dataCenter.fraction;
         }
+        ;
         return this;
     };
     return gameOver;

@@ -6,11 +6,12 @@ var __extends = (this && this.__extends) || function (d, b) {
 /** 红包一个 */
 var HBaoOne = (function (_super) {
     __extends(HBaoOne, _super);
-    function HBaoOne() {
+    function HBaoOne(game) {
         var _this = _super.call(this) || this;
         /** 领取按钮效果 */
         _this.buttonTimeLine = new Laya.TimeLine();
         _this.init();
+        _this.Game = game;
         return _this;
     }
     /** 初始化 */
@@ -27,8 +28,7 @@ var HBaoOne = (function (_super) {
     };
     /** 打开红包 */
     HBaoOne.prototype.openHB = function () {
-        console.log("open HBao $$$");
-        return this;
+        console.log("打开红包");
     };
     //添加滤镜
     HBaoOne.prototype.applayFilter = function () {

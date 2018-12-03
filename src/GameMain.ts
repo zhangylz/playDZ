@@ -14,7 +14,8 @@ class GameMain {
         , { url: "res/atlas/everyDay.atlas", type: Laya.Loader.ATLAS }
         , { url: "res/atlas/player.atlas", type: Laya.Loader.ATLAS }
         , { url: "res/atlas/ball_skin.atlas", type: Laya.Loader.ATLAS }
-        , { url: "res/atlas/Hbao.atlas", type: Laya.Loader.ATLAS }
+        , { url: "res/atlas/HBao.atlas", type: Laya.Loader.ATLAS }
+        , { url: "res/atlas/one_HBao.atlas", type: Laya.Loader.ATLAS }
         /** 音频文件 */
         , { url: "res/sounds/ballSounds.mp3", type: Laya.Loader.SOUND }
         , { url: "res/sounds/bgMusic.mp3", type: Laya.Loader.SOUND }

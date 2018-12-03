@@ -1,4 +1,5 @@
 ;
+;
 /** API对接 */
 var ApiDocking = (function () {
     function ApiDocking(game) {
@@ -159,13 +160,15 @@ var ApiDocking = (function () {
             success: function (res) {
                 console.log("获取每星期签到列表成功 结果 ↓↓↓↓↓↓");
                 console.log(res.data);
-                return res.data;
+                // return res.data;
+                that.Game.gameHome.dailyGift.sysData(res.data.data);
             },
             fail: function (res) {
                 console.log("获取每星期签到列表失败");
                 console.log(res);
             }
         });
+        return this;
     };
     ;
     /** 添加签到 */

@@ -21,14 +21,13 @@ var GameHome = (function (_super) {
         _this.inviteGift = new inviteGift();
         /** 我的红包 */
         _this.myHB = new myHB();
-        /** 每日奖励 */
-        _this.dailyGift = new dailyGift();
         // 初始化
         _this.Game = game;
         _this.dataCenter = dataCenter;
         _this.init();
         return _this;
     }
+    ;
     /**
      * 初始化
      */
@@ -53,9 +52,10 @@ var GameHome = (function (_super) {
         this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.changeSkin); //球皮肤事件
         this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //好友排行
         this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun); //添加钻石
-        // this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest);          //开始游戏
+        this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest); //开始游戏
         this.starGame.on(Laya.Event.MOUSE_DOWN, this, this.startTest);
     };
+    ;
     /**
      * 鼠标点击绑定出发的事件
      * @param e
@@ -63,6 +63,7 @@ var GameHome = (function (_super) {
     GameHome.prototype.mouseDowm = function (e) {
         console.log("测试测试");
     };
+    ;
     /**
      * 时间线的指示动画,左右滑动控制球
      */
@@ -72,6 +73,7 @@ var GameHome = (function (_super) {
         // 播放滑动动画并循环
         this.timerLine.play(0, true);
     };
+    ;
     /** 邀请有礼点击事件 */
     GameHome.prototype.inviteFun = function (e) {
         //判断是否显示 否就显示
@@ -80,6 +82,7 @@ var GameHome = (function (_super) {
         }
         return this;
     };
+    ;
     /** 玩法介绍 */
     GameHome.prototype.playJieShao = function () {
         // 判断是否显示 否就显示
@@ -87,28 +90,35 @@ var GameHome = (function (_super) {
             this.playDialog.popup();
         }
     };
+    ;
     /** 关闭音乐 */
     GameHome.prototype.musicOFF = function () {
         console.log("关闭音乐🎵");
         var that = this;
-        that.Game.ApiDocking.getUser();
+        var oneHbao = new HBaoOne(this.Game);
     };
+    ;
     /** 每日奖励 */
     GameHome.prototype.openDailyGift = function () {
+        this.dailyGift = new dailyGift();
         this.dailyGift.popup();
-        return this;
+        /** 获得签到列表 */
+        this.Game.ApiDocking.getSign();
+        return new Promise(function (res) {
+            console.log("test   openDailyGift");
+        });
     };
+    ;
     /** 我的红包 */
     GameHome.prototype.myHBao = function () {
         this.myHB.updateMoney(this.dataCenter.balance).popup();
     };
+    ;
     /** 开始游戏 */
     GameHome.prototype.startTest = function () {
-        var VX = Laya.stage.mouseX;
-        this.Game.startGame(VX);
-        this.visible = false;
-        console.log("start game gameHome " + VX);
+        console.log("测试一下，回调完成就关闭");
     };
+    ;
     /** 同步数据 */
     GameHome.prototype.synchronousData = function () {
         // 同步数据数据
@@ -116,12 +126,17 @@ var GameHome = (function (_super) {
         this.bigFraction.text = String(this.dataCenter.maxFraction);
         this.hb_money.text = String(this.dataCenter.balance);
         console.log("game home sysData ok!");
+        if (this.startBox.visible) {
+            this.startBox.visible = false;
+        }
         return this;
     };
+    ;
     /** 换皮肤 */
     GameHome.prototype.changeSkin = function () {
         this.ballSkinView.visible = true;
     };
+    ;
     return GameHome;
 }(ui.gameHomeUI));
 //# sourceMappingURL=GameHome.js.map
