@@ -179,6 +179,6 @@ class spriteCollision {
         // console.log("调用红包\t▲▲▲▲▲▲▲▲▲▲▲\t" + this.dataCenter.hbNumber);
         return this;
     }
-
+  
 }
 

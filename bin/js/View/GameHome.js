@@ -90,8 +90,8 @@ var GameHome = (function (_super) {
     /** 关闭音乐 */
     GameHome.prototype.musicOFF = function () {
         console.log("关闭音乐🎵");
-        this.Game.ApiDocking.getUser();
-        return this;
+        var that = this;
+        that.Game.ApiDocking.getUser();
     };
     /** 每日奖励 */
     GameHome.prototype.openDailyGift = function () {
@@ -100,7 +100,7 @@ var GameHome = (function (_super) {
     };
     /** 我的红包 */
     GameHome.prototype.myHBao = function () {
-        this.myHB.popup();
+        this.myHB.updateMoney(this.dataCenter.balance).popup();
     };
     /** 开始游戏 */
     GameHome.prototype.startTest = function () {
@@ -113,9 +113,9 @@ var GameHome = (function (_super) {
     GameHome.prototype.synchronousData = function () {
         // 同步数据数据
         this.doNumber.text = String(this.dataCenter.doNumber);
-        this.bigFraction.text = String(this.dataCenter.bigFraction);
-        // 设置居中
-        this.box_fraction.getBounds();
+        this.bigFraction.text = String(this.dataCenter.maxFraction);
+        this.hb_money.text = String(this.dataCenter.balance);
+        console.log("game home sysData ok!");
         return this;
     };
     /** 换皮肤 */

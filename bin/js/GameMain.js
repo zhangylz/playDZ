@@ -25,6 +25,10 @@ var GameMain = (function () {
             { url: "everyDay/window.png", type: Laya.Loader.IMAGE },
             { url: "Game_Settlement/inWindow.png", type: Laya.Loader.IMAGE },
             { url: "Game_Settlement/window.png", type: Laya.Loader.IMAGE },
+            { url: "HBao/window.png", type: Laya.Loader.IMAGE },
+            { url: "invite_gift/dotted_line.png", type: Laya.Loader.IMAGE },
+            { url: "invite_gift/in_view.png", type: Laya.Loader.IMAGE },
+            { url: "invite_gift/window.png", type: Laya.Loader.IMAGE },
             { url: "ladder/image_ladder.png", type: Laya.Loader.IMAGE },
             { url: "myHbao/myHBao.png", type: Laya.Loader.IMAGE },
             { url: "one_Hbao/window.png", type: Laya.Loader.IMAGE },
@@ -63,7 +67,7 @@ var GameMain = (function () {
     GameMain.prototype.onAssetsLoaded = function () {
         console.log("加载完成 $$$$$$$ 开始游戏");
         // 摧毁进度
-        this.Progres.destroy();
+        this.Progres.visible = false;
         this.playDZ = new Game();
     };
     return GameMain;

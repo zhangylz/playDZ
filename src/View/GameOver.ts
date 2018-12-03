@@ -56,7 +56,7 @@ class gameOver extends ui.gameOverUI {
         let HbOpenes: Array<Laya.Image> = this.HB_opeb_box._childs;
         let getMoney: number = 5;
         Hbao.visible = false;
-        let monet = Math.random()*5;
+        let monet = Math.random() * 5;
         moneyAarr[n].text = "￥ " + monet.toFixed(2);
         HbOpenes[n].visible = true;
         console.log(" is OKer! \t" + n);
@@ -83,6 +83,8 @@ class gameOver extends ui.gameOverUI {
         this.Game.inGameView.reset();
         this.Game.gameReset();
         this.Game.monitorMouse();
+        // 获取用户信息并刷新
+        this.Game.ApiDocking.getUser();
         console.log("goBreak Game Home");
     }
 
@@ -133,9 +135,9 @@ class gameOver extends ui.gameOverUI {
         this.fraction.text = String(this.dataCenter.fraction);
         this.do_n.text = String(this.dataCenter.doObtain);
         //  同步最高分
-        if (this.dataCenter.fraction > this.dataCenter.bigFraction) {
-            this.dataCenter.bigFraction = this.dataCenter.fraction;
-        }
+        if (this.dataCenter.fraction > this.dataCenter.maxFraction) {
+            this.dataCenter.maxFraction = this.dataCenter.fraction;
+        };
         return this;
     }
 }

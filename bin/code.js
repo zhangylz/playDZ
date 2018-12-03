@@ -54263,8 +54263,11 @@ var Game = (function () {
         console.log("Game Over!");
         // 显示死亡弹窗
         this.gameOverDia.Opened().show();
+        /** 上传获得的砖石数量 */
+        this.ApiDocking.setGold(this.dataCenter.doObtain);
+        /** 上传分数 */
+        this.ApiDocking.ScoreUpload(this.dataCenter.fraction);
         //关闭音乐
-        // this.offBgMusic();
         this.gameSound.goSounds();
         return this;
     };
@@ -54294,18 +54297,16 @@ var Game = (function () {
     };
     return Game;
 }());
-// 开始游戏
-// new Game(); 
 //# sourceMappingURL=Game.js.map
 /** 数据中心 */
 var dataCenter = (function () {
     function dataCenter() {
         /** 砖石总数量 */
-        this.doNumber = 1;
+        this.doNumber = 0;
         /** 局内获得钻石 */
         this.doObtain = 0;
         /** 最高分 */
-        this.bigFraction = 0;
+        this.maxFraction = 0;
         /** 分数 */
         this.fraction = 0;
         /** 余额 */
@@ -54314,24 +54315,43 @@ var dataCenter = (function () {
         this.hbNumber = 0;
         this.init();
     }
+    ;
     /**初始化 */
     dataCenter.prototype.init = function () {
-        console.log(new Date());
+        console.log("API初始化" + new Date());
     };
+    ;
     /** 局内数据初始化 */
     dataCenter.prototype.dataRest = function () {
         this.hbNumber = 0;
         this.fraction = 0;
         this.doObtain = 0;
     };
-    /** 接收数据并初始化 */
-    dataCenter.prototype.receive = function (res) {
+    ;
+    /** 接收数据并初始化
+     * @param userData 用户数据
+     */
+    dataCenter.prototype.receive = function (userData) {
+        this.userData = userData;
         console.log("测试接收数据");
-        console.log(res);
+        console.log(userData);
+        return new Promise(function (fun) {
+            fun();
+        });
     };
+    ;
+    /** 同步数据 */
+    dataCenter.prototype.sytsData = function () {
+        this.maxFraction = this.userData.max_score;
+        this.doNumber = this.userData.gold;
+        this.balance = 19.8;
+    };
+    ;
     return dataCenter;
 }());
+;
 //# sourceMappingURL=dataCenter.js.map
+;
 /** API对接 */
 var ApiDocking = (function () {
     function ApiDocking(game) {
@@ -54366,7 +54386,8 @@ var ApiDocking = (function () {
                         success: function (res) {
                             that.userData = res.data;
                             that.userToken = res.data.data.token;
-                            console.log("成功 结果  ↓↓↓↓↓↓");
+                            that.Game.dataCenter.token = res.data.data.token;
+                            console.log("wx.login 成功 结果  ↓↓↓↓↓↓");
                             console.log(that.userData.data);
                             var is_auth = res.data.data.user.is_auth;
                             if (!is_auth) {
@@ -54374,8 +54395,15 @@ var ApiDocking = (function () {
                             }
                             else {
                                 that.Game.gameHome.starGame.visible = true;
-                                that.getSign();
+                                that.Game.dataCenter.receive(that.userData.data.user).then(function () {
+                                    console.log("成功保存好数据 查看数据中心的数据  ↓↓↓↓↓↓");
+                                    console.log(that.Game.dataCenter.userData);
+                                    console.log("保存数据用户成功，开始同步数据");
+                                    that.Game.dataCenter.sytsData();
+                                    that.Game.gameHome.synchronousData();
+                                });
                             }
+                            ;
                         },
                         fail: function (res) {
                             console.log("微信请求失败");
@@ -54423,10 +54451,14 @@ var ApiDocking = (function () {
             success: function (res) {
                 console.log("获取用户信息成功 结果    ↓↓↓↓↓↓");
                 console.log(res.data);
+                that.Game.dataCenter.receive(res.data.data.user).then(function () {
+                    console.log("保存数据用户成功，开始同步数据");
+                    that.Game.dataCenter.sytsData();
+                    that.Game.gameHome.synchronousData();
+                });
             },
             //获取用户信息失败
             fail: function (res) {
-                console.log(res.data);
                 console.log(res);
             }
         });
@@ -54744,6 +54776,7 @@ var ApiDocking = (function () {
                         // this.wx_button.hide();
                     },
                     fail: function (res) {
+                        console.log("用户数据保存失败");
                     }
                 });
             });
@@ -54751,7 +54784,8 @@ var ApiDocking = (function () {
         else {
             console.log("用户已经授权");
         }
-        return this;
+        ;
+        // return this;
     };
     ;
     return ApiDocking;
@@ -55306,7 +55340,7 @@ var ui;
         };
         return gameHomeUI;
     }(View));
-    gameHomeUI.uiView = { "type": "View", "props": { "x": 0, "width": 640, "name": "gamehome", "height": 1136 }, "child": [{ "type": "Box", "props": { "y": 0, "x": 0, "var": "startBox", "top": 0, "right": 0, "name": "srartBox", "left": 0, "bottom": 0 } }, { "type": "Image", "props": { "width": 150, "var": "right_frame", "skin": "gameHome/Icon_box_rigth.png", "right": 0, "name": "right_frame", "height": 450, "centerY": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "width": 100, "var": "my_hb", "skin": "gameHome/image_myhb.png", "name": "my_hb", "height": 100, "centerX": 0 }, "child": [{ "type": "Label", "props": { "var": "hb_money", "text": "0", "name": "hb_money", "fontSize": 20, "color": "#f8e4e4", "centerY": 0, "centerX": 3, "bold": true } }] }, { "type": "Image", "props": { "y": 170, "width": 100, "var": "reward", "skin": "gameHome/image_reward.png", "name": "reward", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 320, "width": 100, "var": "tuiqian", "skin": "gameHome/image_tuiqian.png", "name": "tuiqian", "height": 100, "centerX": 0 } }] }, { "type": "Image", "props": { "width": 150, "var": "left_frame", "skin": "gameHome/Icon_box_left.png", "name": "left_frame", "left": 0, "height": 450, "centerY": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "width": 100, "var": "music_off", "skin": "gameHome/music_off.png", "name": "music_off", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 170, "width": 100, "var": "invite", "skin": "gameHome/image_invite.png", "name": "invite", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 320, "width": 100, "var": "jieshao", "skin": "gameHome/image_jieshao.png", "name": "jieshao", "height": 100, "centerX": 0 } }] }, { "type": "Image", "props": { "var": "add_xcx", "top": 38, "skin": "gameHome/image_addxcx.png", "right": 0, "name": "add_xcx" } }, { "type": "Image", "props": { "y": 84, "width": 460, "var": "logo", "skin": "gameHome/image_game_log.png", "name": "logo", "height": 205, "centerX": 0 } }, { "type": "Image", "props": { "y": 850, "x": 471, "width": 169, "var": "ranking", "skin": "gameHome/image_Leaderboard.png", "right": 0, "name": "ranking" }, "child": [{ "type": "Image", "props": { "y": 41, "skin": "gameHome/image_paihang.png", "centerX": 0 } }, { "type": "Text", "props": { "y": 122, "x": 23, "text": "好友排行", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 850, "x": 0, "width": 169, "var": "changeBallSkin", "skin": "gameHome/image_ballSkin.png", "name": "changeBallSkin", "left": 0 }, "child": [{ "type": "Image", "props": { "y": 42, "skin": "gameHome/image_ball.png", "scaleY": 1, "scaleX": 1, "centerX": 0 } }, { "type": "Text", "props": { "y": 122, "x": 23, "text": "更换皮肤", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Box", "props": { "var": "prompt_box", "name": "prompt_box", "centerX": 0, "bottom": 0 }, "child": [{ "type": "Image", "props": { "var": "boot_prompt", "skin": "gameHome/image_boot_prompt.png", "name": "boot_prompt", "alpha": 0.8 } }, { "type": "Image", "props": { "x": 50, "var": "guide", "skin": "gameHome/image_guide.png", "name": "guide", "alpha": 0.8 } }] }, { "type": "HBox", "props": { "y": 270, "var": "box_fraction", "space": 20, "name": "box_fraction", "centerX": 0, "align": "middle" }, "child": [{ "type": "Image", "props": { "x": 0, "width": 50, "var": "crown", "skin": "gameHome/image_crown.png", "name": "crown", "height": 50, "centerY": 0 } }, { "type": "Label", "props": { "x": 70, "var": "bigFraction", "text": "0", "name": "bigFraction", "fontSize": 60, "font": "Arial", "color": "#2d71d6", "centerY": 0, "bold": true } }] }, { "type": "HBox", "props": { "y": 20, "x": 20, "var": "box_do", "space": 30, "name": "box_do", "align": "middle" }, "child": [{ "type": "Image", "props": { "var": "diamond", "skin": "gameHome/image_do.png", "name": "diamond" } }, { "type": "Image", "props": { "y": 7, "x": 126, "var": "button_doAdd", "skin": "gameHome/add_do.png", "name": "button_doAdd" } }, { "type": "Label", "props": { "y": 0, "x": 78, "var": "doNumber", "text": "0", "name": "doNumber", "fontSize": 50, "font": "SimHei", "color": "#2d71d6", "bold": true } }] }, { "type": "Image", "props": { "y": 765, "width": 352, "visible": false, "var": "starGame", "skin": "gameHome/image_button.png", "name": "starGame", "height": 104, "centerX": 0 }, "child": [{ "type": "Label", "props": { "text": "开始游戏", "fontSize": 50, "font": "Arial", "color": "#ff0400", "centerY": -13, "centerX": 0, "bold": true } }] }] };
+    gameHomeUI.uiView = { "type": "View", "props": { "x": 0, "width": 640, "name": "gamehome", "height": 1136 }, "child": [{ "type": "Box", "props": { "y": 0, "x": 0, "visible": false, "var": "startBox", "top": 0, "right": 0, "name": "srartBox", "left": 0, "bottom": 0 } }, { "type": "Image", "props": { "width": 150, "var": "right_frame", "skin": "gameHome/Icon_box_rigth.png", "right": 0, "name": "right_frame", "height": 450, "centerY": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "width": 100, "var": "my_hb", "skin": "gameHome/image_myhb.png", "name": "my_hb", "height": 100, "centerX": 0 }, "child": [{ "type": "Label", "props": { "var": "hb_money", "text": "0", "name": "hb_money", "fontSize": 20, "color": "#f8e4e4", "centerY": 0, "centerX": 3, "bold": true } }] }, { "type": "Image", "props": { "y": 170, "width": 100, "var": "reward", "skin": "gameHome/image_reward.png", "name": "reward", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 320, "width": 100, "var": "tuiqian", "skin": "gameHome/image_tuiqian.png", "name": "tuiqian", "height": 100, "centerX": 0 } }] }, { "type": "Image", "props": { "width": 150, "var": "left_frame", "skin": "gameHome/Icon_box_left.png", "name": "left_frame", "left": 0, "height": 450, "centerY": 0 }, "child": [{ "type": "Image", "props": { "y": 20, "width": 100, "var": "music_off", "skin": "gameHome/music_off.png", "name": "music_off", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 170, "width": 100, "var": "invite", "skin": "gameHome/image_invite.png", "name": "invite", "height": 100, "centerX": 0 } }, { "type": "Image", "props": { "y": 320, "width": 100, "var": "jieshao", "skin": "gameHome/image_jieshao.png", "name": "jieshao", "height": 100, "centerX": 0 } }] }, { "type": "Image", "props": { "var": "add_xcx", "top": 38, "skin": "gameHome/image_addxcx.png", "right": 0, "name": "add_xcx" } }, { "type": "Image", "props": { "y": 84, "width": 460, "var": "logo", "skin": "gameHome/image_game_log.png", "name": "logo", "height": 205, "centerX": 0 } }, { "type": "Image", "props": { "y": 850, "x": 471, "width": 169, "var": "ranking", "skin": "gameHome/image_Leaderboard.png", "right": 0, "name": "ranking" }, "child": [{ "type": "Image", "props": { "y": 41, "skin": "gameHome/image_paihang.png", "centerX": 0 } }, { "type": "Text", "props": { "y": 122, "x": 23, "text": "好友排行", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Image", "props": { "y": 850, "x": 0, "width": 169, "var": "changeBallSkin", "skin": "gameHome/image_ballSkin.png", "name": "changeBallSkin", "left": 0 }, "child": [{ "type": "Image", "props": { "y": 42, "skin": "gameHome/image_ball.png", "scaleY": 1, "scaleX": 1, "centerX": 0 } }, { "type": "Text", "props": { "y": 122, "x": 23, "text": "更换皮肤", "fontSize": 30, "font": "Arial", "color": "#ffffff", "bold": true, "align": "center" } }] }, { "type": "Box", "props": { "var": "prompt_box", "name": "prompt_box", "centerX": 0, "bottom": 0 }, "child": [{ "type": "Image", "props": { "var": "boot_prompt", "skin": "gameHome/image_boot_prompt.png", "name": "boot_prompt", "alpha": 0.8 } }, { "type": "Image", "props": { "x": 50, "var": "guide", "skin": "gameHome/image_guide.png", "name": "guide", "alpha": 0.8 } }] }, { "type": "HBox", "props": { "y": 270, "var": "box_fraction", "space": 20, "name": "box_fraction", "centerX": 0, "align": "middle" }, "child": [{ "type": "Image", "props": { "x": 0, "width": 50, "var": "crown", "skin": "gameHome/image_crown.png", "name": "crown", "height": 50, "centerY": 0 } }, { "type": "Label", "props": { "var": "bigFraction", "text": "0", "name": "bigFraction", "fontSize": 60, "font": "SimHei", "color": "#2d71d6", "centerY": 0, "bold": true } }] }, { "type": "HBox", "props": { "y": 20, "x": 20, "var": "box_do", "space": 30, "name": "box_do", "align": "middle" }, "child": [{ "type": "Image", "props": { "var": "diamond", "skin": "gameHome/image_do.png", "name": "diamond" } }, { "type": "Image", "props": { "y": 7, "x": 126, "var": "button_doAdd", "skin": "gameHome/add_do.png", "name": "button_doAdd" } }, { "type": "Label", "props": { "y": 0, "x": 78, "var": "doNumber", "text": "0", "name": "doNumber", "fontSize": 50, "font": "SimHei", "color": "#2d71d6", "bold": true } }] }, { "type": "Image", "props": { "y": 765, "width": 352, "visible": false, "var": "starGame", "skin": "gameHome/image_button.png", "scaleY": 0.9, "scaleX": 0.9, "name": "starGame", "height": 104, "centerX": 0 }, "child": [{ "type": "Label", "props": { "text": "开始游戏", "fontSize": 50, "font": "Arial", "color": "#ff0400", "centerY": -13, "centerX": 0, "bold": true } }] }] };
     ui.gameHomeUI = gameHomeUI;
 })(ui || (ui = {}));
 (function (ui) {
@@ -55651,8 +55685,8 @@ var GameHome = (function (_super) {
     /** 关闭音乐 */
     GameHome.prototype.musicOFF = function () {
         console.log("关闭音乐🎵");
-        this.Game.ApiDocking.getUser();
-        return this;
+        var that = this;
+        that.Game.ApiDocking.getUser();
     };
     /** 每日奖励 */
     GameHome.prototype.openDailyGift = function () {
@@ -55674,9 +55708,9 @@ var GameHome = (function (_super) {
     GameHome.prototype.synchronousData = function () {
         // 同步数据数据
         this.doNumber.text = String(this.dataCenter.doNumber);
-        this.bigFraction.text = String(this.dataCenter.bigFraction);
-        // 设置居中
-        this.box_fraction.getBounds();
+        this.bigFraction.text = String(this.dataCenter.maxFraction);
+        this.hb_money.text = String(this.dataCenter.balance);
+        console.log("game home sysData ok!");
         return this;
     };
     /** 换皮肤 */
@@ -55762,6 +55796,8 @@ var gameOver = (function (_super) {
         this.Game.inGameView.reset();
         this.Game.gameReset();
         this.Game.monitorMouse();
+        // 获取用户信息并刷新
+        this.Game.ApiDocking.getUser();
         console.log("goBreak Game Home");
     };
     /** 分享复活 */
@@ -56108,6 +56144,10 @@ var GameMain = (function () {
             { url: "everyDay/window.png", type: Laya.Loader.IMAGE },
             { url: "Game_Settlement/inWindow.png", type: Laya.Loader.IMAGE },
             { url: "Game_Settlement/window.png", type: Laya.Loader.IMAGE },
+            { url: "HBao/window.png", type: Laya.Loader.IMAGE },
+            { url: "invite_gift/dotted_line.png", type: Laya.Loader.IMAGE },
+            { url: "invite_gift/in_view.png", type: Laya.Loader.IMAGE },
+            { url: "invite_gift/window.png", type: Laya.Loader.IMAGE },
             { url: "ladder/image_ladder.png", type: Laya.Loader.IMAGE },
             { url: "myHbao/myHBao.png", type: Laya.Loader.IMAGE },
             { url: "one_Hbao/window.png", type: Laya.Loader.IMAGE },
@@ -56146,7 +56186,7 @@ var GameMain = (function () {
     GameMain.prototype.onAssetsLoaded = function () {
         console.log("加载完成 $$$$$$$ 开始游戏");
         // 摧毁进度
-        this.Progres.destroy();
+        this.Progres.visible = false;
         this.playDZ = new Game();
     };
     return GameMain;

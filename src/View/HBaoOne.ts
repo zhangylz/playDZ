@@ -6,9 +6,13 @@ class HBaoOne extends ui.HBaoOneUI {
     public button_close: Laya.Image;
     /** 领取按钮效果 */
     public buttonTimeLine: Laya.TimeLine = new Laya.TimeLine();
-    constructor() {
+    /** 游戏中控 */
+    public Game: Game;
+
+    constructor(game: Game) {
         super();
-        this.init()
+        this.init();
+        this.Game = game;
     }
     /** 初始化 */
     public init(): void {
@@ -16,17 +20,18 @@ class HBaoOne extends ui.HBaoOneUI {
         this.popupEffect = null;
         this.button_receive.on(Laya.Event.MOUSE_DOWN, this, this.openHB);
         this.button_close.on(Laya.Event.MOUSE_DOWN, this, this.close);
-        this.buttonTimeLine.addLabel("big", 0).to(this.button_receive, { scaleX: 1.5, scaleY: 1.5}, 200, null, 0)
-            .addLabel("small", 0).to(this.button_receive, { scaleX: 1.2, scaleY: 1.2}, 500, null, 0);
+        this.buttonTimeLine.addLabel("big", 0).to(this.button_receive, { scaleX: 1.5, scaleY: 1.5 }, 200, null, 0)
+            .addLabel("small", 0).to(this.button_receive, { scaleX: 1.2, scaleY: 1.2 }, 500, null, 0);
         // 循环播放
         this.buttonTimeLine.play(0, true);
         this.applayFilter();
     }
 
     /** 打开红包 */
-    public openHB(): HBaoOne {
-        console.log("open HBao $$$");
-        return this;
+    public openHB(): Promise<any> {
+        return new Promise((res) => {
+            res();
+        });
     }
 
     //添加滤镜

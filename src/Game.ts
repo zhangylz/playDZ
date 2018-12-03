@@ -100,7 +100,7 @@ class Game {
         this.VX = null;
     }
 
-    //监听鼠标移动
+    /** 监听鼠标移动 */
     private mouseMove(): void {
         let addX = Laya.stage.mouseX - this.VX;
         this.ball.x += addX;
@@ -143,8 +143,11 @@ class Game {
         console.log("Game Over!");
         // 显示死亡弹窗
         this.gameOverDia.Opened().show();
+        /** 上传获得的砖石数量 */
+        this.ApiDocking.setGold(this.dataCenter.doObtain);
+        /** 上传分数 */
+        this.ApiDocking.ScoreUpload(this.dataCenter.fraction);
         //关闭音乐
-        // this.offBgMusic();
         this.gameSound.goSounds();
         return this;
     }
@@ -177,6 +180,3 @@ class Game {
     }
 
 }
-
-// 开始游戏
-// new Game();

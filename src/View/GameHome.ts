@@ -35,7 +35,7 @@ class GameHome extends ui.gameHomeUI {
         this.Game = game;
         this.dataCenter = dataCenter;
         this.init();
-    }
+    };
     /**
      * 初始化
      */
@@ -62,7 +62,7 @@ class GameHome extends ui.gameHomeUI {
         this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun);      //添加钻石
         // this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest);          //开始游戏
         this.starGame.on(Laya.Event.MOUSE_DOWN, this, this.startTest);
-    }
+    };
 
 
 
@@ -72,7 +72,7 @@ class GameHome extends ui.gameHomeUI {
      */
     private mouseDowm(e: Laya.Event): void {
         console.log("测试测试");
-    }
+    };
 
     /**
      * 时间线的指示动画,左右滑动控制球
@@ -82,7 +82,7 @@ class GameHome extends ui.gameHomeUI {
             .addLabel("left", 0).to(this.guide, { x: 50, y: this.boot_prompt.y }, 1500, null, 0);
         // 播放滑动动画并循环
         this.timerLine.play(0, true);
-    }
+    };
 
     /** 邀请有礼点击事件 */
     private inviteFun(e: Laya.Event): GameHome {
@@ -91,7 +91,7 @@ class GameHome extends ui.gameHomeUI {
             this.inviteGift.popup();
         }
         return this;
-    }
+    };
 
     /** 玩法介绍 */
     private playJieShao(): void {
@@ -99,25 +99,25 @@ class GameHome extends ui.gameHomeUI {
         if (this.playDialog.isPopup != true) {
             this.playDialog.popup();
         }
-    }
+    };
 
     /** 关闭音乐 */
-    private musicOFF(): GameHome {
+    private musicOFF(): void {
         console.log("关闭音乐🎵");
-        this.Game.ApiDocking.getUser();
-        return this;
-    }
+        let that = this;
+        that.Game.ApiDocking.getUser();
+    };
 
     /** 每日奖励 */
     public openDailyGift(): GameHome {
         this.dailyGift.popup();
         return this;
-    }
+    };
 
     /** 我的红包 */
     private myHBao(): void {
-        this.myHB.popup();
-    }
+        this.myHB.updateMoney(this.dataCenter.balance).popup();
+    };
 
     /** 开始游戏 */
     public startTest(): void {
@@ -125,20 +125,20 @@ class GameHome extends ui.gameHomeUI {
         this.Game.startGame(VX);
         this.visible = false;
         console.log("start game gameHome " + VX);
-    }
+    };
 
     /** 同步数据 */
     public synchronousData(): GameHome {
         // 同步数据数据
         this.doNumber.text = String(this.dataCenter.doNumber);
-        this.bigFraction.text = String(this.dataCenter.bigFraction);
-        // 设置居中
-        this.box_fraction.getBounds();
+        this.bigFraction.text = String(this.dataCenter.maxFraction);
+        this.hb_money.text = String(this.dataCenter.balance);
+        console.log("game home sysData ok!");
         return this;
-    }
+    };
 
     /** 换皮肤 */
     private changeSkin(): void {
         this.ballSkinView.visible = true;
-    }
+    };
 }

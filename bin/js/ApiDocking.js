@@ -1,3 +1,4 @@
+;
 /** API对接 */
 var ApiDocking = (function () {
     function ApiDocking(game) {
@@ -32,7 +33,8 @@ var ApiDocking = (function () {
                         success: function (res) {
                             that.userData = res.data;
                             that.userToken = res.data.data.token;
-                            console.log("成功 结果  ↓↓↓↓↓↓");
+                            that.Game.dataCenter.token = res.data.data.token;
+                            console.log("wx.login 成功 结果  ↓↓↓↓↓↓");
                             console.log(that.userData.data);
                             var is_auth = res.data.data.user.is_auth;
                             if (!is_auth) {
@@ -40,8 +42,15 @@ var ApiDocking = (function () {
                             }
                             else {
                                 that.Game.gameHome.starGame.visible = true;
-                                that.getSign();
+                                that.Game.dataCenter.receive(that.userData.data.user).then(function () {
+                                    console.log("成功保存好数据 查看数据中心的数据  ↓↓↓↓↓↓");
+                                    console.log(that.Game.dataCenter.userData);
+                                    console.log("保存数据用户成功，开始同步数据");
+                                    that.Game.dataCenter.sytsData();
+                                    that.Game.gameHome.synchronousData();
+                                });
                             }
+                            ;
                         },
                         fail: function (res) {
                             console.log("微信请求失败");
@@ -89,10 +98,14 @@ var ApiDocking = (function () {
             success: function (res) {
                 console.log("获取用户信息成功 结果    ↓↓↓↓↓↓");
                 console.log(res.data);
+                that.Game.dataCenter.receive(res.data.data.user).then(function () {
+                    console.log("保存数据用户成功，开始同步数据");
+                    that.Game.dataCenter.sytsData();
+                    that.Game.gameHome.synchronousData();
+                });
             },
             //获取用户信息失败
             fail: function (res) {
-                console.log(res.data);
                 console.log(res);
             }
         });
@@ -410,6 +423,7 @@ var ApiDocking = (function () {
                         // this.wx_button.hide();
                     },
                     fail: function (res) {
+                        console.log("用户数据保存失败");
                     }
                 });
             });
@@ -417,7 +431,8 @@ var ApiDocking = (function () {
         else {
             console.log("用户已经授权");
         }
-        return this;
+        ;
+        // return this;
     };
     ;
     return ApiDocking;

@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":1,
-    "selecteID":12,
+    "selectedBox":4,
+    "selecteID":9,
     "props":{"width":640,"visible":false,"sceneColor":"#aaeaef","height":1136},
     "nodeParent":-1,
     "label":"View",
@@ -103,7 +103,7 @@
                 {
                     "x":30,
                     "type":"Image",
-                    "props":{"width":80,"var":"surpassAvatar","skin":"inGame/yazi.jpg","right":10,"name":"surpassAvatar","height":80,"centerY":0.5},
+                    "props":{"width":80,"var":"surpassAvatar","skin":"inGame/wukong.jpg","right":10,"name":"surpassAvatar","height":80,"centerY":0.5},
                     "nodeParent":4,
                     "label":"Image(surpassAvatar)",
                     "isOpen":true,

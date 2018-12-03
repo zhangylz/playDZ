@@ -74,6 +74,8 @@ var gameOver = (function (_super) {
         this.Game.inGameView.reset();
         this.Game.gameReset();
         this.Game.monitorMouse();
+        // 获取用户信息并刷新
+        this.Game.ApiDocking.getUser();
         console.log("goBreak Game Home");
     };
     /** 分享复活 */

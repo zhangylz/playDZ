@@ -8,6 +8,14 @@ interface requestFace {
     fail?: (res: any) => void,
     dataType?: string,
     complete?: (res: any) => void
+};
+
+/** res.data 数据 */
+interface res_Data {
+    "config": Object,
+    "share": Array<any>,
+    "token": string,
+    "user": userData
 }
 
 
@@ -54,15 +62,23 @@ class ApiDocking {
                         success(res) {
                             that.userData = res.data;
                             that.userToken = res.data.data.token;
-                            console.log("成功 结果  ↓↓↓↓↓↓");
+                            that.Game.dataCenter.token = res.data.data.token;
+                            console.log("wx.login 成功 结果  ↓↓↓↓↓↓");
                             console.log(that.userData.data);
                             let is_auth = res.data.data.user.is_auth;
                             if (!is_auth) {
                                 that.authLogin(is_auth);
                             } else {
                                 that.Game.gameHome.starGame.visible = true;
-                                that.getSign();
-                            }
+                                that.Game.dataCenter.receive(that.userData.data.user).then(() => {
+                                    console.log("成功保存好数据 查看数据中心的数据  ↓↓↓↓↓↓");
+                                    console.log(that.Game.dataCenter.userData);
+                                    console.log("保存数据用户成功，开始同步数据");
+                                    that.Game.dataCenter.sytsData();
+                                    that.Game.gameHome.synchronousData();
+
+                                });
+                            };
                         },
                         fail(res) {
                             console.log("微信请求失败")
@@ -72,6 +88,7 @@ class ApiDocking {
                     console.log("code NotOK! 登录失败!\t$$$$");
                 }
             },
+
             //wx.login失败
             fail(res) {
                 console.log("wx.login 失败");
@@ -109,10 +126,14 @@ class ApiDocking {
             success(res) {
                 console.log("获取用户信息成功 结果    ↓↓↓↓↓↓");
                 console.log(res.data);
+                that.Game.dataCenter.receive(res.data.data.user).then(() => {
+                    console.log("保存数据用户成功，开始同步数据");
+                    that.Game.dataCenter.sytsData();
+                    that.Game.gameHome.synchronousData();
+                });
             },
             //获取用户信息失败
             fail(res) {
-                console.log(res.data);
                 console.log(res);
             }
         });
@@ -382,7 +403,7 @@ class ApiDocking {
      * 保存用户授权信息
      * @param is_auth  boolean服务器是否保存信息
      */
-    public authLogin(is_auth: boolean): ApiDocking {
+    public authLogin(is_auth: boolean): void {
         /** 指向ApiDocking */
         let that: ApiDocking = this;
         if (!is_auth) {
@@ -437,14 +458,14 @@ class ApiDocking {
                         // this.wx_button.hide();
                     },
                     fail(res) {
-
+                        console.log("用户数据保存失败");
                     }
                 })
             })
         } else {
             console.log("用户已经授权");
-        }
-        return this;
+        };
+        // return this;
     };
 }
 
