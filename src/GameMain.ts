@@ -35,7 +35,7 @@ class GameMain {
         , { url: "ladder/image_ladder.png", type: Laya.Loader.IMAGE }
         , { url: "myHbao/myHBao.png", type: Laya.Loader.IMAGE }
         , { url: "one_Hbao/window.png", type: Laya.Loader.IMAGE }
-        , { url: "res/ladder/image_ladder.png", type: Laya.Loader.IMAGE }
+        , { url: "ladder/image_ladder.png", type: Laya.Loader.IMAGE }
     ];
 
     // 构造函数

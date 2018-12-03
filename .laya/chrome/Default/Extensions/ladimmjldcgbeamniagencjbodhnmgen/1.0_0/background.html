@@ -1,0 +1,94 @@
+<!--In the background page:-->
+<html>
+<head>
+  <script>
+    	//alert("begin");
+
+    	function GetVersion()
+    	{
+					alert("GetVersion");
+		try
+		{	
+			chrome.tabs.executeScript(null,{code:"alert(document.body.innerHTML)"});
+			var PLUGIN = document.getElementById('plugin2');
+			if(PLUGIN)
+				alert( "Get Plugin" );
+		
+			//alert( "Version from plugin: " + PLUGIN.connectionName);
+		}
+		catch (err) { alert(err); }
+    	};
+    	chrome.tabs.onUpdated.addListener(function(tabId, info) {
+		if(info.status == "complete"){
+			//alert("bg:load complete");
+	
+			chrome.tabs.getSelected(null,function(tab){
+				var  currentURLString =  tab.url;
+				if(currentURLString.indexOf("http") != -1 ){
+					chrome.tabs.sendRequest(tabId,{'action' : 'LoadPage'});
+				}
+			});
+		}
+   	});
+
+	chrome.tabs.onSelectionChanged.addListener(function(tabId, info) {
+		//current tabs.
+		//alert("onSelectionChanged tabId="+tabId);
+		chrome.tabs.getSelected(null,function(tab){
+				var  currentURLString =  tab.url;
+				if(currentURLString.indexOf("http") != -1 ){
+					chrome.tabs.sendRequest(tabId, {'action' : 'SelectedChanged'});
+				}
+				else{
+						chrome.tabs.getAllInWindow(null, function(tabs){
+						tabCount = tabs.length;
+						// alert('tabCount :'+ tabCount);
+						for (n=0; n<tabCount; n++)  {
+							//alert('tabs[n].id :'+ tabs[n].id);
+							var port =	chrome.tabs.connect(tabs[n].id, {name: "updatewindow"});
+							port.postMessage({mars: "updatewindow"});    
+						 }
+						});			
+				}
+			});
+	});
+
+	chrome.tabs.onCreated.addListener(function(tab) {
+	//alert("onCreated  + tab.url: "+  tab.url + tab.id);
+	chrome.tabs.getAllInWindow(null, function(tabs){
+		  tabCount = tabs.length;
+		  // alert('tabCount :'+ tabCount);
+		   for (n=0; n<tabCount; n++)  {
+		   		//alert('tabs[n].id :'+ tabs[n].id);
+				var port =	chrome.tabs.connect(tabs[n].id, {name: "updatewindow"});
+				port.postMessage({mars: "updatewindow"});    
+             }
+		});	
+	});
+
+chrome.extension.onConnect.addListener(function(port) {    
+  port.onMessage.addListener(function(msg) {    
+    if (msg.mars == "Reload")  {
+			//alert('Reload')
+			chrome.tabs.getSelected(null, function(tab){
+				//alert('chrome.tabs.getSelected +tab.id : ' +tab.id);
+				var port =	chrome.tabs.connect(tab.id, {name: "updatewindowevent"});
+				port.postMessage({mars: "updatewindowevent"});    
+			});
+		}
+  });    
+});   
+chrome.windows.onFocusChanged.addListener(function(windowId) {
+			chrome.tabs.getSelected(null, function(tab){
+			//alert('chrome.tabs.getSelected +tab.id : ' +tab.id);
+			var port =	chrome.tabs.connect(tab.id, {name: "reflashWindowEvent"});
+			port.postMessage({mars: "reflashWindowEvent"});    
+		});
+});
+
+  </script>
+</head>
+<body>
+<!--<embed id="plugin" type="application/x-Mars-chrome" hidden="true">-->
+</body>
+</html>

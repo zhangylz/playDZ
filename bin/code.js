@@ -54956,7 +54956,7 @@ var Ladder = (function (_super) {
     // 精灵初始化
     Ladder.prototype.init = function () {
         // 加载阶梯图片，放在坐标 0，0
-        this.loadImage("res/ladder/image_ladder.png", 0, 0, this.ladder_width, this.ladder_heigth);
+        this.loadImage("ladder/image_ladder.png", 0, 0, this.ladder_width, this.ladder_heigth);
         // 开始添加障碍 添加白圈 添加砖石 or 红包
         this.spr_add_ob().spr_add_ov(this.random_arr).spr_add_gift(this.random_arr);
         // 添加白圈
@@ -56227,7 +56227,7 @@ var GameMain = (function () {
             { url: "ladder/image_ladder.png", type: Laya.Loader.IMAGE },
             { url: "myHbao/myHBao.png", type: Laya.Loader.IMAGE },
             { url: "one_Hbao/window.png", type: Laya.Loader.IMAGE },
-            { url: "res/ladder/image_ladder.png", type: Laya.Loader.IMAGE }
+            { url: "ladder/image_ladder.png", type: Laya.Loader.IMAGE }
         ];
         //  适配小程序
         Laya.MiniAdpter.init();

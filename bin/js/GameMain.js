@@ -33,7 +33,7 @@ var GameMain = (function () {
             { url: "ladder/image_ladder.png", type: Laya.Loader.IMAGE },
             { url: "myHbao/myHBao.png", type: Laya.Loader.IMAGE },
             { url: "one_Hbao/window.png", type: Laya.Loader.IMAGE },
-            { url: "res/ladder/image_ladder.png", type: Laya.Loader.IMAGE }
+            { url: "ladder/image_ladder.png", type: Laya.Loader.IMAGE }
         ];
         //  适配小程序
         Laya.MiniAdpter.init();
