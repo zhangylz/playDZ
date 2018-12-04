@@ -7,6 +7,7 @@ var Game = (function () {
         this.ladderN = 4;
         this.init();
     }
+    ;
     /** 初始化 */
     Game.prototype.init = function () {
         Laya.stage.name = "Stage";
@@ -33,9 +34,12 @@ var Game = (function () {
         this.gameSound = new Sounds.gameSounds(); //实例化背景音乐
         // 监听碰撞
         this.spriteCollision = new spriteCollision(this.ball, this.dataCenter);
+        // 实例化API接口
+        this.ApiDocking = new ApiDocking(this);
+        //  如果再小游戏就wx.login
         if (Laya.Browser.onMiniGame) {
             /** 实例化api对接 */
-            this.ApiDocking = new ApiDocking(this);
+            this.wxLogin();
             console.log("in miniGame!");
         }
         else {
@@ -43,6 +47,7 @@ var Game = (function () {
         }
         ;
     };
+    ;
     /**
      * 开始游戏
      *@param VX 传入在gameHome的鼠标X坐标
@@ -56,10 +61,12 @@ var Game = (function () {
         Laya.stage.on(Laya.Event.MOUSE_UP, this, this.mouseUP); //监听鼠标抬起
         this.gameSound.onBgMusic();
     };
+    ;
     /** 监听鼠标 */
     Game.prototype.monitorMouse = function () {
         return this;
     };
+    ;
     /** 开始下降 */
     Game.prototype.startDowm = function () {
         //阶梯开始循环下降
@@ -68,18 +75,21 @@ var Game = (function () {
         this.collision();
         this.inGameView.init();
     };
+    ;
     /** 鼠标按下 */
     Game.prototype.mouseDown = function () {
         // 开始游戏
         Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
         this.VX = Laya.stage.mouseX;
     };
+    ;
     /** 鼠标抬起 */
     Game.prototype.mouseUP = function () {
         // 取消移动监听
         Laya.stage.off(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
         this.VX = null;
     };
+    ;
     /** 监听鼠标移动 */
     Game.prototype.mouseMove = function () {
         var addX = Laya.stage.mouseX - this.VX;
@@ -93,6 +103,7 @@ var Game = (function () {
         // 刷新记载VX
         this.VX = Laya.stage.mouseX;
     };
+    ;
     /** 碰撞检测 */
     Game.prototype.collision = function () {
         // 寄存阶梯群
@@ -112,6 +123,7 @@ var Game = (function () {
             this.gameOver();
         }
     };
+    ;
     /** 游戏结束 */
     Game.prototype.gameOver = function () {
         // 取消鼠标监听
@@ -131,6 +143,7 @@ var Game = (function () {
         this.gameSound.goSounds();
         return this;
     };
+    ;
     /** 游戏重置 */
     Game.prototype.gameReset = function () {
         this.gameHome.synchronousData();
@@ -142,6 +155,7 @@ var Game = (function () {
         console.log("game Reset!");
         return this;
     };
+    ;
     /** 复活开始 */
     Game.prototype.gameRelive = function () {
         this.gameHome.synchronousData();
@@ -151,9 +165,31 @@ var Game = (function () {
         this.spriteCollision.resultCollision = false;
         return this;
     };
+    ;
     /** 关闭音乐 */
     Game.prototype.offBgMusic = function () {
         return this;
+    };
+    ;
+    /** 微信登录 */
+    Game.prototype.wxLogin = function () {
+        var _this = this;
+        this.ApiDocking.wxLogin().then(function (Data) {
+            // 保存token
+            _this.dataCenter.token = Data.token;
+            // 显示开始按钮
+            _this.gameHome.starGame.visible = true;
+            // 隐藏阻挡BOX
+            _this.gameHome.startBox.visible = false;
+            _this.dataCenter.receive(Data.user).then(function () {
+                console.log("成功保存好数据 查看数据中心的数据  ↓↓↓↓↓↓");
+                console.log(_this.dataCenter.userData);
+                console.log(_this.dataCenter.token);
+                console.log("保存数据用户成功，开始同步数据");
+                _this.dataCenter.sytsData();
+                _this.gameHome.synchronousData();
+            });
+        });
     };
     return Game;
 }());

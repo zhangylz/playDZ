@@ -42,6 +42,7 @@ P 409D7CDF single_4.png
 R 65DF3AEE window.png
 D Game_Settlement
 P CC611F65 HBao.png
+P 20DB3D19 HBao2.png
 P 74ED523A HBao_open.png
 P 557E3305 home.png
 P B91B46F9 image_button.png
@@ -116,5 +117,3 @@ P 5E65FC1A receive.png
 R 0DFDD4FA window.png
 D player
 P D300CDEE wanfajies.png
-D praticle
-R 0F6382C0 shanguang.plist

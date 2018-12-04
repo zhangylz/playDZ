@@ -2,7 +2,7 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":2,
-    "selecteID":6,
+    "selecteID":60,
     "props":{"width":640,"sceneColor":"#000000","height":1164},
     "nodeParent":-1,
     "label":"Dialog",
@@ -15,7 +15,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":384,"x":10,"width":619,"skin":"everyDay/window.png","height":532},
+            "props":{"width":619,"skin":"everyDay/window.png","height":532,"centerY":0,"centerX":0},
             "nodeParent":1,
             "label":"Image",
             "isOpen":true,
@@ -30,15 +30,16 @@
                     "props":{"y":71,"x":34,"visible":false,"var":"hb_window","skin":"everyDay/inWindow.png","name":"hb_window"},
                     "nodeParent":2,
                     "label":"Image(hb_window)",
-                    "isOpen":false,
+                    "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":3,
                     "child":[
                         {
+                            "x":45,
                             "type":"Box",
-                            "props":{"y":32,"x":16,"width":0,"var":"Hbao_open_box","name":"Hbao_open_box","height":0},
+                            "props":{"y":32,"x":16,"width":0,"visible":false,"var":"Hbao_open_box","name":"Hbao_open_box","height":0},
                             "nodeParent":3,
                             "label":"Box(Hbao_open_box)",
                             "isOpen":false,
@@ -49,7 +50,7 @@
                             "child":[
                                 {
                                     "type":"Image",
-                                    "props":{"y":2,"x":73,"visible":false,"skin":"Game_Settlement/HBao_open.png","name":"hb_1"},
+                                    "props":{"y":2,"x":73,"width":108,"visible":false,"skin":"Game_Settlement/HBao_open.png","name":"hb_1","height":97},
                                     "nodeParent":27,
                                     "label":"Image(hb_1)",
                                     "isOpen":false,
@@ -71,21 +72,21 @@
                                                 ]
                                         },
                                         {
-                                            "type":"Text",
-                                            "props":{"y":17,"x":0,"width":108,"var":"hb_money_0","valign":"middle","text":"￥ 0","name":"hb_money_0","height":25,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
+                                            "type":"Label",
+                                            "props":{"y":17,"var":"hb_money_0","text":"￥ 0","name":"hb_money_0","fontSize":25,"font":"Arial","color":"#ff0c08","centerX":0,"bold":true},
                                             "nodeParent":28,
-                                            "label":"Text(hb_money_0)",
+                                            "label":"Label(hb_money_0)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":45,
+                                            "compId":53,
                                             "child":[
                                                 ]
                                         }]
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":2,"x":214,"visible":false,"skin":"Game_Settlement/HBao_open.png","name":"hb_2"},
+                                    "props":{"y":2,"x":214,"width":108,"visible":false,"skin":"Game_Settlement/HBao_open.png","name":"hb_2","height":97},
                                     "nodeParent":27,
                                     "label":"Image(hb_2)",
                                     "isOpen":false,
@@ -107,21 +108,21 @@
                                                 ]
                                         },
                                         {
-                                            "type":"Text",
-                                            "props":{"y":17,"x":0,"width":108,"var":"hb_money_1","valign":"middle","text":"￥ 0","name":"hb_money_1","height":25,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
+                                            "type":"Label",
+                                            "props":{"y":17,"var":"hb_money_1","text":"￥ 0","name":"hb_money_1","fontSize":25,"font":"Arial","color":"#ff0c08","centerX":0,"bold":true},
                                             "nodeParent":30,
-                                            "label":"Text(hb_money_1)",
+                                            "label":"Label(hb_money_1)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":46,
+                                            "compId":54,
                                             "child":[
                                                 ]
                                         }]
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":0,"x":355,"skin":"Game_Settlement/HBao_open.png","name":"hb_3"},
+                                    "props":{"y":0,"x":355,"width":108,"skin":"Game_Settlement/HBao_open.png","name":"hb_3","height":97},
                                     "nodeParent":27,
                                     "label":"Image(hb_3)",
                                     "isOpen":false,
@@ -143,14 +144,14 @@
                                                 ]
                                         },
                                         {
-                                            "type":"Text",
-                                            "props":{"y":17,"x":0,"width":108,"var":"hb_money_2","valign":"middle","text":"￥ 0","name":"hb_money_2","height":25,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
+                                            "type":"Label",
+                                            "props":{"y":17,"var":"hb_money_2","text":"￥ 0","name":"hb_money_2","fontSize":25,"font":"Arial","color":"#ff0c08","centerX":0,"bold":true},
                                             "nodeParent":32,
-                                            "label":"Text(hb_money_2)",
+                                            "label":"Label(hb_money_2)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":47,
+                                            "compId":55,
                                             "child":[
                                                 ]
                                         }],
@@ -158,7 +159,7 @@
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":150,"x":17,"visible":false,"skin":"Game_Settlement/HBao_open.png","name":"hb_4"},
+                                    "props":{"y":150,"x":17,"width":108,"visible":false,"skin":"Game_Settlement/HBao_open.png","name":"hb_4","height":97},
                                     "nodeParent":27,
                                     "label":"Image(hb_4)",
                                     "isOpen":false,
@@ -180,21 +181,21 @@
                                                 ]
                                         },
                                         {
-                                            "type":"Text",
-                                            "props":{"y":17,"x":0,"width":108,"var":"hb_money_3","valign":"middle","text":"￥ 0","name":"hb_money_3","height":25,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
+                                            "type":"Label",
+                                            "props":{"y":17,"var":"hb_money_3","text":"￥ 0","name":"hb_money_3","fontSize":25,"font":"Arial","color":"#ff0c08","centerX":0,"bold":true},
                                             "nodeParent":34,
-                                            "label":"Text(hb_money_3)",
+                                            "label":"Label(hb_money_3)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":48,
+                                            "compId":56,
                                             "child":[
                                                 ]
                                         }]
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":150,"x":148,"visible":false,"skin":"Game_Settlement/HBao_open.png","name":"hb_5"},
+                                    "props":{"y":150,"x":148,"width":108,"visible":false,"skin":"Game_Settlement/HBao_open.png","name":"hb_5","height":97},
                                     "nodeParent":27,
                                     "label":"Image(hb_5)",
                                     "isOpen":false,
@@ -216,21 +217,21 @@
                                                 ]
                                         },
                                         {
-                                            "type":"Text",
-                                            "props":{"y":17,"x":0,"width":108,"var":"hb_money_4","valign":"middle","text":"￥ 0","name":"hb_money_4","height":25,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
+                                            "type":"Label",
+                                            "props":{"y":17,"var":"hb_money_4","text":"￥ 0","name":"hb_money_4","fontSize":25,"font":"Arial","color":"#ff0c08","centerX":0,"bold":true},
                                             "nodeParent":36,
-                                            "label":"Text(hb_money_4)",
+                                            "label":"Label(hb_money_4)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":49,
+                                            "compId":57,
                                             "child":[
                                                 ]
                                         }]
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":150,"x":279,"visible":false,"skin":"Game_Settlement/HBao_open.png","name":"hb_6"},
+                                    "props":{"y":150,"x":279,"width":108,"visible":false,"skin":"Game_Settlement/HBao_open.png","name":"hb_6"},
                                     "nodeParent":27,
                                     "label":"Image(hb_6)",
                                     "isOpen":false,
@@ -252,21 +253,21 @@
                                                 ]
                                         },
                                         {
-                                            "type":"Text",
-                                            "props":{"y":17,"x":0,"width":108,"var":"hb_money_5","valign":"middle","text":"￥ 0","name":"hb_money_5","height":25,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
+                                            "type":"Label",
+                                            "props":{"y":17,"var":"hb_money_5","text":"￥ 0","name":"hb_money_5","fontSize":25,"font":"Arial","color":"#ff0c08","centerX":0,"bold":true},
                                             "nodeParent":38,
-                                            "label":"Text(hb_money_5)",
+                                            "label":"Label(hb_money_5)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":50,
+                                            "compId":58,
                                             "child":[
                                                 ]
                                         }]
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":150,"x":410,"visible":false,"skin":"Game_Settlement/HBao_open.png","name":"hb_7"},
+                                    "props":{"y":150,"x":410,"width":108,"visible":false,"skin":"Game_Settlement/HBao_open.png","name":"hb_7"},
                                     "nodeParent":27,
                                     "label":"Image(hb_7)",
                                     "isOpen":false,
@@ -288,14 +289,14 @@
                                                 ]
                                         },
                                         {
-                                            "type":"Text",
-                                            "props":{"y":17,"x":0,"width":108,"var":"hb_money_6","valign":"middle","text":"￥ 0","name":"hb_money_6","height":25,"fontSize":25,"font":"Arial","color":"#ff0c08","bold":true,"align":"center"},
+                                            "type":"Label",
+                                            "props":{"y":17,"var":"hb_money_6","text":"￥ 0","name":"hb_money_6","fontSize":25,"font":"Arial","color":"#ff0c08","centerX":0,"bold":true},
                                             "nodeParent":40,
-                                            "label":"Text(hb_money_6)",
+                                            "label":"Label(hb_money_6)",
                                             "isDirectory":false,
                                             "isAniNode":true,
                                             "hasChild":false,
-                                            "compId":51,
+                                            "compId":59,
                                             "child":[
                                                 ]
                                         }]
@@ -303,6 +304,7 @@
                             "$HIDDEN":true
                         },
                         {
+                            "x":45,
                             "type":"Box",
                             "props":{"y":16,"x":16,"width":0,"var":"Hbao_box","name":"Hbao_box","height":0},
                             "nodeParent":3,
@@ -462,7 +464,7 @@
                                     "props":{"y":150,"x":410,"skin":"everyDay/HBao.png","name":"hb_7"},
                                     "nodeParent":10,
                                     "label":"Image(hb_7)",
-                                    "isOpen":false,
+                                    "isOpen":true,
                                     "isDirectory":true,
                                     "isAniNode":true,
                                     "hasChild":true,
@@ -483,7 +485,7 @@
                                 }],
                             "$HIDDEN":false
                         }],
-                    "$HIDDEN":true
+                    "$HIDDEN":false
                 },
                 {
                     "x":30,
@@ -502,7 +504,7 @@
                 {
                     "x":30,
                     "type":"Image",
-                    "props":{"y":-44,"skin":"everyDay/daily_Login.png","centerX":0.5},
+                    "props":{"y":-44,"skin":"everyDay/daily_Login.png","centerX":0},
                     "nodeParent":2,
                     "label":"Image",
                     "isDirectory":false,
@@ -515,9 +517,9 @@
                 {
                     "x":30,
                     "type":"Image",
-                    "props":{"y":415,"x":330,"width":253,"var":"voide_get","skin":"everyDay/image_button_1.png","name":"voide_get","disabled":true},
+                    "props":{"y":415,"x":330,"width":253,"visible":false,"var":"video_get","skin":"everyDay/image_button_1.png","name":"video_get","disabled":true},
                     "nodeParent":2,
-                    "label":"Image(voide_get)",
+                    "label":"Image(video_get)",
                     "isOpen":false,
                     "isDirectory":true,
                     "isAniNode":true,
@@ -535,12 +537,13 @@
                             "compId":7,
                             "child":[
                                 ]
-                        }]
+                        }],
+                    "$HIDDEN":true
                 },
                 {
                     "x":30,
                     "type":"Image",
-                    "props":{"y":415,"x":40,"width":251,"var":"now_get","skin":"everyDay/image_button_1.png","name":"now_get","disabled":true,"alpha":0.85},
+                    "props":{"y":415,"width":251,"var":"now_get","skin":"everyDay/image_button_1.png","name":"now_get","disabled":true,"centerX":0,"alpha":0.85},
                     "nodeParent":2,
                     "label":"Image(now_get)",
                     "isOpen":false,
@@ -572,6 +575,20 @@
                     "isAniNode":true,
                     "hasChild":false,
                     "compId":52,
+                    "child":[
+                        ],
+                    "$HIDDEN":true
+                },
+                {
+                    "x":30,
+                    "type":"Label",
+                    "props":{"var":"prompt","text":"您今天还没有领取红包，赶快领取吧！","name":"prompt","fontSize":20,"font":"Microsoft YaHei","color":"#f6110d","centerX":10,"bottom":25,"bold":true},
+                    "nodeParent":2,
+                    "label":"Label(prompt)",
+                    "isDirectory":false,
+                    "isAniNode":true,
+                    "hasChild":false,
+                    "compId":60,
                     "child":[
                         ]
                 }]

@@ -42,70 +42,59 @@ class ApiDocking {
     public Game: Game;
 
     constructor(game: Game) {
-        this.wxLogin();
         this.Game = game;
     };
 
     /** 初始化登录获得数据 */
-    public wxLogin(): ApiDocking {
+    public wxLogin(): Promise<any> {
         let that = this;
-        wx.login({
-            //wx.login成功
-            success(res) {
-                if (res.code) {
-                    console.log("code OK!\t$$$$");
-                    wx.request({
-                        url: that.ApiUrl + "login",
-                        data: {
-                            code: res.code,
-                            sys: wx.getSystemInfoSync(),
-                            query: wx.getLaunchOptionsSync().query,
-                            shareTicket: wx.getLaunchOptionsSync().shareTicket,
-                            referrerInfo: wx.getLaunchOptionsSync().referrerInfo
-                        },
-                        header: {
-                            'Accept': 'application/json',
-                            'content-type': 'application/json'
-                        },
-                        method: "POST",
-                        success(res) {
-                            that.userData = res.data;
-                            that.userToken = res.data.data.token;
-                            that.Game.dataCenter.token = res.data.data.token;
-                            console.log("wx.login 成功 结果  ↓↓↓↓↓↓");
-                            console.log(that.userData.data);
-                            let is_auth = res.data.data.user.is_auth;
-                            if (!is_auth) {
-                                that.authLogin(is_auth);
-                            } else {
-                                that.Game.gameHome.starGame.visible = true;
-                                that.Game.dataCenter.receive(that.userData.data.user).then(() => {
-                                    console.log("成功保存好数据 查看数据中心的数据  ↓↓↓↓↓↓");
-                                    console.log(that.Game.dataCenter.userData);
-                                    console.log("保存数据用户成功，开始同步数据");
-                                    that.Game.dataCenter.sytsData();
-                                    that.Game.gameHome.synchronousData();
-
-
-                                });
-                            };
-                        },
-                        fail(res) {
-                            console.log("微信请求失败")
-                        },
-                    })
-                } else {
-                    console.log("code NotOK! 登录失败!\t$$$$");
+        return new Promise((resolve, erject) => {
+            wx.login({
+                //wx.login成功
+                success(res) {
+                    if (res.code) {
+                        wx.request({
+                            url: that.ApiUrl + "login",
+                            data: {
+                                code: res.code,
+                                sys: wx.getSystemInfoSync(),
+                                query: wx.getLaunchOptionsSync().query,
+                                shareTicket: wx.getLaunchOptionsSync().shareTicket,
+                                referrerInfo: wx.getLaunchOptionsSync().referrerInfo
+                            },
+                            header: {
+                                'Accept': 'application/json',
+                                'content-type': 'application/json'
+                            },
+                            method: "POST",
+                            success(res) {
+                                that.userData = res.data;
+                                that.userToken = res.data.data.token;
+                                // console.log("wx.login 成功 结果  ↓↓↓↓↓↓");
+                                // console.log(that.userData.data);
+                                let is_auth = res.data.data.user.is_auth;
+                                if (!is_auth) {
+                                    that.authLogin(is_auth);
+                                } else {
+                                    let userData = res.data.data;
+                                    resolve(userData);
+                                };
+                            },
+                            fail(err) {
+                                console.log("微信请求失败")
+                            },
+                        })
+                    } else {
+                        console.log("code NotOK! 登录失败!\t$$$$");
+                    }
+                },
+                //wx.login失败
+                fail(res) {
+                    console.log("wx.login 失败");
+                    console.log(res);
                 }
-            },
-
-            //wx.login失败
-            fail(res) {
-                console.log("wx.login 失败");
-                console.log(res);
-            }
+            })
         });
-        return this;
     };
 
     /**
@@ -180,32 +169,34 @@ class ApiDocking {
     };
 
     /** 获取每星期签到列表 */
-    public getSign(): ApiDocking {
+    public getSign(): Promise<any> {
         let that = this;
-        wx.request({
-            url: that.ApiUrl + "getSign",
-            data: {
-                sys: wx.getSystemInfoSync()
-            },
-            header: {
-                'Accept': 'application/json',
-                'content-type': 'application/json',
-                'Authorization': 'Bearer ' + that.userToken
-            },
-            method: "POST",
-            //请求成功
-            success(res) {
-                console.log("获取每星期签到列表成功 结果 ↓↓↓↓↓↓");
-                console.log(res.data);
-                // return res.data;
-                that.Game.gameHome.dailyGift.sysData(res.data.data);
-            },
-            fail(res) {
-                console.log("获取每星期签到列表失败");
-                console.log(res);
-            }
+        return new Promise((resole, erject) => {
+            wx.request({
+                url: that.ApiUrl + "getSign",
+                data: {
+                    sys: wx.getSystemInfoSync()
+                },
+                header: {
+                    'Accept': 'application/json',
+                    'content-type': 'application/json',
+                    'Authorization': 'Bearer ' + that.userToken
+                },
+                method: "POST",
+                //请求成功
+                success(res) {
+                    console.log("获取每星期签到列表成功 结果 ↓↓↓↓↓↓");
+                    console.log(res.data);
+                    // that.Game.gameHome.dailyGift.sysData(res.data.data);
+                    resole(res.data.data);
+                },
+                fail(err) {
+                    console.log("获取每星期签到列表失败");
+                    console.log(err);
+                    erject(err);
+                }
+            })
         });
-        return this;
     };
 
     /** 添加签到 */
@@ -422,9 +413,11 @@ class ApiDocking {
         if (!is_auth) {
             console.log("用户没有授权");
             // console.log(that.userToken);
+            let startSkin:string = Laya.ResourceVersion.addVersionPrefix(this.Game.gameHome.starGame.skin);
+            console.log(startSkin);
             let wx_button = wx.createUserInfoButton({
                 type: "image",
-                image: Laya.ResourceVersion.addVersionPrefix(this.Game.gameHome.starGame.skin),
+                image: startSkin,
                 style: {
                     left: 100,
                     top: 300,

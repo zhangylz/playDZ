@@ -2,7 +2,7 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":1,
-    "selecteID":1,
+    "selecteID":4,
     "referenceLines":null,
     "props":{"var":"gameOverDialog","sceneWidth":640,"sceneHeight":1164,"sceneColor":"#efe3e2","name":"gameOverDialog"},
     "nodeParent":-1,
@@ -105,18 +105,19 @@
                     "props":{"y":220,"x":34,"skin":"Game_Settlement/inWindow.png"},
                     "nodeParent":2,
                     "label":"Image",
-                    "isOpen":false,
+                    "isOpen":true,
                     "isDirectory":true,
                     "isAniNode":true,
                     "hasChild":true,
                     "compId":3,
                     "child":[
                         {
+                            "x":45,
                             "type":"Box",
                             "props":{"y":43,"x":6,"var":"HB_opeb_box","name":"HB_opeb_box"},
                             "nodeParent":3,
                             "label":"Box(HB_opeb_box)",
-                            "isOpen":true,
+                            "isOpen":false,
                             "isDirectory":true,
                             "isAniNode":true,
                             "hasChild":true,
@@ -265,9 +266,11 @@
                                             "child":[
                                                 ]
                                         }]
-                                }]
+                                }],
+                            "$HIDDEN":true
                         },
                         {
+                            "x":45,
                             "type":"Box",
                             "props":{"y":16,"x":6,"var":"HBao_box","name":"HBao_box"},
                             "nodeParent":3,
@@ -280,7 +283,7 @@
                             "child":[
                                 {
                                     "type":"Image",
-                                    "props":{"y":10,"x":0,"var":"HBao_1","skin":"Game_Settlement/HBao.png","name":"HBao_1"},
+                                    "props":{"y":10,"x":0,"var":"HBao_1","skin":"Game_Settlement/HBao2.png","name":"HBao_1","alpha":0.8},
                                     "nodeParent":17,
                                     "label":"Image(HBao_1)",
                                     "isDirectory":false,
@@ -292,7 +295,7 @@
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":10,"x":142,"var":"HBao_2","skin":"Game_Settlement/HBao.png","name":"HBao_2"},
+                                    "props":{"y":10,"x":142,"var":"HBao_2","skin":"Game_Settlement/HBao2.png","name":"HBao_2","alpha":0.8},
                                     "nodeParent":17,
                                     "label":"Image(HBao_2)",
                                     "isDirectory":false,
@@ -304,7 +307,7 @@
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":10,"x":286,"var":"HBao_3","skin":"Game_Settlement/HBao.png","name":"HBao_3"},
+                                    "props":{"y":10,"x":286,"var":"HBao_3","skin":"Game_Settlement/HBao2.png","name":"HBao_3","alpha":0.8},
                                     "nodeParent":17,
                                     "label":"Image(HBao_3)",
                                     "isDirectory":false,
@@ -316,7 +319,7 @@
                                 },
                                 {
                                     "type":"Image",
-                                    "props":{"y":10,"x":429,"var":"HBao_4","skin":"Game_Settlement/HBao.png","name":"HBao_4"},
+                                    "props":{"y":10,"x":429,"var":"HBao_4","skin":"Game_Settlement/HBao2.png","name":"HBao_4","alpha":0.8},
                                     "nodeParent":17,
                                     "label":"Image(HBao_4)",
                                     "isDirectory":false,

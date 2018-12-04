@@ -17,9 +17,16 @@ var hbDialog = (function (_super) {
      *
      */
     hbDialog.prototype.init = function (num, prompt) {
+        var _this = this;
         this.money = num;
         this.getMoney.text = String("￥" + num);
         this.prompt.text = prompt;
+        this.keepOnHbao.on(Laya.Event.MOUSE_DOWN, this, this.userWithdraw);
+        this.button_close.on(Laya.Event.MOUSE_DOWN, this, function () { _this.destroy(); });
+    };
+    ;
+    /** 用户点击提现按钮 */
+    hbDialog.prototype.userWithdraw = function () {
     };
     return hbDialog;
 }(ui.hbDialogUI));

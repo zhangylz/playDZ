@@ -21,6 +21,13 @@ class hbDialog extends ui.hbDialogUI {
         this.money = num;
         this.getMoney.text = String("￥" + num);
         this.prompt.text = prompt;
-    }
 
+        this.keepOnHbao.on(Laya.Event.MOUSE_DOWN, this, this.userWithdraw);
+        this.button_close.on(Laya.Event.MOUSE_DOWN, this, () => { this.destroy() });
+    };
+
+    /** 用户点击提现按钮 */
+    public userWithdraw(){
+        
+    }
 }

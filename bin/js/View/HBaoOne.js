@@ -14,6 +14,7 @@ var HBaoOne = (function (_super) {
         _this.Game = game;
         return _this;
     }
+    ;
     /** 初始化 */
     HBaoOne.prototype.init = function () {
         // this.popupCenter = true;
@@ -29,6 +30,10 @@ var HBaoOne = (function (_super) {
     /** 打开红包 */
     HBaoOne.prototype.openHB = function () {
         console.log("打开红包");
+        var Hbao = new hbDialog();
+        this.Game.ApiDocking.addSign(function (data) {
+            console.log(data);
+        }, "direct");
     };
     //添加滤镜
     HBaoOne.prototype.applayFilter = function () {

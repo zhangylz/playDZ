@@ -13,7 +13,7 @@ class HBaoOne extends ui.HBaoOneUI {
         super();
         this.init();
         this.Game = game;
-    }
+    };
     /** 初始化 */
     public init(): void {
         // this.popupCenter = true;
@@ -30,6 +30,10 @@ class HBaoOne extends ui.HBaoOneUI {
     /** 打开红包 */
     public openHB(): void {
         console.log("打开红包");
+        let Hbao: hbDialog = new hbDialog();
+        this.Game.ApiDocking.addSign((data) => {
+            console.log(data);
+        }, "direct");
     }
 
     //添加滤镜

@@ -51,9 +51,9 @@ var GameHome = (function (_super) {
         this.music_off.on(Laya.Event.MOUSE_DOWN, this, this.musicOFF); //关闭音乐
         this.changeBallSkin.on(Laya.Event.MOUSE_DOWN, this, this.changeSkin); //球皮肤事件
         this.ranking.on(Laya.Event.MOUSE_DOWN, this, this.mouseDowm); //好友排行
-        this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun); //添加钻石
-        this.startBox.on(Laya.Event.MOUSE_DOWN, this, this.startTest); //开始游戏
-        this.starGame.on(Laya.Event.MOUSE_DOWN, this, this.startTest);
+        this.button_doAdd.on(Laya.Event.MOUSE_DOWN, this, this.inviteFun); //开始游戏
+        this.starGame.on(Laya.Event.MOUSE_DOWN, this, this.startGame);
+        this.startBox.zOrder = 99;
     };
     ;
     /**
@@ -100,10 +100,12 @@ var GameHome = (function (_super) {
     ;
     /** 每日奖励 */
     GameHome.prototype.openDailyGift = function () {
-        this.dailyGift = new dailyGift();
-        this.dailyGift.popup();
+        var dailyGifts = new dailyGift(this.Game);
+        dailyGifts.popup();
         /** 获得签到列表 */
-        this.Game.ApiDocking.getSign();
+        this.Game.ApiDocking.getSign().then(function (data) {
+            dailyGifts.sysData(data);
+        });
         return new Promise(function (res) {
             console.log("test   openDailyGift");
         });
@@ -115,8 +117,11 @@ var GameHome = (function (_super) {
     };
     ;
     /** 开始游戏 */
-    GameHome.prototype.startTest = function () {
-        console.log("测试一下，回调完成就关闭");
+    GameHome.prototype.startGame = function () {
+        console.log("开始游戏");
+        var VX = Laya.stage.mouseX;
+        this.Game.startGame(VX);
+        this.visible = false;
     };
     ;
     /** 同步数据 */

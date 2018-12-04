@@ -2,7 +2,7 @@
     "x":0,
     "type":"View",
     "selectedBox":1,
-    "selecteID":32,
+    "selecteID":34,
     "props":{"x":0,"width":640,"var":"gamehome","sceneColor":"#EEE9E9","name":"gamehome","height":1136},
     "nodeParent":-1,
     "label":"View(gamehome)",
@@ -265,7 +265,7 @@
         {
             "x":15,
             "type":"HBox",
-            "props":{"y":270,"var":"box_fraction","space":20,"name":"box_fraction","centerX":0,"align":"middle"},
+            "props":{"y":270,"width":101.171875,"var":"box_fraction","space":20,"name":"box_fraction","centerX":0,"align":"middle"},
             "nodeParent":1,
             "label":"HBox(box_fraction)",
             "isOpen":false,

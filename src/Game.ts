@@ -22,8 +22,7 @@ class Game {
     public ApiDocking: ApiDocking;
     constructor() {
         this.init();
-    }
-
+    };
     /** 初始化 */
     public init(): void {
         Laya.stage.name = "Stage";
@@ -50,12 +49,16 @@ class Game {
         this.gameSound = new Sounds.gameSounds();   //实例化背景音乐
         // 监听碰撞
         this.spriteCollision = new spriteCollision(this.ball, this.dataCenter);
+        // 实例化API接口
+        this.ApiDocking = new ApiDocking(this);
+        //  如果再小游戏就wx.login
+
         if (Laya.Browser.onMiniGame) {
             /** 实例化api对接 */
-            this.ApiDocking = new ApiDocking(this);
+            this.wxLogin();
             console.log("in miniGame!");
         } else { console.log("not miniGame") };
-    }
+    };
 
     /** 
      * 开始游戏
@@ -69,12 +72,12 @@ class Game {
         Laya.stage.on(Laya.Event.MOUSE_DOWN, this, this.mouseDown);
         Laya.stage.on(Laya.Event.MOUSE_UP, this, this.mouseUP);     //监听鼠标抬起
         this.gameSound.onBgMusic();
-    }
+    };
 
     /** 监听鼠标 */
     public monitorMouse(): Game {
         return this;
-    }
+    };
 
     /** 开始下降 */
     public startDowm(): void {
@@ -83,7 +86,7 @@ class Game {
         // 检测碰撞
         this.collision();
         this.inGameView.init();
-    }
+    };
 
     private VX: number;
     /** 鼠标按下 */
@@ -91,14 +94,14 @@ class Game {
         // 开始游戏
         Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.mouseMove)
         this.VX = Laya.stage.mouseX;
-    }
+    };
 
     /** 鼠标抬起 */
     private mouseUP(): void {
         // 取消移动监听
         Laya.stage.off(Laya.Event.MOUSE_MOVE, this, this.mouseMove);
         this.VX = null;
-    }
+    };
 
     /** 监听鼠标移动 */
     private mouseMove(): void {
@@ -111,7 +114,8 @@ class Game {
         }
         // 刷新记载VX
         this.VX = Laya.stage.mouseX;
-    }
+    };
+
     /** 初始的阶梯编号 */
     public ladderN: number = 4;
     /** 碰撞检测 */
@@ -130,7 +134,7 @@ class Game {
         let resultCollision: boolean = this.spriteCollision.resultCollision;
         //如果碰撞了
         if (resultCollision == true) { this.gameOver() }
-    }
+    };
 
     /** 游戏结束 */
     public gameOver(): Game {
@@ -150,7 +154,7 @@ class Game {
         //关闭音乐
         this.gameSound.goSounds();
         return this;
-    }
+    };
 
     /** 游戏重置 */
     public gameReset(): Game {
@@ -162,7 +166,7 @@ class Game {
         this.spriteCollision.resultCollision = false;
         console.log("game Reset!");
         return this;
-    }
+    };
 
     /** 复活开始 */
     public gameRelive(): Game {
@@ -172,11 +176,30 @@ class Game {
         this.ladderN = 4;
         this.spriteCollision.resultCollision = false;
         return this;
-    }
+    };
 
     /** 关闭音乐 */
     private offBgMusic(): Game {
         return this;
-    }
+    };
 
+    /** 微信登录 */
+    public wxLogin() {
+        this.ApiDocking.wxLogin().then((Data) => {
+            // 保存token
+            this.dataCenter.token = Data.token;
+            // 显示开始按钮
+            this.gameHome.starGame.visible = true;
+            // 隐藏阻挡BOX
+            this.gameHome.startBox.visible = false;
+            this.dataCenter.receive(Data.user).then(() => {
+                console.log("成功保存好数据 查看数据中心的数据  ↓↓↓↓↓↓");
+                console.log(this.dataCenter.userData);
+                console.log(this.dataCenter.token);
+                console.log("保存数据用户成功，开始同步数据");
+                this.dataCenter.sytsData();
+                this.gameHome.synchronousData();
+            })
+        })
+    }
 }

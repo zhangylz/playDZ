@@ -2,39 +2,33 @@ var GameMain = (function () {
     // 构造函数
     function GameMain() {
         /** 资源集合 */
-        this.ResourceArr = [
-            /** 图集文件 */
-            { url: "res/atlas/ladder.atlas", type: Laya.Loader.ATLAS },
-            { url: "res/ladder/image_ladder.png", type: Laya.Loader.IMAGE },
-            { url: "res/atlas/gameHome.atlas", type: Laya.Loader.ATLAS },
-            { url: "res/atlas/inGame.atlas", type: Laya.Loader.ATLAS },
-            { url: "res/atlas/invite_gift.atlas", type: Laya.Loader.ATLAS },
-            { url: "res/atlas/Game_Settlement.atlas", type: Laya.Loader.ATLAS },
-            { url: "res/atlas/myHbao.atlas", type: Laya.Loader.ATLAS },
-            { url: "res/atlas/everyDay.atlas", type: Laya.Loader.ATLAS },
-            { url: "res/atlas/player.atlas", type: Laya.Loader.ATLAS },
-            { url: "res/atlas/ball_skin.atlas", type: Laya.Loader.ATLAS },
-            { url: "res/atlas/HBao.atlas", type: Laya.Loader.ATLAS },
-            { url: "res/atlas/one_HBao.atlas", type: Laya.Loader.ATLAS },
-            { url: "res/sounds/ballSounds.mp3", type: Laya.Loader.SOUND },
-            { url: "res/sounds/bgMusic.mp3", type: Laya.Loader.SOUND },
-            { url: "res/sounds/doSound.mp3", type: Laya.Loader.SOUND },
-            { url: "res/sounds/goSound.mp3", type: Laya.Loader.SOUND },
-            { url: "res/sounds/hbCome.mp3", type: Laya.Loader.SOUND },
-            { url: "ball_skin/image_inWindow.png", type: Laya.Loader.IMAGE },
-            { url: "everyDay/inWindow.png", type: Laya.Loader.IMAGE },
-            { url: "everyDay/window.png", type: Laya.Loader.IMAGE },
-            { url: "Game_Settlement/inWindow.png", type: Laya.Loader.IMAGE },
-            { url: "Game_Settlement/window.png", type: Laya.Loader.IMAGE },
-            { url: "HBao/window.png", type: Laya.Loader.IMAGE },
-            { url: "invite_gift/dotted_line.png", type: Laya.Loader.IMAGE },
-            { url: "invite_gift/in_view.png", type: Laya.Loader.IMAGE },
-            { url: "invite_gift/window.png", type: Laya.Loader.IMAGE },
-            { url: "ladder/image_ladder.png", type: Laya.Loader.IMAGE },
-            { url: "myHbao/myHBao.png", type: Laya.Loader.IMAGE },
-            { url: "one_Hbao/window.png", type: Laya.Loader.IMAGE },
-            { url: "ladder/image_ladder.png", type: Laya.Loader.IMAGE }
-        ];
+        this.ResourceArr = {
+            t: [
+                "res/atlas/ladder.atlas",
+                "res/atlas/gameHome.atlas",
+                "res/atlas/inGame.atlas",
+                "res/atlas/invite_gift.atlas",
+                "res/atlas/Game_Settlement.atlas",
+                "res/atlas/myHbao.atlas",
+                "res/atlas/everyDay.atlas",
+                "res/atlas/player.atlas",
+                "res/atlas/ball_skin.atlas",
+                "res/atlas/HBao.atlas",
+                "res/atlas/one_HBao.atlas",
+                "ball_skin/image_inWindow.png",
+                "everyDay/inWindow.png",
+                "everyDay/window.png",
+                "Game_Settlement/inWindow.png",
+                "Game_Settlement/window.png",
+                "HBao/window.png",
+                "invite_gift/dotted_line.png",
+                "invite_gift/in_view.png",
+                "invite_gift/window.png",
+                "ladder/image_ladder.png",
+                "myHbao/myHBao.png",
+                "one_Hbao/window.png"
+            ]
+        };
         //  适配小程序
         Laya.MiniAdpter.init();
         Laya.init(640, 1136, Laya.WebGL);
@@ -55,7 +49,8 @@ var GameMain = (function () {
     }
     /** 开始加载资源 */
     GameMain.prototype.onProgress = function () {
-        Laya.loader.load(this.ResourceArr, Laya.Handler.create(this, this.onAssetsLoaded), Laya.Handler.create(this, this.onAssetsLoading, null, false));
+        console.log(this.ResourceArr.t);
+        Laya.loader.load(this.ResourceArr.t, Laya.Handler.create(this, this.onAssetsLoaded), Laya.Handler.create(this, this.onAssetsLoading, null, false));
     };
     /** 加载中 */
     GameMain.prototype.onAssetsLoading = function (progress) {
