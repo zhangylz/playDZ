@@ -22,7 +22,10 @@ interface res_Data {
 interface sgin_Data {
     "status": string,
     "code": number,
-    "data": {}
+    "data": {
+        "list": Array<any>,
+        "today_sign": boolean
+    }
 }
 
 /** API对接 */
@@ -82,7 +85,7 @@ class ApiDocking {
                                     console.log("保存数据用户成功，开始同步数据");
                                     that.Game.dataCenter.sytsData();
                                     that.Game.gameHome.synchronousData();
-                                    
+
 
                                 });
                             };
@@ -206,12 +209,13 @@ class ApiDocking {
     };
 
     /** 添加签到 */
-    public addSign(): any {
+    public addSign(testFun, tpye): any {
         let that = this;
         wx.request({
             url: that.ApiUrl + "addSign",
             data: {
-                sys: wx.getSystemInfoSync()
+                sys: wx.getSystemInfoSync(),
+                type: tpye
             },
             header: {
                 'Accept': 'application/json',
@@ -221,7 +225,8 @@ class ApiDocking {
             method: "POST",
             success(res) {
                 console.log("添加签到成功");
-                return res.data;
+                // return res.data;
+                testFun(res.data);
             },
             fail(res) {
                 console.log("添加签到失败");
